@@ -13,8 +13,8 @@ def save_credentials():
     print("Storing credentials in " + "'" + credentials_file_path + "'" + " with openvpn",
           "compatible 'auth-user-pass' file format\n")
 
-    username = input("Enter your username for NordVPN, i.e youremail@yourmail.com: ")
-    password = input("Enter the password for NordVPN: ")
+    username = askVPNUsername()
+    password = askVPNPassword()
     try:
         with open(credentials_file_path, 'w') as creds:
             creds.write(username + "\n")
@@ -34,8 +34,18 @@ def save_credentials():
         print("IOError while creating 'credentials' file.")
     return
 
+
 def askRootPassword():
-    rootPassword = simpledialog.askstring("Password", "Enter password:", show='*')
+    rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
     return rootPassword
+
+
+def askVPNUsername():
+    return simpledialog.askstring("Username NordVPN", "Enter username:")
+
+
+def askVPNPassword():
+    return simpledialog.askstring("Password NordVPN", "Enter password:", show="*")
+
 
 credentials_file_path = CURRENT_PATH + "credentials"
