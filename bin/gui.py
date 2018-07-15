@@ -84,6 +84,9 @@ class gui(Tk):
     def setStatusAlreadyConnected(self):
         self.statusFrame.statusDinamic.configure(text="Already connected", foreground="green")
 
+        self.buttonsFrame.connect.configure(state=DISABLED)
+        self.buttonsFrame.disconnect.configure(state=ACTIVE)
+
     def connect(self):
         recommendedServer = getRecommendedServer(self.serverType.get())
 
@@ -101,7 +104,7 @@ class gui(Tk):
         self.setStatusConnected(recommendedServer, protocolSelected)
 
     def disconnect(self):
-        if self.openvpnProcess.poll() is None:
+        if checkOpenVPN() or self.openvpnProcess.poll() is None:
             if not hasattr(self, "sudoPassword"):
                 self.sudoPassword = askRootPassword()
 
