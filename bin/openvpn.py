@@ -1,9 +1,10 @@
 from bin.credentials import *
 from bin.root import *
-PATH_TO_OPENVPN = "/etc/openvpn/ovpn_tcp/"
-OVA_SUFFIX = ".tcp.ovpn"
+PATH_TO_OPENVPN = "/etc/openvpn/ovpn_"
+OVA_SUFFIX = ".ovpn"
+PROTOCOLS = ["udp", "tcp"]
 
-def startVPN(server, sudoPassword):
+def startVPN(server, protocol, sudoPassword):
 
     # obtains root access
     if sudoPassword is None:
@@ -15,7 +16,8 @@ def startVPN(server, sudoPassword):
     if not check_credentials():
         save_credentials()
 
-    args = ["sudo", "openvpn", "--config", PATH_TO_OPENVPN + server + OVA_SUFFIX, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
+    pathToConf = PATH_TO_OPENVPN + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
+    args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
 
     openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True)
 
