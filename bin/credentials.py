@@ -5,6 +5,7 @@ from bin.pathUtil import CURRENT_PATH
 
 CREDENTIALS_FILENAME = "credentials"
 
+
 def check_credentials():
     return os.path.exists(credentials_file_path)
 
@@ -37,14 +38,17 @@ def save_credentials():
 
 def askRootPassword():
     rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
+    # TODO: controls that the password is correct
     return rootPassword
 
 
 def askVPNUsername():
+    # TODO: controls that the password is correct
     return simpledialog.askstring("Username NordVPN", "Enter username:")
 
 
 def askVPNPassword():
+    # TODO: controls that the password is correct
     return simpledialog.askstring("Password NordVPN", "Enter password:", show="*")
 
 

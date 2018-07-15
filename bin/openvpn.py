@@ -23,3 +23,9 @@ def startVPN(server, protocol, sudoPassword):
 
     return openvpn, sudoPassword
 
+def checkOpenVPN():
+    c = subprocess.Popen(["ps ax | grep openvpn | grep -v grep"], stdout=subprocess.PIPE, shell=True)
+    (out, _) = c.communicate()
+    if out != '':
+        return True
+    return False

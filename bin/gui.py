@@ -19,6 +19,11 @@ class gui(Tk):
 
         self.center_window(300, 160)
 
+        if checkOpenVPN():
+            self.setStatusAlreadyConnected()
+        else:
+            self.setStatusDisconnected()
+
     def __initOptions__(self):
         self.optionsFrame = LabelFrame(self, text="Options")
 
@@ -52,7 +57,6 @@ class gui(Tk):
         self.statusFrame.statusStatic = Label(self.statusFrame, text="Status: ")
         self.statusFrame.statusStatic.pack(side=LEFT)
         self.statusFrame.statusDinamic = Label(self.statusFrame)
-        self.setStatusDisconnected()
         self.statusFrame.statusDinamic.pack(side=LEFT)
         self.statusFrame.pack(ipady=10)
 
@@ -67,9 +71,18 @@ class gui(Tk):
     def setStatusDisconnected(self):
         self.statusFrame.statusDinamic.configure(text="Disconnected", foreground="grey")
 
-    def setStatusConnected(self, serverName, protocol): # TODO: improve status with protocol type
+        self.buttonsFrame.connect.configure(state=ACTIVE)
+        self.buttonsFrame.disconnect.configure(state=DISABLED)
+
+    def setStatusConnected(self, serverName, protocol):
         self.statusFrame.statusDinamic.configure(text="Connected to "+serverName + " by " +
                                                       PROTOCOLS[protocol], foreground="green")
+
+        self.buttonsFrame.connect.configure(state=DISABLED)
+        self.buttonsFrame.disconnect.configure(state=ACTIVE)
+
+    def setStatusAlreadyConnected(self):
+        self.statusFrame.statusDinamic.configure(text="Already connected", foreground="green")
 
     def connect(self):
         recommendedServer = getRecommendedServer(self.serverType.get())
@@ -87,18 +100,15 @@ class gui(Tk):
 
         self.setStatusConnected(recommendedServer, protocolSelected)
 
-        self.buttonsFrame.connect.configure(state=DISABLED)
-        self.buttonsFrame.disconnect.configure(state=ACTIVE)
-
     def disconnect(self):
         if self.openvpnProcess.poll() is None:
+            if not hasattr(self, "sudoPassword"):
+                self.sudoPassword = askRootPassword()
+
             getRootPermissions(self.sudoPassword)
             subprocess.call(["sudo", "killall", "openvpn"])
 
         self.setStatusDisconnected()
-
-        self.buttonsFrame.connect.configure(state=ACTIVE)
-        self.buttonsFrame.disconnect.configure(state=DISABLED)
 
     def center_window(self, width=300, height=200):
         # gets screen width and height
