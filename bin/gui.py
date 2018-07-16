@@ -87,6 +87,9 @@ class gui(Tk):
         self.buttonsFrame.connect.configure(state=DISABLED)
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
 
+    def setStatusConnecting(self):
+        self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
+
     def connect(self):
         recommendedServer = getRecommendedServer(self.serverType.get())
 
@@ -96,10 +99,21 @@ class gui(Tk):
 
         protocolSelected = self.connectionProtocol.get()
 
-        if hasattr(self, "sudoPassword"):
-            (self.openvpnProcess, _) = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
-        else:
-            (self.openvpnProcess, self.sudoPassword) = startVPN(recommendedServer, protocolSelected, None)
+        self.setStatusConnecting() # TODO: not always executed
+
+        try:
+            if hasattr(self, "sudoPassword"):
+                (self.openvpnProcess, _) = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
+            else:
+                (self.openvpnProcess, self.sudoPassword) = startVPN(recommendedServer, protocolSelected, None)
+        except ConnectionError:
+            messagebox.showwarning(title="Error", message="Error Connecting")
+            self.setStatusDisconnected()
+            return
+        except LoginError:
+            messagebox.showwarning(title="Error", message="Wrong credentials")
+            os.remove(credentials_file_path + CREDENTIALS_FILENAME)
+            return
 
         self.setStatusConnected(recommendedServer, protocolSelected)
 
