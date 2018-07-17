@@ -2,6 +2,7 @@ import os
 import subprocess
 from tkinter import simpledialog
 from bin.pathUtil import CURRENT_PATH
+from bin.root import test_root_password, wrong_root_password
 
 CREDENTIALS_FILENAME = "credentials"
 
@@ -38,17 +39,25 @@ def save_credentials():
 
 def askRootPassword():
     rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
-    # TODO: controls that the password is correct
+
+    if rootPassword == "":
+        pass # TODO: implement here management of this case
+
+    while rootPassword == "" or not test_root_password(rootPassword):
+        wrong_root_password()
+        rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
+
+        if rootPassword == "":
+            pass  # TODO: implement here management of this case
+
     return rootPassword
 
 
 def askVPNUsername():
-    # TODO: controls that the password is correct
     return simpledialog.askstring("Username NordVPN", "Enter username:")
 
 
 def askVPNPassword():
-    # TODO: controls that the password is correct
     return simpledialog.askstring("Password NordVPN", "Enter password:", show="*")
 
 

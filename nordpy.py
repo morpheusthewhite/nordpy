@@ -1,3 +1,5 @@
+#!/usr/bin/python3.6
+
 from bin.gui import gui
 
 def main():

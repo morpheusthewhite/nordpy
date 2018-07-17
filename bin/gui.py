@@ -112,7 +112,7 @@ class gui(Tk):
             return
         except LoginError:
             messagebox.showwarning(title="Error", message="Wrong credentials")
-            os.remove(credentials_file_path + CREDENTIALS_FILENAME)
+            os.remove(credentials_file_path)
             return
 
         self.setStatusConnected(recommendedServer, protocolSelected)
