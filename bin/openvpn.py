@@ -1,6 +1,6 @@
 from bin.credentials import *
 from bin.root import *
-
+from bin.root import askRootPassword
 
 PATH_TO_OPENVPN = "/etc/openvpn/ovpn_"
 OVA_SUFFIX = ".ovpn"
@@ -16,7 +16,13 @@ def startVPN(server, protocol, sudoPassword):
 
     # obtains root access
     if sudoPassword is None:
-        sudoPassword = askRootPassword()
+        tmp = askRootPassword()
+
+        if tmp is None:
+            return None
+
+        sudoPassword = tmp
+
     getRootPermissions(sudoPassword)
 
     print("Obtained root access")

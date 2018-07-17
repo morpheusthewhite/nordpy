@@ -1,5 +1,6 @@
 import subprocess
-from tkinter import messagebox
+from tkinter import messagebox, simpledialog
+
 
 def getRootPermissions(sudoPassword):
     obtainsRoot = subprocess.Popen(["sudo", "-S", "ls"], stdin=subprocess.PIPE, universal_newlines=True,
@@ -20,3 +21,19 @@ def test_root_password(sudoPassword):
 
 def wrong_root_password():
     messagebox.showwarning(title="Wrong password", message="Wrong root password, insert it again")
+
+
+def askRootPassword():
+    rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
+
+    if rootPassword is None:
+        return None
+
+    while rootPassword is None or not test_root_password(rootPassword):
+        wrong_root_password()
+        rootPassword = simpledialog.askstring("Password", "Enter root password:", show='*')
+
+        if rootPassword is None:
+            return None
+
+    return rootPassword

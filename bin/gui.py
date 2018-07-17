@@ -1,7 +1,7 @@
-from tkinter import messagebox
 from tkinter import *
 from bin.networkSelection import *
 from bin.openvpn import *
+from bin.root import askRootPassword
 
 
 class gui(Tk):
@@ -103,9 +103,22 @@ class gui(Tk):
 
         try:
             if hasattr(self, "sudoPassword"):
-                (self.openvpnProcess, _) = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
+                tmp = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
+
+                if tmp is None:  # No password inserted
+                    self.setStatusDisconnected()
+                    return
+
+                (self.openvpnProcess, _) = tmp
             else:
-                (self.openvpnProcess, self.sudoPassword) = startVPN(recommendedServer, protocolSelected, None)
+                tmp = startVPN(recommendedServer, protocolSelected, None)
+
+                if tmp is None:  # No password inserted
+                    self.setStatusDisconnected()
+                    return
+
+                (self.openvpnProcess, self.sudoPassword) = tmp
+
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
             self.setStatusDisconnected()
@@ -120,7 +133,12 @@ class gui(Tk):
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
             if not hasattr(self, "sudoPassword"):
-                self.sudoPassword = askRootPassword()
+                tmp = askRootPassword()
+
+                if tmp is None:
+                    return
+
+                self.sudoPassword = tmp
 
             getRootPermissions(self.sudoPassword)
             subprocess.call(["sudo", "killall", "openvpn"])
