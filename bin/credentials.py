@@ -6,6 +6,10 @@ from bin.pathUtil import CURRENT_PATH
 CREDENTIALS_FILENAME = "credentials"
 
 
+class NoCredentialsProvidedException(Exception):
+    pass
+
+
 def check_credentials():
     return os.path.exists(credentials_file_path)
 
@@ -15,7 +19,13 @@ def save_credentials():
           "compatible 'auth-user-pass' file format\n")
 
     username = askVPNUsername()
+    if username is None:
+        raise NoCredentialsProvidedException
+
     password = askVPNPassword()
+    if password is None:
+        raise NoCredentialsProvidedException
+
     try:
         with open(credentials_file_path, 'w') as creds:
             creds.write(username + "\n")

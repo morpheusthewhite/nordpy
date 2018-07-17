@@ -28,7 +28,10 @@ def startVPN(server, protocol, sudoPassword):
     print("Obtained root access")
 
     if not check_credentials():
-        save_credentials()
+        try:
+            save_credentials()
+        except NoCredentialsProvidedException:
+            return None
 
     pathToConf = PATH_TO_OPENVPN + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
