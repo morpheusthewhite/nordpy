@@ -2,7 +2,7 @@ from tkinter import *
 from bin.networkSelection import *
 from bin.openvpn import *
 from bin.root import askRootPassword
-
+from bin.settings import *
 
 class gui(Tk):
     def __init__(self):
@@ -17,12 +17,17 @@ class gui(Tk):
         self.__initStatus__()
         self.__initButtons__()
 
-        self.center_window(300, 160)
+        self.center_window(350, 160)
 
         if checkOpenVPN():
             self.setStatusAlreadyConnected()
         else:
             self.setStatusDisconnected()
+
+        if exists_saved_settings():
+            serverType, protocol = load_settings()
+            self.serverType.set(serverType)
+            self.connectionProtocol.set(protocol)
 
     def __initOptions__(self):
         self.optionsFrame = LabelFrame(self, text="Options")
@@ -32,8 +37,8 @@ class gui(Tk):
         self.serverTypeFrame.serverTypeLabel.pack(side=LEFT, padx=10)
         self.serverType = StringVar(self)
         self.serverType.set("Standard VPN")  # default value
-        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, "P2P", "Dedicated IP",
-                                                      "Double VPN", "Onion over VPN", "Standard VPN", "Obfuscated")
+        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, "Standard VPN", "P2P", "Dedicated IP",
+                                                      "Double VPN", "Onion over VPN", "Obfuscated")
         self.serverTypeFrame.serverTypeMenu.pack()
         self.serverTypeFrame.pack()
 
@@ -129,6 +134,8 @@ class gui(Tk):
             return
 
         self.setStatusConnected(recommendedServer, protocolSelected)
+
+        update_settings(self.serverType.get(), protocolSelected)
 
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
