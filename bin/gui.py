@@ -4,6 +4,7 @@ from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
 
+
 class gui(Tk):
     def __init__(self):
         super().__init__()

@@ -33,7 +33,7 @@ def startVPN(server, protocol, sudoPassword):
         except NoCredentialsProvidedException:
             return None
 
-    pathToConf = PATH_TO_OPENVPN + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
+    pathToConf = CURRENT_PATH + "ovpn_" + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
 
     openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
@@ -42,6 +42,8 @@ def startVPN(server, protocol, sudoPassword):
 
     while True:
         line = openvpn.stdout.readline()
+        if line.strip() != "":
+            print(line)
         if "Initialization Sequence Completed" in line:
             break
         elif "connection failed" in line:
