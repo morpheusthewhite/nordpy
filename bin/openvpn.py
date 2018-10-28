@@ -2,7 +2,6 @@ from bin.credentials import *
 from bin.root import *
 from bin.root import askRootPassword
 
-PATH_TO_OPENVPN = "/etc/openvpn/ovpn_"
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp"]
 MAXIMUM_TRIES = 5
@@ -42,8 +41,6 @@ def startVPN(server, protocol, sudoPassword):
 
     while True:
         line = openvpn.stdout.readline()
-        if line.strip() != "":
-            print(line)
         if "Initialization Sequence Completed" in line:
             break
         elif "connection failed" in line:
