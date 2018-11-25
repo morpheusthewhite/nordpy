@@ -97,7 +97,14 @@ class gui(Tk):
         self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
 
     def connect(self):
-        recommendedServer = getRecommendedServer(self.serverType.get())
+        try:
+            recommendedServer = getRecommendedServer(self.serverType.get())
+        except RequestException:
+            messagebox.showerror(title="Error", message="Connection with nordvpn failed")
+            return
+        except requests.exceptions.ConnectionError:
+            messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
+            return
 
         if recommendedServer is None:
             messagebox.showwarning(title="Error", message="Sorry, server not found! Please try a different server.")
