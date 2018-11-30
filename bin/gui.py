@@ -3,6 +3,7 @@ from bin.networkSelection import *
 from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
+from bin.networkSelection import PROTOCOLS
 
 
 class gui(Tk):
@@ -38,8 +39,7 @@ class gui(Tk):
         self.serverTypeFrame.serverTypeLabel.pack(side=LEFT, padx=10)
         self.serverType = StringVar(self)
         self.serverType.set("Standard VPN")  # default value
-        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, "Standard VPN", "P2P", "Dedicated IP",
-                                                      "Double VPN", "Onion over VPN", "Obfuscated")
+        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, *PROTOCOLS)
         self.serverTypeFrame.serverTypeMenu.pack()
         self.serverTypeFrame.pack()
 
