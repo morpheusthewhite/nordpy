@@ -3,7 +3,7 @@ from bin.networkSelection import *
 from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
-from bin.networkSelection import PROTOCOLS
+from bin.networkSelection import MODES
 
 
 class gui(Tk):
@@ -27,7 +27,7 @@ class gui(Tk):
             self.setStatusDisconnected()
 
         if exists_saved_settings():
-            serverType, protocol = load_settings()
+            serverType, protocol, self.previously_recommended_server = load_settings()
             self.serverType.set(serverType)
             self.connectionProtocol.set(protocol)
 
@@ -39,7 +39,7 @@ class gui(Tk):
         self.serverTypeFrame.serverTypeLabel.pack(side=LEFT, padx=10)
         self.serverType = StringVar(self)
         self.serverType.set("Standard VPN")  # default value
-        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, *PROTOCOLS)
+        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, *MODES)
         self.serverTypeFrame.serverTypeMenu.pack()
         self.serverTypeFrame.pack()
 
@@ -81,7 +81,7 @@ class gui(Tk):
         self.buttonsFrame.disconnect.configure(state=DISABLED)
 
     def setStatusConnected(self, serverName, protocol):
-        self.statusFrame.statusDinamic.configure(text="Connected to "+serverName + " by " +
+        self.statusFrame.statusDinamic.configure(text="Connected to " + serverName + " by " +
                                                       PROTOCOLS[protocol], foreground="green")
 
         self.buttonsFrame.connect.configure(state=DISABLED)
@@ -99,9 +99,10 @@ class gui(Tk):
     def connect(self):
         try:
             recommendedServer = getRecommendedServer(self.serverType.get())
+            self.previously_recommended_server = recommendedServer
         except RequestException:
-            messagebox.showerror(title="Error", message="Connection with nordvpn failed")
-            return
+            messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
+            recommendedServer = self.previously_recommended_server
         except requests.exceptions.ConnectionError:
             messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
             return
@@ -143,7 +144,7 @@ class gui(Tk):
 
         self.setStatusConnected(recommendedServer, protocolSelected)
 
-        update_settings(self.serverType.get(), protocolSelected)
+        update_settings(self.serverType.get(), protocolSelected, recommendedServer)
 
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
