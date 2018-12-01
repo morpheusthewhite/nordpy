@@ -1,15 +1,13 @@
 from bin.credentials import *
 from bin.root import *
 from bin.root import askRootPassword
-import logging
+from bin.logging_util import get_logger
 
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp"]
 MAXIMUM_TRIES = 5
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-logger.addHandler(logging.StreamHandler())
+logger = get_logger(__name__)
 
 
 class LoginError(Exception):

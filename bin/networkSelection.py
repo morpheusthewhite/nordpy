@@ -1,8 +1,10 @@
 import requests
+from bin.logging_util import get_logger
 
 NORDVPN_CODES = {"Standard VPN": "11", "Double VPN": "1", "Onion over VPN": "3", "Dedicated IP": "9", "P2P": "15", "Obfuscated": "17"}
 MODES = ["Standard VPN", "P2P", "Dedicated IP", "Double VPN", "Onion over VPN", "Obfuscated"]
 
+logger = get_logger(__name__)
 
 class RequestException(Exception):
     pass
@@ -29,5 +31,5 @@ def getRecommendedServer(serverType):
     import json
     server = json.loads(jsonData)[0]["hostname"]
 
-    print(server)
+    logger.info("Connecting to " + server)
     return server

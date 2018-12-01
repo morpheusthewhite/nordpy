@@ -4,6 +4,9 @@ from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
 from bin.networkSelection import MODES
+from bin.logging_util import get_logger
+
+logger = get_logger(__name__)
 
 
 class gui(Tk):
