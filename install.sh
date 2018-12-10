@@ -3,16 +3,25 @@
 #install dependencies and add desktop Entry
 
 if ! [ -z `which apt-get 2> /dev/null` ]; # Debian
-    then sudo apt-get install python python-tkinter python-requests openvpn wget unzip 2> /dev/null
+    then sudo apt-get install python3 python3-tk python3-requests openvpn wget unzip 2> /dev/null
 fi
 if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
-    then sudo dnf install python python-tkinter python-requests openvpn wget unzip 2> /dev/null
+    then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip 2> /dev/null
 fi
 if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
-    then sudo pacman install python python-tkinter python-requests openvpn wget unzip 2> /dev/null
+    then sudo pacman install python3 python3-tkinter python3-requests openvpn wget unzip 2> /dev/null
 fi
 
 current_dir=`pwd`
+
+# check which path to desktop files exists
+if [ -d /usr/local/share/applications ]
+then
+    DESK_PATH=/usr/local/share/applications
+else
+    DESK_PATH=/usr/share/applications
+fi
+echo "Saving desktop shortcut in "$DESK_PATH
 
 echo "[Desktop Entry]
 
@@ -24,7 +33,7 @@ Path="$current_dir"
 Exec="$current_dir"/nordpy.py
 Icon="$current_dir"/media/nordvpn.png
 Terminal=false
-Categories=Internet;System;Utilities;" | sudo tee /usr/local/share/applications/nordpy.desktop > /dev/null
+Categories=Internet;System;Utilities;" | sudo tee $DESK_PATH/nordpy.desktop > /dev/null
 
 sudo chmod +x /usr/local/share/applications/nordpy.desktop
 
