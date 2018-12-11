@@ -50,11 +50,13 @@ class gui(Tk):
         self.protocolFrame.protocolLabel = Label(self.protocolFrame, text="Protocol: ")
         self.protocolFrame.protocolLabel.pack(side=LEFT)
         self.connectionProtocol = IntVar()
+        # getting color for background
+        select_color = self.serverTypeFrame.serverTypeLabel.cget('background')
         self.protocolFrame.tcp = Radiobutton(self.protocolFrame, text="TCP", variable=self.connectionProtocol, value=1,
-                                             selectcolor="black")
+                                             selectcolor=select_color)
         self.protocolFrame.tcp.pack(side=LEFT)
         self.protocolFrame.udp = Radiobutton(self.protocolFrame, text="UDP", variable=self.connectionProtocol, value=0,
-                                             selectcolor="black")
+                                             selectcolor=select_color)
         self.protocolFrame.udp.pack(side=LEFT)
         self.connectionProtocol.set(1)
         self.protocolFrame.pack(pady=6)
