@@ -121,22 +121,15 @@ class gui(Tk):
         self.setStatusConnecting() # TODO: not always executed
 
         try:
-            if hasattr(self, "sudoPassword"):
-                tmp = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
-
-                if tmp is None:  # No password inserted
+            if not hasattr(self, "sudoPassword"):
+                password = askRootPassword()
+                if password is None:
+                    logger.info("No sudo password inserted")
                     self.setStatusDisconnected()
                     return
+                self.sudoPassword = password
 
-                (self.openvpnProcess, _) = tmp
-            else:
-                tmp = startVPN(recommendedServer, protocolSelected, None)
-
-                if tmp is None:  # No password inserted
-                    self.setStatusDisconnected()
-                    return
-
-                (self.openvpnProcess, self.sudoPassword) = tmp
+            self.openvpnProcess = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")

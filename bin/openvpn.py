@@ -20,18 +20,7 @@ def get_path_to_conf(server, protocol):
 
 def startVPN(server, protocol, sudoPassword):
 
-    # obtains root access
-    if sudoPassword is None:
-        tmp = askRootPassword()
-
-        if tmp is None:
-            return None
-
-        sudoPassword = tmp
-
     getRootPermissions(sudoPassword)
-
-    print("Obtained root access")
 
     if not check_credentials():
         try:
@@ -63,7 +52,7 @@ def startVPN(server, protocol, sudoPassword):
         elif "AUTH_FAILED" in line:
             raise LoginError
 
-    return openvpn, sudoPassword
+    return openvpn
 
 
 def checkOpenVPN():

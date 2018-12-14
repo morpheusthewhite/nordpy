@@ -1,11 +1,14 @@
 import subprocess
 from tkinter import messagebox, simpledialog
-
+from bin.logging_util import get_logger
+logger = get_logger(__name__)
 
 def getRootPermissions(sudoPassword):
     obtainsRoot = subprocess.Popen(["sudo", "-S", "ls"], stdin=subprocess.PIPE, universal_newlines=True,
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     obtainsRoot.communicate(input=sudoPassword + "\n")
+
+    logger.info("Obtained root access")
 
 
 def test_root_password(sudoPassword):
