@@ -62,12 +62,10 @@ def update_conf_files(sudo_password):
     with open(zip_filename, 'wb') as zip_f:
         zip_f.write(r.content)
 
-    args1 = ['unzip', zip_filename]
-    unzipping = subprocess.Popen(args1, universal_newlines=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    unzipping.communicate("A\n")    # if files already exist they are replaced [A]ll
-
-    # waiting for unzip to complete
-    unzipping.wait()
+    # unzipping files
+    import zipfile
+    with zipfile.ZipFile(zip_filename, "r") as zip_ref:
+        zip_ref.extractall(CURRENT_PATH)
 
     # removing zip
     from os import remove
