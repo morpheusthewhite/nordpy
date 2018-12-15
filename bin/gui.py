@@ -118,17 +118,26 @@ class gui(Tk):
 
         protocolSelected = self.connectionProtocol.get()
 
+        if not hasattr(self, "sudoPassword"):
+            password = askRootPassword()
+            if password is None:
+                logger.info("No sudo password inserted")
+                self.setStatusDisconnected()
+                return
+            self.sudoPassword = password
+
+        # check if recommended server exists. If it does not exists, download the needed files
+        if not exists_conf_for(recommendedServer, protocolSelected):
+            update_conf_files(self.sudoPassword)
+
+            # if file does not exist then it is incorrect (extreme case)
+            if not exists_conf_for(recommendedServer, protocolSelected):
+                messagebox.showwarning(title="Error", message="Retrieved a wrong server from NordVPN, try again")
+                return
+
         self.setStatusConnecting() # TODO: not always executed
 
         try:
-            if not hasattr(self, "sudoPassword"):
-                password = askRootPassword()
-                if password is None:
-                    logger.info("No sudo password inserted")
-                    self.setStatusDisconnected()
-                    return
-                self.sudoPassword = password
-
             self.openvpnProcess = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
 
         except ConnectionError:

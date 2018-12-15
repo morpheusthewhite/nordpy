@@ -39,6 +39,6 @@ sudo chmod +x /usr/local/share/applications/nordpy.desktop
 
 
 # downloading and extracting conf files from NordVPN
-sudo wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
-sudo unzip ovpn.zip
-sudo rm ovpn.zip
+wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
+unzip ovpn.zip
+rm ovpn.zip
