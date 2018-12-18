@@ -1,9 +1,12 @@
 from tkinter import *
+
+from bin.gui_components.option_frame import *
+from bin.gui_components.manual_selection_frame import *
+from bin.conf_util import exists_conf_for, update_conf_files
 from bin.networkSelection import *
 from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
-from bin.networkSelection import MODES
 from bin.logging_util import get_logger
 
 logger = get_logger(__name__)
@@ -17,12 +20,16 @@ class gui(Tk):
         # sets the icon
         self.__imgicon__ = PhotoImage(file=os.path.join(CURRENT_PATH+"media", "nordvpn.png"))
         self.tk.call('wm', 'iconphoto', self._w, self.__imgicon__)
+        # getting color for background (some widget will need it)
+        self.background_color = self.cget('background')
 
-        self.__initOptions__()
+        self.manual_frame = ManualSelectionFrame(self, self.background_color)
+        self.optionsFrame = OptionFrame(self)
+        self.__init_protocol__()
         self.__initStatus__()
         self.__initButtons__()
 
-        self.center_window(350, 160)
+        self.center_window(350, 260)
 
         if checkOpenVPN():
             self.setStatusAlreadyConnected()
@@ -31,37 +38,10 @@ class gui(Tk):
 
         if exists_saved_settings():
             serverType, protocol, self.previously_recommended_server = load_settings()
-            self.serverType.set(serverType)
+            self.optionsFrame.set_selected_server(serverType)
             self.connectionProtocol.set(protocol)
 
-    def __initOptions__(self):
-        self.optionsFrame = LabelFrame(self, text="Options")
-
-        self.serverTypeFrame = Frame(self.optionsFrame)
-        self.serverTypeFrame.serverTypeLabel = Label(self.serverTypeFrame, text="Server Type")
-        self.serverTypeFrame.serverTypeLabel.pack(side=LEFT, padx=10)
-        self.serverType = StringVar(self)
-        self.serverType.set("Standard VPN")  # default value
-        self.serverTypeFrame.serverTypeMenu = OptionMenu(self.serverTypeFrame, self.serverType, *MODES)
-        self.serverTypeFrame.serverTypeMenu.pack()
-        self.serverTypeFrame.pack()
-
-        self.protocolFrame = Frame(self.optionsFrame)
-        self.protocolFrame.protocolLabel = Label(self.protocolFrame, text="Protocol: ")
-        self.protocolFrame.protocolLabel.pack(side=LEFT)
-        self.connectionProtocol = IntVar()
-        # getting color for background
-        select_color = self.serverTypeFrame.serverTypeLabel.cget('background')
-        self.protocolFrame.tcp = Radiobutton(self.protocolFrame, text="TCP", variable=self.connectionProtocol, value=1,
-                                             selectcolor=select_color)
-        self.protocolFrame.tcp.pack(side=LEFT)
-        self.protocolFrame.udp = Radiobutton(self.protocolFrame, text="UDP", variable=self.connectionProtocol, value=0,
-                                             selectcolor=select_color)
-        self.protocolFrame.udp.pack(side=LEFT)
-        self.connectionProtocol.set(1)
-        self.protocolFrame.pack(pady=6)
-
-        self.optionsFrame.pack(fill="x")
+        self.on_manual_change()
 
     def __initStatus__(self):
         self.statusFrame = Frame(self)
@@ -71,6 +51,21 @@ class gui(Tk):
         self.statusFrame.statusDinamic.pack(side=LEFT)
         self.statusFrame.pack(ipady=10)
 
+    def __init_protocol__(self):
+        self.protocolFrame = Frame(self)
+        self.protocolFrame.protocolLabel = Label(self.protocolFrame, text="Protocol: ")
+        self.protocolFrame.protocolLabel.pack(side=LEFT)
+        self.connectionProtocol = IntVar()
+        self.protocolFrame.tcp = Radiobutton(self.protocolFrame, text="TCP", variable=self.connectionProtocol, value=1,
+                                             selectcolor=self.background_color)
+        self.protocolFrame.tcp.pack(side=LEFT)
+        self.protocolFrame.udp = Radiobutton(self.protocolFrame, text="UDP", variable=self.connectionProtocol, value=0,
+                                             selectcolor=self.background_color)
+        self.protocolFrame.udp.pack(side=LEFT)
+        self.connectionProtocol.set(1)
+        self.protocolFrame.pack(pady=4)
+
+
     def __initButtons__(self):
         self.buttonsFrame = Frame(self)
         self.buttonsFrame.connect = Button(text="Connect", command=self.connect)
@@ -78,6 +73,10 @@ class gui(Tk):
         self.buttonsFrame.disconnect = Button(text="Disconnect", command=self.disconnect, state=DISABLED)
         self.buttonsFrame.disconnect.pack(side=RIGHT, padx=5)
         self.buttonsFrame.pack()
+
+    def on_manual_change(self):
+        self.manual_frame.__manual_frame_state_change__()
+        self.optionsFrame.option_frame_state_change(self.manual_frame.get_is_manual())
 
     def setStatusDisconnected(self):
         self.statusFrame.statusDinamic.configure(text="Disconnected", foreground="grey")
@@ -102,8 +101,26 @@ class gui(Tk):
         self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
 
     def connect(self):
+
+        if not hasattr(self, "sudoPassword"):
+            password = askRootPassword()
+            if password is None:
+                logger.info("No sudo password inserted")
+                self.setStatusDisconnected()
+                return
+            self.sudoPassword = password
+
+        if self.manual_frame.get_is_manual():
+            self.manual_connection()
+        else:
+            self.automatic_connection()
+
+    def manual_connection(self):
+        self.connect_to_VPN(self.manual_frame.get_manual_server(), self.connectionProtocol.get())
+
+    def automatic_connection(self):
         try:
-            recommendedServer = getRecommendedServer(self.serverType.get())
+            recommendedServer = getRecommendedServer(self.optionsFrame.get_selected_server())
             self.previously_recommended_server = recommendedServer
         except RequestException:
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
@@ -118,14 +135,6 @@ class gui(Tk):
 
         protocolSelected = self.connectionProtocol.get()
 
-        if not hasattr(self, "sudoPassword"):
-            password = askRootPassword()
-            if password is None:
-                logger.info("No sudo password inserted")
-                self.setStatusDisconnected()
-                return
-            self.sudoPassword = password
-
         # check if recommended server exists. If it does not exists, download the needed files
         if not exists_conf_for(recommendedServer, protocolSelected):
             update_conf_files(self.sudoPassword)
@@ -135,10 +144,13 @@ class gui(Tk):
                 messagebox.showwarning(title="Error", message="Retrieved a wrong server from NordVPN, try again")
                 return
 
+        self.connect_to_VPN(recommendedServer, protocolSelected)
+
+    def connect_to_VPN(self, server, protocol):
         self.setStatusConnecting() # TODO: not always executed
 
         try:
-            self.openvpnProcess = startVPN(recommendedServer, protocolSelected, self.sudoPassword)
+            self.openvpnProcess = startVPN(server, protocol, self.sudoPassword)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
@@ -149,9 +161,9 @@ class gui(Tk):
             os.remove(credentials_file_path)
             return
 
-        self.setStatusConnected(recommendedServer, protocolSelected)
+        self.setStatusConnected(server, protocol)
 
-        update_settings(self.serverType.get(), protocolSelected, recommendedServer)
+        update_settings(self.optionsFrame.get_selected_server(), protocol, server)
 
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
