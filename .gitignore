@@ -3,3 +3,4 @@ credentials
 ovpn_tcp/
 ovpn_udp/
 settings.ini
+*.pyc
