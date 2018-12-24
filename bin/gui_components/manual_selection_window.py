@@ -1,9 +1,13 @@
 from tkinter import *
+from os import path
 
 from bin.conf_util import get_available_servers_dict
 from bin.logging_util import get_logger
+from bin.pathUtil import CURRENT_PATH
+
 SERVERS_DICT = get_available_servers_dict()
 logger = get_logger(__name__)
+
 
 class ManualServerWindow(Toplevel):
     def __init__(self, parent):
@@ -11,9 +15,15 @@ class ManualServerWindow(Toplevel):
         self.wm_title("Select your server")
         self.parent = parent  # this will be needed when a server is chosen
 
+        # sets the icon
+        self.__imgicon__ = PhotoImage(file=path.join(CURRENT_PATH + "media", "manual.png"))
+        self.tk.call('wm', 'iconphoto', self._w, self.__imgicon__)
+
         self.center_window(300, 190)
         self.__init_listboxes__()
         self.__init_buttons__()
+
+        self.grab_set()  # used to disable the underlying window
 
     def __init_listboxes__(self):
         self.listboxes_frame = Frame(self)
@@ -73,9 +83,11 @@ class ManualServerWindow(Toplevel):
 
             self.parent.manual_server_selected(server_selected)
 
+        self.grab_release()  # to enable again the underlying window
         self.destroy()
 
     def cancel_pressed(self):
+        self.grab_release() # to enable again the underlying window
         self.destroy()
 
     def center_window(self, width=300, height=200):
