@@ -1,5 +1,3 @@
-from tkinter import *
-
 from bin.gui_components.option_frame import *
 from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
@@ -8,6 +6,7 @@ from bin.openvpn import *
 from bin.root import askRootPassword
 from bin.settings import *
 from bin.logging_util import get_logger
+from bin.gui_components.manual_selection_frame import DEFAULT_MANUAL_SERVER_LABEL
 
 logger = get_logger(__name__)
 
@@ -116,7 +115,11 @@ class gui(Tk):
             self.automatic_connection()
 
     def manual_connection(self):
-        self.connect_to_VPN(self.manual_frame.get_manual_server(), self.connectionProtocol.get())
+        server = self.manual_frame.get_manual_server()
+        if server == DEFAULT_MANUAL_SERVER_LABEL:
+            messagebox.showwarning(title="Select a server", message='Please select a manual server')
+            return
+        self.connect_to_VPN(server , self.connectionProtocol.get())
 
     def automatic_connection(self):
         try:

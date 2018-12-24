@@ -1,6 +1,7 @@
 from tkinter import *
 from bin.gui_components.manual_selection_window import *
 
+DEFAULT_MANUAL_SERVER_LABEL = '-----'
 
 class ManualSelectionFrame(LabelFrame):
     def __init__(self, parent, background_color):
@@ -19,7 +20,7 @@ class ManualSelectionFrame(LabelFrame):
         self.info_frame = Frame(self)
         self.static_server_label = Label(self.info_frame, text='Server Selected: ')
         self.static_server_label.pack(side=LEFT)
-        self.dynamic_server_label = Label(self.info_frame, text='---')
+        self.dynamic_server_label = Label(self.info_frame, text=DEFAULT_MANUAL_SERVER_LABEL)
         self.dynamic_server_label.pack(side=LEFT)
         self.info_frame.pack(pady=5)
 

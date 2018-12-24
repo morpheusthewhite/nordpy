@@ -5,7 +5,7 @@ from bin.logging_util import get_logger
 SERVERS_DICT = get_available_servers_dict()
 logger = get_logger(__name__)
 
-class ManualServerWindow(Tk):
+class ManualServerWindow(Toplevel):
     def __init__(self, parent):
         super(ManualServerWindow, self).__init__()
         self.wm_title("Select your server")
