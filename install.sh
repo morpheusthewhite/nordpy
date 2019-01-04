@@ -8,9 +8,6 @@ fi
 if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
     then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip 2> /dev/null
 fi
-if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
-    then sudo pacman install python3 python3-tkinter python3-requests openvpn wget unzip 2> /dev/null
-fi
 
 current_dir=`pwd`
 
