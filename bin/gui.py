@@ -28,7 +28,7 @@ class gui(Tk):
         self.__initStatus__()
         self.__initButtons__()
 
-        self.center_window(350, 260)
+        self.center_window(350, 290)
 
         if checkOpenVPN():
             self.setStatusAlreadyConnected()
@@ -123,7 +123,8 @@ class gui(Tk):
 
     def automatic_connection(self):
         try:
-            recommendedServer = getRecommendedServer(self.optionsFrame.get_selected_server())
+            recommendedServer = get_recommended_server(self.optionsFrame.get_selected_server(),
+                                                       self.optionsFrame.get_selected_country())
             self.previously_recommended_server = recommendedServer
         except RequestException:
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
