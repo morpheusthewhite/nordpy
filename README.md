@@ -1,15 +1,15 @@
 # NordPy
-A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type or to the specific chosen server.
+A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server.
 
 All server types on NordVPN site are available to be selected in the window.
 
 **Installation**
 
-For Debian/Ubuntu and Fedora users:
+For <b>Debian/Ubuntu</b> and <b>Fedora</b> users:
 
 To install all dependencies, download config files and to add a desktop entry in the main menu just run install.sh
 
-For other distro:
+For <b>other distros</b>:
 
 install the following packages
 ```
