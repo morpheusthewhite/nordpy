@@ -18,7 +18,7 @@ def get_root_permissions(sudo_password):
 
 def test_root_password(sudo_password):
     """
-    Check if the given root password is correct
+    Checks if the given root password is correct
     :param sudo_password: the root password
     :return True if it is correct, False otherwise
     """
@@ -35,7 +35,7 @@ def test_root_password(sudo_password):
 
 def wrong_root_password():
     """
-    Show a window dialog notifying that the root password is not correct
+    Shows a window dialog notifying that the root password is not correct
     :return:
     """
     messagebox.showwarning(title="Wrong password", message="Wrong root password, insert it again")

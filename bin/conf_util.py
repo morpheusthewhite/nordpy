@@ -6,7 +6,7 @@ logger = get_logger(__name__)
 
 def exists_conf_for(server_name, protocol):
     """
-    Check if exists a .ovpn file for the specified server and protocol
+    Checks if exists a .ovpn file for the specified server and protocol
     :param server_name: the name of the server
     :param protocol: the protocol to be used
     :return: True if exists, False otherwise
@@ -22,7 +22,7 @@ def exists_conf_for(server_name, protocol):
 
 def update_conf_files(sudo_password):
     """
-    Download from nordvpn.com all the .ovpn files
+    Downloads from nordvpn.com all the .ovpn files
     :param sudo_password: the root password
     """
     from bin.root import get_root_permissions

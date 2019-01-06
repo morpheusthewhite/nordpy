@@ -3,7 +3,7 @@ import os
 
 def calculatePath(pathToModule):
     """
-    Calculate the path to the current folder
+    Calculates the path to the current folder
     :param pathToModule: the path to the a module in a subdirectory
     :return: a string indicating the path
     """

@@ -26,7 +26,7 @@ def get_path_to_conf(server, protocol):
 
 def startVPN(server, protocol, sudoPassword):
     """
-    Launches openvpn with the given server and protocol. Raise a ConnectionError if no connection is available
+    Launches openvpn with the given server and protocol. Raises a ConnectionError if no connection is available
     :param server: the name of the server
     :param protocol: the protocol to be used
     :param sudoPassword: the root password
@@ -69,7 +69,7 @@ def startVPN(server, protocol, sudoPassword):
 
 def checkOpenVPN():
     """
-    Check if a openvpn process is already running
+    Checks if a openvpn process is already running
     :return: True if is running, False otherwise
     """
     c = subprocess.Popen(["ps ax | grep openvpn | grep -v grep"], stdout=subprocess.PIPE, shell=True, universal_newlines=True)

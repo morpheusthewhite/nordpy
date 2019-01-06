@@ -35,7 +35,7 @@ class RequestException(Exception):
 
 def get_recommended_server(server_type, country):
     """
-    Obtains the recommended server of a certain type in a given country according to NordVPN.com. Raise a
+    Obtains the recommended server of a certain type in a given country according to NordVPN.com. Raises a
     RequestException if NordVPN's response is incorrect
     :param server_type: the type of the server (such as Obfuscated IP)
     :param country: the country (can be chosen automatically)

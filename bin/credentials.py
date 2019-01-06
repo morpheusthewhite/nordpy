@@ -12,7 +12,7 @@ class NoCredentialsProvidedException(Exception):
 
 def check_credentials():
     """
-    check if exists a file with the credentials for nordvpn.com
+    checks if exists a file with the credentials for nordvpn.com
     :return: True if exists, False otherwise
     """
     return os.path.exists(credentials_file_path)
@@ -20,7 +20,7 @@ def check_credentials():
 
 def save_credentials():
     """
-    Stores credentials in a root-password-protected file. Raise a NoCredentialsProvidedException if some
+    Stores credentials in a root-password-protected file. Raises a NoCredentialsProvidedException if some
     credentials info were not inserted
     """
     print("Storing credentials in " + "'" + credentials_file_path + "'" + " with openvpn",
@@ -55,7 +55,7 @@ def save_credentials():
 
 def askVPNUsername():
     """
-    Ask VPN username by a dialog window
+    Asks VPN username by a dialog window
     :return: the username inserted
     """
     return simpledialog.askstring("Username NordVPN", "Enter username:")
@@ -63,7 +63,7 @@ def askVPNUsername():
 
 def askVPNPassword():
     """
-    Ask VPN password by a window dialog
+    Asks VPN password by a window dialog
     :return: the password inserted
     """
     return simpledialog.askstring("Password NordVPN", "Enter password:", show="*")
