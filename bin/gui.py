@@ -3,7 +3,7 @@ from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
 from bin.networkSelection import *
 from bin.openvpn import *
-from bin.root import askRootPassword
+from bin.root import ask_root_password
 from bin.settings import *
 from bin.logging_util import get_logger
 from bin.gui_components.manual_selection_frame import DEFAULT_MANUAL_SERVER_LABEL
@@ -102,7 +102,7 @@ class gui(Tk):
     def connect(self):
 
         if not hasattr(self, "sudoPassword"):
-            password = askRootPassword()
+            password = ask_root_password()
             if password is None:
                 logger.info("No sudo password inserted")
                 self.setStatusDisconnected()
@@ -172,14 +172,14 @@ class gui(Tk):
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
             if not hasattr(self, "sudoPassword"):
-                tmp = askRootPassword()
+                tmp = ask_root_password()
 
                 if tmp is None:
                     return
 
                 self.sudoPassword = tmp
 
-            getRootPermissions(self.sudoPassword)
+            get_root_permissions(self.sudoPassword)
             subprocess.call(["sudo", "killall", "openvpn"])
 
         self.setStatusDisconnected()

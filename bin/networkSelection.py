@@ -34,8 +34,14 @@ class RequestException(Exception):
 
 
 def get_recommended_server(server_type, country):
-
-    response = get(get_url(server_type, country))
+    """
+    Obtains the recommended server of a certain type in a given country according to NordVPN.com. Raise a
+    RequestException if NordVPN's response is incorrect
+    :param server_type: the type of the server (such as Obfuscated IP)
+    :param country: the country (can be chosen automatically)
+    :return: the recommmended server
+    """
+    response = get(get_nordvpn_url(server_type, country))
     # if no connection is available the get will raise a ConnectionError, catched by the calling function
 
     # controlling incorrect response
@@ -54,7 +60,7 @@ def get_recommended_server(server_type, country):
     return server
 
 
-def get_url(server_type, country):
+def get_nordvpn_url(server_type, country):
     """
     Builds the url to obtain the recommended server from NordVPN
     :param server_type: the string representing the type of the server requested

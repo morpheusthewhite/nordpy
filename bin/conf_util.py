@@ -3,8 +3,14 @@ from bin.logging_util import get_logger
 
 logger = get_logger(__name__)
 
-# download from nordvpn.com all conf files and stores them in the current directory
+
 def exists_conf_for(server_name, protocol):
+    """
+    Check if exists a .ovpn file for the specified server and protocol
+    :param server_name: the name of the server
+    :param protocol: the protocol to be used
+    :return: True if exists, False otherwise
+    """
     import os.path
     from bin.openvpn import get_path_to_conf
 
@@ -15,10 +21,14 @@ def exists_conf_for(server_name, protocol):
 
 
 def update_conf_files(sudo_password):
-    from bin.root import getRootPermissions
+    """
+    Download from nordvpn.com all the .ovpn files
+    :param sudo_password: the root password
+    """
+    from bin.root import get_root_permissions
     from bin.pathUtil import CURRENT_PATH
 
-    getRootPermissions(sudo_password)
+    get_root_permissions(sudo_password)
 
     logger.debug("Missing files, trying to download the .ovpn files")
     ovpn_download_link = 'https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip'
@@ -40,11 +50,12 @@ def update_conf_files(sudo_password):
 
     logger.debug("Finished preparing ovpn files")
 
-    return
 
-
-# returns a list of all available server
 def get_available_servers():
+    """
+    returns a list of all available server
+    :return: a list with all the server names
+    """
     import os.path
     from bin.pathUtil import CURRENT_PATH
 
@@ -56,8 +67,11 @@ def get_available_servers():
     return servers[:40]
 
 
-# returns a list of all available server
 def get_available_servers_dict():
+    """
+    returns a list of all available server as a dictionary whose keys are the countries
+    :return: a dictionary
+    """
     import os.path
     from bin.pathUtil import CURRENT_PATH
 
@@ -83,7 +97,6 @@ def get_available_servers_dict():
             servers[domain_name].append(server.split(".")[0])
         except KeyError:
             servers[domain_name] = [server.split(".")[0]]
-
 
     # sorts all servers
     for server_domain in servers.keys():
