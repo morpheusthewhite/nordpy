@@ -54,10 +54,14 @@ class OptionFrame(LabelFrame):
             # enabling option frame
             self.serverTypeLabel.config(state=NORMAL)
             self.serverTypeMenu.config(state=NORMAL)
+            self.country_menu_button.config(state=NORMAL)
+            self.country_label.config(state=NORMAL)
         else:
             # disabling option frame
             self.serverTypeLabel.config(state=DISABLED)
             self.serverTypeMenu.config(state=DISABLED)
+            self.country_menu_button.config(state=DISABLED)
+            self.country_label.config(state=DISABLED)
 
     def get_selected_server(self):
         return self.serverType.get()
