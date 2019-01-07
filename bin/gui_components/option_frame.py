@@ -72,7 +72,8 @@ class OptionFrame(LabelFrame):
     def get_selected_country(self):
         return self.country.get()
 
-    def set_selected_country(self, server):
-        self.country.set(server)
+    def set_selected_country(self, country):
+        self.country.set(country)
+        self.country_menu_button.config(textvariable=self.country)
 
 

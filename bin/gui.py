@@ -35,10 +35,12 @@ class gui(Tk):
         else:
             self.setStatusDisconnected()
 
-        if exists_saved_settings():
-            serverType, protocol, self.previously_recommended_server = load_settings()
+        if existing_corrected_saved_settings():
+            serverType, protocol, country, self.previously_recommended_server = load_settings()
+
             self.optionsFrame.set_selected_server(serverType)
             self.connectionProtocol.set(protocol)
+            self.optionsFrame.set_selected_country(country)
 
         self.on_manual_change()
 
@@ -119,39 +121,44 @@ class gui(Tk):
         if server == DEFAULT_MANUAL_SERVER_LABEL:
             messagebox.showwarning(title="Select a server", message='Please select a manual server')
             return
-        self.connect_to_VPN(server , self.connectionProtocol.get())
+        self.connect_to_VPN(server, self.connectionProtocol.get())
 
     def automatic_connection(self):
+        selected_server_type = self.optionsFrame.get_selected_server()
+        selected_country = self.optionsFrame.get_selected_country()
+
         try:
-            recommendedServer = get_recommended_server(self.optionsFrame.get_selected_server(),
-                                                       self.optionsFrame.get_selected_country())
-            self.previously_recommended_server = recommendedServer
+            recommended_server = get_recommended_server(selected_server_type, selected_country)
+            self.previously_recommended_server = recommended_server
         except RequestException:
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
-            recommendedServer = self.previously_recommended_server
+            recommended_server = self.previously_recommended_server
         except requests.exceptions.ConnectionError:
             messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
             return
 
-        if recommendedServer is None:
+        if recommended_server is None:
             messagebox.showwarning(title="Error", message="Sorry, server not found! Please try a different server.")
             return
 
-        protocolSelected = self.connectionProtocol.get()
+        protocol_selected = self.connectionProtocol.get()
 
         # check if recommended server exists. If it does not exists, download the needed files
-        if not exists_conf_for(recommendedServer, protocolSelected):
+        if not exists_conf_for(recommended_server, protocol_selected):
             update_conf_files(self.sudoPassword)
 
             # if file does not exist then it is incorrect (extreme case)
-            if not exists_conf_for(recommendedServer, protocolSelected):
+            if not exists_conf_for(recommended_server, protocol_selected):
                 messagebox.showwarning(title="Error", message="Retrieved a wrong server from NordVPN, try again")
                 return
 
-        self.connect_to_VPN(recommendedServer, protocolSelected)
+        # saving settings for the next opening
+        update_settings(selected_server_type, protocol_selected, selected_country, recommended_server)
+
+        self.connect_to_VPN(recommended_server, protocol_selected)
 
     def connect_to_VPN(self, server, protocol):
-        self.setStatusConnecting() # TODO: not always executed
+        self.setStatusConnecting()  # TODO: not always executed
 
         try:
             self.openvpnProcess = startVPN(server, protocol, self.sudoPassword)
@@ -166,8 +173,6 @@ class gui(Tk):
             return
 
         self.setStatusConnected(server, protocol)
-
-        update_settings(self.optionsFrame.get_selected_server(), protocol, server)
 
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:

@@ -1,9 +1,10 @@
 from requests import get
 from bin.logging_util import get_logger
 
+AUTOMATIC_CHOICE_STRING = 'Choose Automatically'
 NORDVPN_CODES = {"Standard VPN": "11", "Double VPN": "1", "Onion over VPN": "3", "Dedicated IP": "9", "P2P": "15", "Obfuscated": "17"}
 MODES = ["Standard VPN", "P2P", "Dedicated IP", "Double VPN", "Onion over VPN", "Obfuscated"]
-COUNTRIES = {'Automatic': ['Choose Automatically'],
+COUNTRIES = {'Automatic': [AUTOMATIC_CHOICE_STRING],
              'Africa': ['South Africa', 'Egypt'],
              'Asia': ['Turkey', 'Israel', 'United Arab Emirates', 'India', 'South Korea', 'Singapore', 'Taiwan', 'Vietnam',
                       'Hong Kong', 'Indonesia', 'Thailand', 'Japan', 'Malaysia'],

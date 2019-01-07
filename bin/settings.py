@@ -4,6 +4,8 @@ from bin.openvpn import get_path_to_conf
 import os
 import configparser as cp
 from bin.logging_util import get_logger
+from bin.networkSelection import COUNTRY_CODES
+from bin.networkSelection import AUTOMATIC_CHOICE_STRING
 
 SETTING_FILENAME = "settings.ini"
 SETTING_FILE = CURRENT_PATH + SETTING_FILENAME
@@ -14,6 +16,7 @@ DEFAULT_SETTING = 'DEFAULT'
 SERVER_TYPE_KEY = 'Server Type'
 PROTOCOL_KEY = 'Protocol'
 LAST_CONNECTED_KEY = 'Last Connected Server'
+LAST_COUNTRY_KEY = 'Last country'
 
 configparser = cp.ConfigParser()
 logger = get_logger(__name__)
@@ -36,29 +39,38 @@ def correct_saved_settings():
     Check if the saved settings are correct
     :return: True if they are correct, False otherwise
     """
-    mode, protocol, recommended_server = load_settings()
+    saved_settings = load_settings()
+    if saved_settings is None:
+        return False
+
+    mode, protocol, country, recommended_server = saved_settings
     logger.debug("Verifing saved file")
 
     if mode not in MODES:
-        logger.debug(SERVER_TYPE_KEY + " not correct")
+        logger.info(SERVER_TYPE_KEY + " not correct")
         logger.debug(mode)
         return False
 
     if protocol not in ['0', '1']:
-        logger.debug(PROTOCOL_KEY + " not correct")
+        logger.info(PROTOCOL_KEY + " not correct")
         logger.debug(protocol)
         return False
 
+    if country not in COUNTRY_CODES.keys() and not country == AUTOMATIC_CHOICE_STRING:
+        logger.info(LAST_COUNTRY_KEY + " not correct")
+        logger.debug(country)
+        return False
+
     if is_not_valid_server(recommended_server, int(protocol)):
+        logger.info(LAST_CONNECTED_KEY + " not correct")
         logger.debug(recommended_server)
-        logger.debug(LAST_CONNECTED_KEY + " not correct")
         return False
 
     logger.debug("File is correct")
     return True
 
 
-def exists_saved_settings():
+def existing_corrected_saved_settings():
     """
     checks if config file exists and is correctly saved
     :return: True if is saved and correct, False otherwise
@@ -66,16 +78,22 @@ def exists_saved_settings():
     if not os.path.exists(SETTING_FILE) or not correct_saved_settings():
         return False
 
+    return True
 
-def update_settings(serverType, protocol, recommended_server):
+
+def update_settings(server_type, protocol, country, recommended_server):
     """
     Updates the saved settings
-    :param serverType: the type of the server used
+    :param server_type: the type of the server used
     :param protocol: the protocol used
+    :param country: the country selected
     :param recommended_server: the recommended server
     """
-    configparser[DEFAULT_SETTING] = {SERVER_TYPE_KEY: serverType,
-                                     PROTOCOL_KEY: protocol, LAST_CONNECTED_KEY: recommended_server}
+
+    configparser[DEFAULT_SETTING] = {SERVER_TYPE_KEY: server_type,
+                                     PROTOCOL_KEY: protocol,
+                                     LAST_COUNTRY_KEY: country,
+                                     LAST_CONNECTED_KEY: recommended_server}
 
     logger.debug("Updating setting file")
     with open(SETTING_FILE, "w") as settings_file:
@@ -86,7 +104,7 @@ def update_settings(serverType, protocol, recommended_server):
 def load_settings():
     """
     Reads the saved configurations
-    :return: the read server type, the protocol and the last recommended server or (None, None, None)
+    :return: the read server type, the protocol, the country and the last recommended server or None
     if some error were faced during the read (for example the saved file is incorrect)
     """
     configparser.read(SETTING_FILE)
@@ -94,7 +112,8 @@ def load_settings():
     try:
         return configparser[DEFAULT_SETTING][SERVER_TYPE_KEY], \
                configparser[DEFAULT_SETTING][PROTOCOL_KEY],\
+               configparser[DEFAULT_SETTING][LAST_COUNTRY_KEY],\
                configparser[DEFAULT_SETTING][LAST_CONNECTED_KEY]
     except KeyError:
         logger.debug("Key not found")
-        return None, None, None
+        return None
