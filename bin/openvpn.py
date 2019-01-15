@@ -27,10 +27,11 @@ def get_path_to_conf(server, protocol):
 def startVPN(server, protocol, sudoPassword):
     """
     Launches openvpn with the given server and protocol. Raises a ConnectionError if no connection is available
+    and a LoginError if the credentials are wrong
     :param server: the name of the server
     :param protocol: the protocol to be used
     :param sudoPassword: the root password
-    :return: a Popen object
+    :return: a Popen object, None if the connection failed
     """
     get_root_permissions(sudoPassword)
 
@@ -45,7 +46,7 @@ def startVPN(server, protocol, sudoPassword):
 
     openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
 
-    tries=0
+    tries = 0
 
     while True:
         line = openvpn.stdout.readline()

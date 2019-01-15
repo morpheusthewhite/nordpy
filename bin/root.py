@@ -13,8 +13,6 @@ def get_root_permissions(sudo_password):
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     obtainsRoot.communicate(input=sudo_password + "\n")
 
-    logger.info("Obtained root access")
-
 
 def test_root_password(sudo_password):
     """
