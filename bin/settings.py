@@ -1,11 +1,10 @@
 from bin.pathUtil import CURRENT_PATH
-from bin.networkSelection import MODES
-from bin.openvpn import get_path_to_conf
+from bin.vpn_util.networkSelection import MODES
+from bin.vpn_util.openvpn import get_path_to_conf
 import os
 import configparser as cp
 from bin.logging_util import get_logger
-from bin.networkSelection import COUNTRY_CODES
-from bin.networkSelection import AUTOMATIC_CHOICE_STRING
+from bin.vpn_util.networkSelection import COUNTRY_CODES, AUTOMATIC_CHOICE_STRING
 
 SETTING_FILENAME = "settings.ini"
 SETTING_FILE = CURRENT_PATH + SETTING_FILENAME

@@ -2,6 +2,7 @@
 
 from bin.gui import gui
 
+
 def main():
     app = gui()
     app.mainloop()

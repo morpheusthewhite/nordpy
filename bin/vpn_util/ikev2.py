@@ -2,7 +2,7 @@ from bin.root import get_root_permissions
 from subprocess import *
 from os import linesep
 from bin.logging_util import get_logger
-from bin.openvpn import LoginError
+from bin.vpn_util.exceptions import LoginError
 
 IKEV2_CREDENTIAL_FILE = '/etc/ipsec.secrets'
 IKEV2_CREDENTIALS_FILE_FORMAT = '# This file holds shared secrets or RSA private keys for authentication.' + linesep + \
@@ -124,18 +124,11 @@ def ikev2_launch(sudo_password):
     args = ['sudo', 'ipsec', 'up', 'NordVPN']
     ipsec_start_command = Popen(args, stdout=PIPE, universal_newlines=True)
 
-    while True:
-        line = ipsec_start_command.stdout.readline()
-
-        if not line.strip() == '':
-            logger.debug("[ipsec]: "+line)
-
-        if SUCCESS_STRING in line:
-            break
-        elif FAILURE_STRING in line:
-            raise ConnectionError
-        elif AUTH_FAILURE_STRING in line:
-            raise LoginError
+    (out, _) = ipsec_start_command.communicate()
+    if AUTH_FAILURE_STRING in out:
+        raise LoginError
+    elif FAILURE_STRING in out:
+        raise ConnectionError
 
     return
 
@@ -203,6 +196,8 @@ def ikev2_connect(sudo_password, username, password, server):
 
     # restart ipsec in order to load configurations
     ikev2_ipsec_restart(sudo_password)
+
+    logger.info("Configuration completed")
 
     # launches the connection
     ikev2_launch(sudo_password)

@@ -15,7 +15,7 @@ def calculatePath(pathToModule):
         if i < len(pathElements)-2:
             result = os.path.join(result, elem)
 
-    return os.path.join("")
+    return os.path.join(result,"")
 
 
 CURRENT_PATH = calculatePath(os.path.realpath(__file__))

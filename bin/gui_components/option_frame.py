@@ -1,5 +1,5 @@
 from tkinter import *
-from bin.networkSelection import MODES, COUNTRIES
+from bin.vpn_util.networkSelection import MODES, COUNTRIES
 
 
 class OptionFrame(LabelFrame):

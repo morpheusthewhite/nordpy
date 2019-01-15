@@ -1,12 +1,10 @@
 from bin.gui_components.option_frame import *
 from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
-from bin.networkSelection import *
-from bin.openvpn import *
-from bin.root import ask_root_password
-from bin.settings import *
-from bin.logging_util import get_logger
-from bin.gui_components.manual_selection_frame import DEFAULT_MANUAL_SERVER_LABEL
+from bin.vpn_util.networkSelection import *
+from bin.settings import existing_corrected_saved_settings, load_settings, update_settings
+from requests import ConnectionError
+from bin.vpn_util.vpn import *
 
 logger = get_logger(__name__)
 
@@ -30,7 +28,7 @@ class gui(Tk):
 
         self.center_window(350, 290)
 
-        if checkOpenVPN():
+        if is_vpn_running():
             self.setStatusAlreadyConnected()
         else:
             self.setStatusDisconnected()
@@ -64,6 +62,10 @@ class gui(Tk):
                                              selectcolor=self.background_color)
         self.protocolFrame.udp.pack(side=LEFT)
         self.connectionProtocol.set(1)
+        self.protocolFrame.ikev2 = Radiobutton(self.protocolFrame, text='Ikev2/IPsec', variable=self.connectionProtocol,
+                                               value=2, selectcolor=self.background_color)
+        self.protocolFrame.ikev2.pack(side=LEFT)
+
         self.protocolFrame.pack(pady=4)
 
 
@@ -133,7 +135,7 @@ class gui(Tk):
         except RequestException:
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
             recommended_server = self.previously_recommended_server
-        except requests.exceptions.ConnectionError:
+        except ConnectionError:
             messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
             return
 
@@ -144,7 +146,7 @@ class gui(Tk):
         protocol_selected = self.connectionProtocol.get()
 
         # check if recommended server exists. If it does not exists, download the needed files
-        if not exists_conf_for(recommended_server, protocol_selected):
+        if protocol_selected != 2 and not exists_conf_for(recommended_server, protocol_selected):
             update_conf_files(self.sudoPassword)
 
             # if file does not exist then it is incorrect (extreme case)
@@ -158,7 +160,8 @@ class gui(Tk):
         self.connect_to_VPN(recommended_server, protocol_selected)
 
     def connect_to_VPN(self, server, protocol):
-        self.setStatusConnecting()  # TODO: not always executed
+        self.setStatusConnecting()
+        self.update_idletasks()
 
         try:
             self.openvpnProcess = startVPN(server, protocol, self.sudoPassword)

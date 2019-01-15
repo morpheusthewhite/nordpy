@@ -12,7 +12,7 @@ def exists_conf_for(server_name, protocol):
     :return: True if exists, False otherwise
     """
     import os.path
-    from bin.openvpn import get_path_to_conf
+    from bin.vpn_util.openvpn import get_path_to_conf
 
     conf_filename = get_path_to_conf(server_name, protocol)
     logger.debug("Checking if exists "+conf_filename)

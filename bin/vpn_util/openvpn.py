@@ -1,17 +1,13 @@
 from bin.credentials import *
 from bin.root import *
-from bin.root import ask_root_password
 from bin.logging_util import get_logger
+from bin.vpn_util.exceptions import LoginError
 
 OVA_SUFFIX = ".ovpn"
-PROTOCOLS = ["udp", "tcp"]
+PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
 MAXIMUM_TRIES = 5
 
 logger = get_logger(__name__)
-
-
-class LoginError(Exception):
-    pass
 
 
 def get_path_to_conf(server, protocol):
@@ -24,23 +20,7 @@ def get_path_to_conf(server, protocol):
     return CURRENT_PATH + "ovpn_" + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
 
 
-def startVPN(server, protocol, sudoPassword):
-    """
-    Launches openvpn with the given server and protocol. Raises a ConnectionError if no connection is available
-    and a LoginError if the credentials are wrong
-    :param server: the name of the server
-    :param protocol: the protocol to be used
-    :param sudoPassword: the root password
-    :return: a Popen object, None if the connection failed
-    """
-    get_root_permissions(sudoPassword)
-
-    if not check_credentials():
-        try:
-            save_credentials()
-        except NoCredentialsProvidedException:
-            return None
-
+def start_openvpn(server, protocol):
     pathToConf = get_path_to_conf(server, protocol)
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
 
