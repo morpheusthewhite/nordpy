@@ -36,6 +36,7 @@ class gui(Tk):
         if existing_corrected_saved_settings():
             serverType, protocol, country, self.previously_recommended_server = load_settings()
 
+            print(protocol)
             self.optionsFrame.set_selected_server(serverType)
             self.connectionProtocol.set(protocol)
             self.optionsFrame.set_selected_country(country)
@@ -61,13 +62,12 @@ class gui(Tk):
         self.protocolFrame.udp = Radiobutton(self.protocolFrame, text="UDP", variable=self.connectionProtocol, value=0,
                                              selectcolor=self.background_color)
         self.protocolFrame.udp.pack(side=LEFT)
-        self.connectionProtocol.set(1)
         self.protocolFrame.ikev2 = Radiobutton(self.protocolFrame, text='Ikev2/IPsec', variable=self.connectionProtocol,
                                                value=2, selectcolor=self.background_color)
         self.protocolFrame.ikev2.pack(side=LEFT)
+        self.connectionProtocol.set(1)
 
         self.protocolFrame.pack(pady=4)
-
 
     def __initButtons__(self):
         self.buttonsFrame = Frame(self)
@@ -184,6 +184,3 @@ class gui(Tk):
         y = (screen_height / 2) - (height / 2)
         self.geometry('%dx%d+%d+%d' % (width, height, x, y))
 
-
-if __name__ == '__main__':
-    gui().mainloop()

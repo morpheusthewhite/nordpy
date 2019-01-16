@@ -171,7 +171,7 @@ def __ikev2_wait__():
 
 def ikev2_connect(username, password, server):
     """
-    starts a ikev2 connection. Launches a ConnectionError if no connection is avalable, a LoginError if the
+    starts a ikev2 connection. Launches a ConnectionError if no connection is available, a LoginError if the
     credentials are wrong
     :param username: the NordVPN account username
     :param password: the NordVPN account password
