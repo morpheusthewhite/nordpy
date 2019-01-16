@@ -40,7 +40,7 @@ IKEV2_STRONGSWAN_CONF_FORMAT = 'constraints{' + linesep + \
 logger = get_logger(__name__)
 
 
-def ikev2_save_credentials(username, password):
+def __ikev2_save_credentials__(username, password):
     """
     Saves the credentials in the system file
     :param username: the NordVPN account username
@@ -54,7 +54,7 @@ def ikev2_save_credentials(username, password):
     return
 
 
-def ikev2_save_conf_file(username, server):
+def __ikev2_save_conf_file__(username, server):
     """
     Saves the configuration for the next connection
     :param username: the NordVPN account username
@@ -68,7 +68,7 @@ def ikev2_save_conf_file(username, server):
     return
 
 
-def ikev2_reset_load():
+def __ikev2_reset_load__():
     """
     Changes load setting to 'yes' in strongswan configuration file
     """
@@ -106,7 +106,7 @@ FAILURE_STRING = "establishing connection 'NordVPN' failed"
 AUTH_FAILURE_STRING = "EAP authentication failed"
 
 
-def ikev2_launch():
+def __ikev2_launch__():
     """
     Launches the command the start the ikev2 connection. Raise a LoginError if credentials are wrong, a ConnectionError
     if no connection is available
@@ -153,15 +153,21 @@ def ikev2_is_running():
         return False
 
 
-def ikev2_ipsec_restart():
+def __ikev2_ipsec_reload__():
     """
     restarts ipsec (used to load saved settings)
     """
-    args = ['sudo', 'ipsec', 'restart']
-    Popen(args, stdout=PIPE).wait()
+    args = ['sudo', 'ipsec', 'reload']
+    Popen(args).communicate()
 
     return
 
+def __ikev2_wait__():
+    """
+    wait until ikev2 is ready to establish a connection by executing a simple status
+    """
+    args = ['sudo', 'ipsec', 'statusall']
+    Popen(args).wait()
 
 def ikev2_connect(username, password, server):
     """
@@ -174,17 +180,19 @@ def ikev2_connect(username, password, server):
     """
 
     # saves credentials and configurations
-    ikev2_save_credentials(username, password)
-    ikev2_save_conf_file(username, server)
-    ikev2_reset_load()
+    __ikev2_save_credentials__(username, password)
+    __ikev2_save_conf_file__(username, server)
+    __ikev2_reset_load__()
 
-    # restart ipsec in order to load configurations
-    ikev2_ipsec_restart()
+    # reload ipsec configurations
+    __ikev2_ipsec_reload__()
 
-    logger.info("Configuration completed")
+    # waiting until confs are loaded (otherwise configuration needed will not be found)
+    __ikev2_wait__()
+    __ikev2_wait__()
 
     # launches the connection
-    ikev2_launch()
+    __ikev2_launch__()
 
     logger.info("ikev2 connection completed")
 
