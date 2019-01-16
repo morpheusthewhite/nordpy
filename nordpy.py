@@ -11,6 +11,9 @@ def main():
         # checking if a correct password has been inserted
         from bin.gui_components.root_password_window import password_inserted
 
+        if password_inserted is None:
+            return
+
         import subprocess, bin.root
         bin.root.get_root_permissions(password_inserted)
 

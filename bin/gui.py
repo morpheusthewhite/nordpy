@@ -104,15 +104,6 @@ class gui(Tk):
         self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
 
     def connect(self):
-
-        if not hasattr(self, "sudoPassword"):
-            password = ask_root_password()
-            if password is None:
-                logger.info("No sudo password inserted")
-                self.setStatusDisconnected()
-                return
-            self.sudoPassword = password
-
         if self.manual_frame.get_is_manual():
             self.manual_connection()
         else:
@@ -147,7 +138,7 @@ class gui(Tk):
 
         # check if recommended server exists. If it does not exists, download the needed files
         if protocol_selected != 2 and not exists_conf_for(recommended_server, protocol_selected):
-            update_conf_files(self.sudoPassword)
+            update_conf_files()
 
             # if file does not exist then it is incorrect (extreme case)
             if not exists_conf_for(recommended_server, protocol_selected):
@@ -164,7 +155,7 @@ class gui(Tk):
         self.update_idletasks()
 
         try:
-            self.openvpnProcess = startVPN(server, protocol, self.sudoPassword)
+            self.openvpnProcess = startVPN(server, protocol)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
@@ -179,15 +170,6 @@ class gui(Tk):
 
     def disconnect(self):
         if checkOpenVPN() or self.openvpnProcess.poll() is None:
-            if not hasattr(self, "sudoPassword"):
-                tmp = ask_root_password()
-
-                if tmp is None:
-                    return
-
-                self.sudoPassword = tmp
-
-            get_root_permissions(self.sudoPassword)
             subprocess.call(["sudo", "killall", "openvpn"])
 
         self.setStatusDisconnected()

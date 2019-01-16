@@ -20,15 +20,11 @@ def exists_conf_for(server_name, protocol):
     return os.path.exists(conf_filename)
 
 
-def update_conf_files(sudo_password):
+def update_conf_files():
     """
     Downloads from nordvpn.com all the .ovpn files
-    :param sudo_password: the root password
     """
-    from bin.root import get_root_permissions
     from bin.pathUtil import CURRENT_PATH
-
-    get_root_permissions(sudo_password)
 
     logger.debug("Missing files, trying to download the .ovpn files")
     ovpn_download_link = 'https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip'

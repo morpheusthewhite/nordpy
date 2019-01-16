@@ -28,6 +28,7 @@ class RootPermissionWindow(Tk):
         self.middle_frame = Frame(self)
         self.password_field = Entry(self, show="*", width=15)
         self.password_field.pack()
+        self.password_field.focus_set()
         self.middle_frame.pack(ipady=3)
 
         # ok button

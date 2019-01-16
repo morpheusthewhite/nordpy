@@ -2,7 +2,6 @@ import os
 import subprocess
 from tkinter import simpledialog
 from bin.pathUtil import CURRENT_PATH
-from bin.root import get_root_permissions
 
 CREDENTIALS_FILENAME = "credentials"
 
@@ -70,14 +69,11 @@ def askVPNPassword():
     return simpledialog.askstring("Password NordVPN", "Enter password:", show="*")
 
 
-def read_saved_credentials(sudo_password):
+def read_saved_credentials():
     """
     reads saved credentials
-    :param sudo_password: the root password
     :return:
     """
-    get_root_permissions(sudo_password)
-
     args = ['sudo', 'cat', credentials_file_path]
     reading_process = subprocess.Popen(args, universal_newlines=True, stdout=subprocess.PIPE)
     (out, _) = reading_process.communicate()

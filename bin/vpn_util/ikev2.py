@@ -1,4 +1,3 @@
-from bin.root import get_root_permissions
 from subprocess import *
 from os import linesep
 from bin.logging_util import get_logger
@@ -41,14 +40,12 @@ IKEV2_STRONGSWAN_CONF_FORMAT = 'constraints{' + linesep + \
 logger = get_logger(__name__)
 
 
-def ikev2_save_credentials(sudo_password, username, password):
+def ikev2_save_credentials(username, password):
     """
     Saves the credentials in the system file
-    :param sudo_password: the root password
     :param username: the NordVPN account username
     :param password: the NordVPN account password
     """
-    get_root_permissions(sudo_password)
 
     args = ['sudo', 'tee', IKEV2_CREDENTIAL_FILE]
     writing_process = Popen(args, stdout=DEVNULL, stdin=PIPE, universal_newlines=True)
@@ -57,14 +54,12 @@ def ikev2_save_credentials(sudo_password, username, password):
     return
 
 
-def ikev2_save_conf_file(sudo_password, username, server):
+def ikev2_save_conf_file(username, server):
     """
     Saves the configuration for the next connection
-    :param sudo_password: the root password
     :param username: the NordVPN account username
     :param server: the server to which the connection will be established
     """
-    get_root_permissions(sudo_password)
 
     args = ['sudo', 'tee', IKEV2_CONF_FILE]
     writing_process = Popen(args, stdout=DEVNULL, stdin=PIPE, universal_newlines=True)
@@ -73,12 +68,10 @@ def ikev2_save_conf_file(sudo_password, username, server):
     return
 
 
-def ikev2_reset_load(sudo_password):
+def ikev2_reset_load():
     """
     Changes load setting to 'yes' in strongswan configuration file
-    :param sudo_password: the root password
     """
-    get_root_permissions(sudo_password)
 
     # reading file content
     reading_args = ['sudo', 'cat', IKEV2_STRONGSWAN_CONF_FILE]
@@ -113,18 +106,16 @@ FAILURE_STRING = "establishing connection 'NordVPN' failed"
 AUTH_FAILURE_STRING = "EAP authentication failed"
 
 
-def ikev2_launch(sudo_password):
+def ikev2_launch():
     """
     Launches the command the start the ikev2 connection. Raise a LoginError if credentials are wrong, a ConnectionError
     if no connection is available
-    :param sudo_password: the root password
     """
-    get_root_permissions(sudo_password)
-
     args = ['sudo', 'ipsec', 'up', 'NordVPN']
     ipsec_start_command = Popen(args, stdout=PIPE, universal_newlines=True)
 
     (out, _) = ipsec_start_command.communicate()
+    logger.info(out)
     if AUTH_FAILURE_STRING in out:
         raise LoginError
     elif FAILURE_STRING in out:
@@ -133,13 +124,10 @@ def ikev2_launch(sudo_password):
     return
 
 
-def ikev2_disconnect(sudo_password):
+def ikev2_disconnect():
     """
     Stops the ikev2 connection
-    :param sudo_password: the root password
     """
-    get_root_permissions(sudo_password)
-
     args = ['sudo', 'ipsec', 'down', 'NordVPN']
     ipsec_stop_command = Popen(args, stdout=PIPE, universal_newlines=True)
     ipsec_stop_command.wait()
@@ -147,42 +135,38 @@ def ikev2_disconnect(sudo_password):
     return
 
 
-def ikev2_is_running(sudo_password):
+def ikev2_is_running():
     """
     Checks if an ikev2 connection is established
     :param sudo_password: the root password
     :return: True if a connection is established, False otherwise
     """
-    get_root_permissions(sudo_password)
 
     args = ['sudo', 'ipsec', 'status']
     ipsec_stop_command = Popen(args, stdout=PIPE, universal_newlines=True)
     (out, _) = ipsec_stop_command.communicate()
 
     if 'ESTABLISHED' in out:
+        logger.info("Found ikev2 connection")
         return True
     else:
         return False
 
 
-def ikev2_ipsec_restart(sudo_password):
+def ikev2_ipsec_restart():
     """
     restarts ipsec (used to load saved settings)
-    :param sudo_password: the root password
     """
-    get_root_permissions(sudo_password)
-
     args = ['sudo', 'ipsec', 'restart']
     Popen(args, stdout=PIPE).wait()
 
     return
 
 
-def ikev2_connect(sudo_password, username, password, server):
+def ikev2_connect(username, password, server):
     """
     starts a ikev2 connection. Launches a ConnectionError if no connection is avalable, a LoginError if the
     credentials are wrong
-    :param sudo_password: the root password
     :param username: the NordVPN account username
     :param password: the NordVPN account password
     :param server: the server to which the connection will be established
@@ -190,16 +174,18 @@ def ikev2_connect(sudo_password, username, password, server):
     """
 
     # saves credentials and configurations
-    ikev2_save_credentials(sudo_password, username, password)
-    ikev2_save_conf_file(sudo_password, username, server)
-    ikev2_reset_load(sudo_password)
+    ikev2_save_credentials(username, password)
+    ikev2_save_conf_file(username, server)
+    ikev2_reset_load()
 
     # restart ipsec in order to load configurations
-    ikev2_ipsec_restart(sudo_password)
+    ikev2_ipsec_restart()
 
     logger.info("Configuration completed")
 
     # launches the connection
-    ikev2_launch(sudo_password)
+    ikev2_launch()
+
+    logger.info("ikev2 connection completed")
 
     return
