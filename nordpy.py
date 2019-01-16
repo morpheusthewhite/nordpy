@@ -1,12 +1,12 @@
 #!/usr/bin/python3
 
-from bin.gui_components.root_password_window import RootWindow
+from bin.gui_components.root_password_window import RootPermissionWindow
 from bin.gui import *
 
 def main():
     # if file is launched without root privileges
     if os.geteuid() != 0:
-        root_request_win = RootWindow()
+        root_request_win = RootPermissionWindow()
         root_request_win.mainloop()
         # checking if a correct password has been inserted
         from bin.gui_components.root_password_window import password_inserted

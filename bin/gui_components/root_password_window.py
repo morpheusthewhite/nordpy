@@ -6,7 +6,7 @@ from bin.root import test_root_password, wrong_root_password
 password_inserted = None
 
 
-class RootWindow(Tk):
+class RootPermissionWindow(Tk):
     """
     A window used to require root password before launching NordPy main interface
     """
@@ -36,7 +36,13 @@ class RootWindow(Tk):
         self.ok_button.pack()
         self.lower_frame.pack(ipady=3)
 
+        # binding enter button to on_button_pressed function
+        self.bind('<Return>', self.on_enter_pressed)
+
         self.center_window(200, 80)
+
+    def on_enter_pressed(self, event):
+        self.on_button_pressed()
 
     def on_button_pressed(self):
         """
