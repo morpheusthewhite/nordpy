@@ -201,3 +201,7 @@ class gui(Tk):
         x = (screen_width / 2) - (width / 2)
         y = (screen_height / 2) - (height / 2)
         self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+
+
+if __name__ == '__main__':
+    gui().mainloop()

@@ -45,7 +45,6 @@ class RootWindow(Tk):
         global password_inserted
         password_inserted = self.password_field.get()
         if test_root_password(password_inserted):
-            print(password_inserted)
             self.destroy()
         else:
             password_inserted = None

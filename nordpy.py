@@ -1,15 +1,23 @@
 #!/usr/bin/python3
 
-from bin.gui import gui
-from bin.gui_components.root_password_window import RootWindow, password_inserted
+from bin.gui_components.root_password_window import RootWindow
+from bin.gui import *
 
 def main():
-    root_request_win = RootWindow()
-    root_request_win.mainloop()
+    # if file is launched without root privileges
+    if os.geteuid() != 0:
+        root_request_win = RootWindow()
+        root_request_win.mainloop()
+        # checking if a correct password has been inserted
+        from bin.gui_components.root_password_window import password_inserted
 
-    # checking if a correct password has been inserted
-    from bin.gui_components.root_password_window import password_inserted
-    if password_inserted is not None:
+        import subprocess, bin.root
+        bin.root.get_root_permissions(password_inserted)
+
+        import sys
+        nordpy_args = ['sudo', 'python3',  *sys.argv]
+        subprocess.call(nordpy_args)
+    else:
         app = gui()
         app.mainloop()
 
