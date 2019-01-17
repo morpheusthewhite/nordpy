@@ -167,6 +167,7 @@ class gui(Tk):
         except LoginError:
             messagebox.showwarning(title="Error", message="Wrong credentials")
             os.remove(credentials_file_path)
+            self.setStatusDisconnected()
             return
 
         if protocol == IKEV2_PROTOCOL_NUMBER:
