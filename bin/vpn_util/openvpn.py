@@ -5,7 +5,7 @@ from bin.vpn_util.exceptions import LoginError
 
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
-MAXIMUM_TRIES = 5
+MAXIMUM_TRIES = 1
 IKEV2_PROTOCOL_NUMBER = 2
 
 logger = get_logger(__name__)
@@ -37,7 +37,7 @@ def start_openvpn(server, protocol):
 
         if "Initialization Sequence Completed" in line:
             break
-        elif "connection failed" in line:
+        elif "connection failed" in line or "Exiting" in line:
             if tries < MAXIMUM_TRIES:
                 tries += 1
             else:
