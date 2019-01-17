@@ -5,7 +5,7 @@ from bin.vpn_util.exceptions import LoginError
 
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
-MAXIMUM_TRIES = 1
+MAXIMUM_TRIES = 2
 IKEV2_PROTOCOL_NUMBER = 2
 
 logger = get_logger(__name__)
@@ -25,29 +25,30 @@ def start_openvpn(server, protocol):
     pathToConf = get_path_to_conf(server, protocol)
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
 
-    openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
-
     tries = 0
+    while tries < MAXIMUM_TRIES:
 
-    while True:
-        line = openvpn.stdout.readline()
+        openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
 
-        if not line.strip() == '':
-            logger.debug("[OPENVPN]: "+line)
+        while True:
+            line = openvpn.stdout.readline()
 
-        if "Initialization Sequence Completed" in line:
-            break
-        elif "connection failed" in line or "Exiting" in line:
-            if tries < MAXIMUM_TRIES:
+            if not line.strip() == '':
+                logger.debug("[OPENVPN]: "+line)
+
+            if "Initialization Sequence Completed" in line:
+                # success !
+                return openvpn
+            elif "connection failed" in line or "Exiting" in line:
                 tries += 1
-            else:
                 openvpn.terminate()
-                raise ConnectionError
-        elif "AUTH_FAILED" in line:
-            raise LoginError
+                break
 
-    return openvpn
+            elif "AUTH_FAILED" in line:
+                # something's wrong
+                raise LoginError
 
+    raise ConnectionError
 
 def checkOpenVPN():
     """
