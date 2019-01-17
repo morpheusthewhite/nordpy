@@ -3,13 +3,15 @@
 #install dependencies and add desktop Entry
 
 if ! [ -z `which apt-get 2> /dev/null` ]; # Debian
-    then sudo apt-get install python3 python3-tk python3-requests openvpn wget unzip 2> /dev/null
+    then sudo apt-get install python3 python3-tk python3-requests openvpn wget strongswan strongswan-ikev2 \
+    libstrongswan-standard-plugins unzip libstrongswan-extra-plugins \
+    libcharon-extra-plugins
 fi
 if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
-    then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip 2> /dev/null
+    then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip strongswan strongswan-charon-nm
 fi
 if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
-    then sudo pacman -Sy python3 tk python-requests openvpn wget unzip 2> /dev/null
+    then sudo pacman -Sy python3 tk python-requests openvpn wget unzip strongswan
 fi
 
 current_dir=`pwd`
@@ -40,5 +42,5 @@ sudo chmod +x /usr/local/share/applications/nordpy.desktop
 
 # downloading and extracting conf files from NordVPN
 wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
-unzip ovpn.zip
+unzip ovpn.zip > /dev/null
 rm ovpn.zip
