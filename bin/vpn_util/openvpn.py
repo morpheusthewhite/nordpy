@@ -6,7 +6,7 @@ from bin.vpn_util.exceptions import LoginError
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
 MAXIMUM_TRIES = 5
-IKEV2_CODE = 2
+IKEV2_PROTOCOL_NUMBER = 2
 
 logger = get_logger(__name__)
 

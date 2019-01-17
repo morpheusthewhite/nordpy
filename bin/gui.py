@@ -28,10 +28,13 @@ class gui(Tk):
 
         self.center_window(350, 290)
 
-        if is_vpn_running():
-            self.setStatusAlreadyConnected()
+        running_vpn = get_running_vpn()
+        if running_vpn is not None:
+            self.setStatusAlreadyConnected(running_vpn)
+            self.running_connection = running_vpn
         else:
             self.setStatusDisconnected()
+            self.running_connection = None
 
         if existing_corrected_saved_settings():
             serverType, protocol, country, self.previously_recommended_server = load_settings()
@@ -94,8 +97,8 @@ class gui(Tk):
         self.buttonsFrame.connect.configure(state=DISABLED)
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
 
-    def setStatusAlreadyConnected(self):
-        self.statusFrame.statusDinamic.configure(text="Already connected", foreground="green")
+    def setStatusAlreadyConnected(self, running_protocol):
+        self.statusFrame.statusDinamic.configure(text="Connected by "+running_protocol, foreground="green")
 
         self.buttonsFrame.connect.configure(state=DISABLED)
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
@@ -155,7 +158,7 @@ class gui(Tk):
         self.update_idletasks()
 
         try:
-            self.openvpnProcess = startVPN(server, protocol)
+            startVPN(server, protocol)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
@@ -166,12 +169,15 @@ class gui(Tk):
             os.remove(credentials_file_path)
             return
 
+        if protocol == IKEV2_PROTOCOL_NUMBER:
+            self.running_connection = IPSEC_CONNECTION_STRING
+        else:
+            self.running_connection = OPENVPN_CONNECTION_STRING
+
         self.setStatusConnected(server, protocol)
 
     def disconnect(self):
-        if checkOpenVPN() or self.openvpnProcess.poll() is None:
-            subprocess.call(["sudo", "killall", "openvpn"])
-
+        stop_vpn(self.running_connection)
         self.setStatusDisconnected()
 
     def center_window(self, width=300, height=200):
