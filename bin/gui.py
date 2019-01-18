@@ -3,7 +3,7 @@ from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
 from bin.vpn_util.networkSelection import *
 from bin.settings import existing_corrected_saved_settings, load_settings, update_settings
-from requests import ConnectionError
+from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 
 logger = get_logger(__name__)
@@ -129,7 +129,7 @@ class gui(Tk):
         except RequestException:
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
             recommended_server = self.previously_recommended_server
-        except ConnectionError:
+        except RequestsConnectionError:
             messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
             return
 

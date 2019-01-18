@@ -22,6 +22,12 @@ def get_path_to_conf(server, protocol):
 
 
 def start_openvpn(server, protocol):
+    """
+    starts openvpn connection with a certain protocol to a specific server. Raise a ConnectionError
+    if the connection failed
+    :param server: the server to which the connection will be established
+    :param protocol: the protocol to be used (an integer)
+    """
     pathToConf = get_path_to_conf(server, protocol)
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
 
