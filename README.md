@@ -5,7 +5,7 @@ All server types on NordVPN site are available to be selected in the window.
 
 ### Installation and requirements
 
-For <b>Debian/Ubuntu</b>, <b>Fedora</b> and <b>Arch Linux</b> users:
+For <b>Debian/Ubuntu</b>, <b>Fedora/Red Hat</b> and <b>Arch Linux</b> users:
 
 To install all dependencies, download config files and to add a desktop entry in the main menu just run install.sh
 

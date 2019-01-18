@@ -14,6 +14,9 @@ if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
     then sudo pacman -Sy python3 tk python-requests openvpn wget unzip strongswan
 fi
 
+# install certificates
+sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der
+
 current_dir=`pwd`
 
 # check which path to desktop files exists
