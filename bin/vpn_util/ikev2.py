@@ -44,7 +44,7 @@ def ipsec_exists():
     Verifies if ipsec is existing in the os
     :return: a boolean: True if ipsec exists, false otherwise
     """
-    (_, err) = Popen(["sudo", "ipsec", "--version"], stdout=PIPE, stderr=PIPE).communicate()
+    (_, err) = Popen(["sudo", "ipsec", "--version"], stdout=PIPE, stderr=PIPE, universal_newlines=True).communicate()
     if "not found" in err:
         return False
 

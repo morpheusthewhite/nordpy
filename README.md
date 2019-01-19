@@ -3,6 +3,7 @@ A python application with gui to connect automatically to the recommended NordVP
 
 All server types on NordVPN site are available to be selected in the window.
 
+<b> NOTE </b>: ikev2 support is tested on Debian, Arch and derivatives (if something's not right button won't show up)
 ### Installation and requirements
 
 For <b>Debian/Ubuntu</b>, <b>Fedora/Red Hat</b> and <b>Arch Linux</b> users:

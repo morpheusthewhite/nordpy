@@ -8,7 +8,8 @@ if ! [ -z `which apt-get 2> /dev/null` ]; # Debian
     libcharon-extra-plugins
 fi
 if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
-    then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip strongswan strongswan-charon-nm
+    then sudo dnf install python3 python3-tkinter python3-requests openvpn wget unzip
+    # sudo dnf install strongswan strongswan-charon-nm libreswan ldns unbound-libs
 fi
 if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
     then sudo pacman -Sy python3 tk python-requests openvpn wget unzip strongswan
