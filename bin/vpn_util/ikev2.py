@@ -39,6 +39,17 @@ IKEV2_STRONGSWAN_CONF_FORMAT = 'constraints{' + linesep + \
 
 logger = get_logger(__name__)
 
+def ipsec_exists():
+    """
+    Verifies if ipsec is existing in the os
+    :return: a boolean: True if ipsec exists, false otherwise
+    """
+    (_, err) = Popen(["sudo", "ipsec", "--version"], stdout=PIPE, stderr=PIPE).communicate()
+    if "not found" in err:
+        return False
+
+    return True
+
 
 def __ikev2_save_credentials__(username, password):
     """
@@ -143,7 +154,7 @@ def ikev2_is_running():
     """
 
     args = ['sudo', 'ipsec', 'status']
-    ipsec_stop_command = Popen(args, stdout=PIPE, universal_newlines=True)
+    ipsec_stop_command = Popen(args, stdout=PIPE, stderr=PIPE, universal_newlines=True)
     (out, _) = ipsec_stop_command.communicate()
 
     if 'ESTABLISHED' in out:
@@ -158,7 +169,7 @@ def __ikev2_ipsec_reload__():
     restarts ipsec (used to load saved settings)
     """
     args = ['sudo', 'ipsec', 'reload']
-    (out, _) = Popen(args, stdout=PIPE).communicate()
+    (out, _) = Popen(args, stdout=PIPE, universal_newlines=True).communicate()
 
     if 'not running' in out:
         Popen(['sudo', 'ipsec', 'start']).communicate()

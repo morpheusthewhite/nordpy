@@ -1,5 +1,6 @@
-from bin.vpn_util.ikev2 import ikev2_connect, ikev2_is_running, ikev2_disconnect
+from bin.vpn_util.ikev2 import ikev2_connect, ikev2_is_running, ikev2_disconnect, ipsec_exists
 from bin.vpn_util.openvpn import *
+IPSEC_EXISTS = ipsec_exists()
 
 
 def startVPN(server, protocol):

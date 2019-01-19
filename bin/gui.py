@@ -65,9 +65,10 @@ class gui(Tk):
         self.protocolFrame.udp = Radiobutton(self.protocolFrame, text="UDP", variable=self.connectionProtocol, value=0,
                                              selectcolor=self.background_color)
         self.protocolFrame.udp.pack(side=LEFT)
-        self.protocolFrame.ikev2 = Radiobutton(self.protocolFrame, text='Ikev2/IPsec', variable=self.connectionProtocol,
-                                               value=2, selectcolor=self.background_color)
-        self.protocolFrame.ikev2.pack(side=LEFT)
+        if(IPSEC_EXISTS):
+            self.protocolFrame.ikev2 = Radiobutton(self.protocolFrame, text='Ikev2/IPsec', variable=self.connectionProtocol,
+                                                   value=2, selectcolor=self.background_color)
+            self.protocolFrame.ikev2.pack(side=LEFT)
         self.connectionProtocol.set(1)
 
         self.protocolFrame.pack(pady=4)
