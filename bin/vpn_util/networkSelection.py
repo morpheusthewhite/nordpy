@@ -27,6 +27,7 @@ COUNTRY_CODES={"Albania": 2,"Argentina": 10,"Australia": 13,"Austria": 14,"Azerb
                "Slovakia": 196,"Slovenia": 197,"South Africa": 200,"Spain": 202,"Sweden": 208,"Switzerland": 209,
                "Taiwan": 211,"Thailand": 214,"Turkey": 220,"Ukraine": 225,"United Kingdom": 227,
                "United States": 228,"United Arab Emirates":226,"Vietnam": 234}
+STD_HEADERS = {'user-agent': 'User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0'}
 logger = get_logger(__name__)
 
 
@@ -42,7 +43,7 @@ def get_recommended_server(server_type, country):
     :param country: the country (can be chosen automatically)
     :return: the recommmended server
     """
-    response = get(get_nordvpn_url(server_type, country))
+    response = get(get_nordvpn_url(server_type, country), headers=STD_HEADERS)
     # if no connection is available the get will raise a ConnectionError, catched by the calling function
 
     # controlling incorrect response

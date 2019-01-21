@@ -141,7 +141,7 @@ class gui(Tk):
         protocol_selected = self.connectionProtocol.get()
 
         # check if recommended server exists. If it does not exists, download the needed files
-        if protocol_selected != 2 and not exists_conf_for(recommended_server, protocol_selected):
+        if protocol_selected != IKEV2_PROTOCOL_NUMBER and not exists_conf_for(recommended_server, protocol_selected):
             update_conf_files()
 
             # if file does not exist then it is incorrect (extreme case)
