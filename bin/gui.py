@@ -5,6 +5,7 @@ from bin.vpn_util.networkSelection import *
 from bin.settings import existing_corrected_saved_settings, load_settings, update_settings
 from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
+from bin.gui_components.settings_frame import SettingsFrame
 
 logger = get_logger(__name__)
 
@@ -20,13 +21,14 @@ class gui(Tk):
         # getting color for background (some widget will need it)
         self.background_color = self.cget('background')
 
+        self.settings_frame = SettingsFrame(self)
         self.manual_frame = ManualSelectionFrame(self, self.background_color)
         self.optionsFrame = OptionFrame(self)
         self.__init_protocol__()
         self.__initStatus__()
         self.__initButtons__()
 
-        self.center_window(350, 290)
+        self.center_window(370, 340)
 
         running_vpn = get_running_vpn()
         if running_vpn is not None:
@@ -181,6 +183,12 @@ class gui(Tk):
     def disconnect(self):
         stop_vpn(self.running_connection)
         self.setStatusDisconnected()
+
+    def reset_settings(self):
+        self.optionsFrame.set_selected_country(AUTOMATIC_CHOICE_STRING)
+        self.optionsFrame.set_selected_server('Standard VPN')
+        self.manual_frame.set_is_manual(False)
+        self.on_manual_change()
 
     def center_window(self, width=300, height=200):
         # gets screen width and height
