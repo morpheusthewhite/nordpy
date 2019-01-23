@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import messagebox
 from bin.settings import update_settings
+from bin.gui_components.advanced_settings_window import AdvancedSettingsWindow
 
 class SettingsFrame(LabelFrame):
     def __init__(self, parent):
@@ -22,4 +23,5 @@ class SettingsFrame(LabelFrame):
             update_settings("", 0, "", "")
 
     def open_advanced_settings(self):
-        pass
+        AdvancedSettingsWindow()
+
