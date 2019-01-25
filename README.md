@@ -20,6 +20,9 @@ then run install.sh
 
 ## Usage
 Open the application, select your preferred server type (also manually) and protocol and just press connect. Once you are connected you can even close the application and reopen it when you want to disconnect the VPN.
+If the size of the window does not fit entirely the gui components change the scale factor in the advanced settings.
+
+<b>Note</b>: The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start).
 
 #### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  
