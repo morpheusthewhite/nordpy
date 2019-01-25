@@ -42,7 +42,7 @@ class AdvancedSettingsWindow(Toplevel):
         self.s_label_info.pack(pady=1)
 
         # variable for the scale value
-        self.scale_var = IntVar()
+        self.scale_var = DoubleVar()
 
         # frame containing the spinbox
         self.window_size_frame = Frame(self)#, text='Window size')

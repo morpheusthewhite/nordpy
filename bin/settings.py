@@ -142,7 +142,7 @@ def advanced_settings_read():
     """
     try:
         configparser.read(SETTING_FILE)
-        scale_factor = int(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
+        scale_factor = float(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
         logger.debug("Read a factor scale of "+str(scale_factor))
         return scale_factor
     except KeyError:
@@ -156,7 +156,7 @@ def advanced_settings_are_correct():
     """
     try:
         configparser.read(SETTING_FILE)
-        scale_factor = int(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
+        scale_factor = float(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
         return scale_factor <= 3 and scale_factor >= 0.5
     except (KeyError, ValueError):
         return False
