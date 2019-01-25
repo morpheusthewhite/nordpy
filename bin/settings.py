@@ -116,3 +116,45 @@ def load_settings():
     except KeyError:
         logger.debug("Key not found")
         return None
+
+
+ADV_SETTINGS = 'OTHER'
+FACTOR_SCALE_KEY = 'Factor Scale'
+
+
+def advanced_settings_save(factor_scale):
+    """
+    Saves advanced settings
+    :param factor_scale: the scale factor for the dimensions of the main window
+    """
+    configparser[ADV_SETTINGS] = {FACTOR_SCALE_KEY: str(factor_scale)}
+    logger.debug('Saved '+str(factor_scale))
+
+    logger.debug("Updating advanced setting file")
+    with open(SETTING_FILE, "w") as settings_file:
+        configparser.write(settings_file)
+
+
+def advanced_settings_read():
+    """
+    Reads advanced settings
+    :return: the factor scale, None if a key was not found
+    """
+    try:
+        configparser.read(SETTING_FILE)
+        return int(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
+    except KeyError:
+        logger.debug("Key not found")
+        return None
+
+def advanced_settings_are_correct():
+    """
+    Checks if advanced settings are saved correctly
+    :return: True if is correct, false otherwise
+    """
+    try:
+        configparser.read(SETTING_FILE)
+        scale_factor = int(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
+        return scale_factor <= 3 and scale_factor >= 0.5
+    except (KeyError, ValueError):
+        return False

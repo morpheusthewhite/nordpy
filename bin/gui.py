@@ -2,13 +2,17 @@ from bin.gui_components.option_frame import *
 from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
 from bin.vpn_util.networkSelection import *
-from bin.settings import existing_corrected_saved_settings, load_settings, update_settings
+from bin.settings import existing_corrected_saved_settings, load_settings, update_settings, \
+    advanced_settings_read, advanced_settings_are_correct
 from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 from bin.gui_components.settings_frame import SettingsFrame
+from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR
 
 logger = get_logger(__name__)
 
+DEFAUL_WIDTH = 370
+DEFAUL_HEIGHT = 340
 
 class gui(Tk):
     def __init__(self):
@@ -28,7 +32,11 @@ class gui(Tk):
         self.__initStatus__()
         self.__initButtons__()
 
-        self.center_window(370, 340)
+        if advanced_settings_are_correct():
+            scale_factor = advanced_settings_read()
+            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, scale_factor)
+        else:
+            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT)
 
         running_vpn = get_running_vpn()
         if running_vpn is not None:
@@ -190,13 +198,16 @@ class gui(Tk):
         self.manual_frame.set_is_manual(False)
         self.on_manual_change()
 
-    def center_window(self, width=300, height=200):
+    def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
+        scaled_width = width * DEFAULT_SCALE_FACTOR
+        scaled_height = height * DEFAULT_SCALE_FACTOR
+
         # calculates position x and y coordinates
-        x = (screen_width / 2) - (width / 2)
-        y = (screen_height / 2) - (height / 2)
-        self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        x = (screen_width / 2) - (scaled_width / 2)
+        y = (screen_height / 2) - (scaled_height / 2)
+        self.geometry('%dx%d+%d+%d' % (scaled_width, scaled_height, x, y))
 
