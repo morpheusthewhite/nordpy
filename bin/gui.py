@@ -203,8 +203,8 @@ class gui(Tk):
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        scaled_width = width * DEFAULT_SCALE_FACTOR
-        scaled_height = height * DEFAULT_SCALE_FACTOR
+        scaled_width = width * scale
+        scaled_height = height * scale
 
         # calculates position x and y coordinates
         x = (screen_width / 2) - (scaled_width / 2)
