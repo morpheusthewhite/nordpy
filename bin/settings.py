@@ -141,7 +141,6 @@ def advanced_settings_read():
     :return: the factor scale, None if a key was not found
     """
     try:
-        print(SETTING_FILE)
         configparser.read(SETTING_FILE)
         scale_factor = int(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
         logger.debug("Read a factor scale of "+str(scale_factor))

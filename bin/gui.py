@@ -49,7 +49,6 @@ class gui(Tk):
         if existing_corrected_saved_settings():
             serverType, protocol, country, self.previously_recommended_server = load_settings()
 
-            print(protocol)
             self.optionsFrame.set_selected_server(serverType)
             self.connectionProtocol.set(protocol)
             self.optionsFrame.set_selected_country(country)
