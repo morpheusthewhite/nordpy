@@ -1,9 +1,10 @@
 from tkinter import *
 from os import path
 
-from bin.conf_util import get_available_servers_dict
+from bin.conf_util import get_available_servers_dict, StatsHolder
 from bin.logging_util import get_logger
 from bin.pathUtil import CURRENT_PATH
+from requests import ConnectionError
 
 SERVERS_DICT = get_available_servers_dict()
 logger = get_logger(__name__)
@@ -24,6 +25,12 @@ class ManualServerWindow(Toplevel):
         self.__init_buttons__()
 
         self.grab_set()  # used to disable the underlying window
+
+        # creating stats holder
+        try:
+            self.stats_holder = StatsHolder()
+        except ConnectionError:
+            self.stats_holder = None
 
     def __init_listboxes__(self):
         self.listboxes_frame = Frame(self)
@@ -72,14 +79,19 @@ class ManualServerWindow(Toplevel):
 
         self.domain_servers_listbox.delete(0, END)
 
-        for server in SERVERS_DICT[domain_selected]:
-            self.domain_servers_listbox.insert(END, server)
+        if self.stats_holder is None:
+            for server in SERVERS_DICT[domain_selected]:
+                self.domain_servers_listbox.insert(END, server)
+        else:
+            for server in SERVERS_DICT[domain_selected]:
+                self.domain_servers_listbox.insert(END, server+"  "+self.stats_holder.get_server_stats(server))
+
 
     def ok_pressed(self):
         selected_item_tuple = self.domain_servers_listbox.curselection()
         if not len(selected_item_tuple) == 0:  # checking if something is selected
             selected_index = selected_item_tuple[0]
-            server_selected = self.domain_servers_listbox.get(selected_index)
+            server_selected = self.domain_servers_listbox.get(selected_index).split(" ")[0]
 
             self.parent.manual_server_selected(server_selected)
 
