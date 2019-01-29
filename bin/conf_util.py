@@ -112,7 +112,10 @@ class StatsHolder:
         threading.Thread(target=self.parallel_request).start()
 
         global local_stats
-        self.stats_dic = local_stats
+        if local_stats is not None:
+            self.stats_dic = local_stats
+        else:
+            self.stats_dic = {}
 
     def parallel_request(self):
         stats = requests.get(STATS_URL)
