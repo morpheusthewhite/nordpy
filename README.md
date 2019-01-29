@@ -1,5 +1,5 @@
 # NordPy
-A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server.
+A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server or to choose manually the preferred server (stats for each server are shown in the relative window).
 
 All server types on NordVPN site are available to be selected in the window.
 
@@ -22,7 +22,9 @@ then run install.sh
 Open the application, select your preferred server type (also manually) and protocol and just press connect. Once you are connected you can even close the application and reopen it when you want to disconnect the VPN.
 If the size of the window does not fit entirely the gui components change the scale factor in the advanced settings.
 
-<b>Note</b>: The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start).
+#### Additional info
+<li> The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start). </li>
+<li> The percent associated to each server in the window for manual choice is the <b>load</b> (a big load implies a slower connection)</li>
 
 #### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  
