@@ -1,6 +1,7 @@
 import requests
 from bin.logging_util import get_logger
 import json
+import threading
 
 logger = get_logger(__name__)
 
@@ -105,11 +106,17 @@ def get_available_servers_dict():
 STATS_URL = 'https://nordvpn.com/api/server/stats'
 PERCENT_KEY = 'percent'
 
-class StatsHolder():
+
+class StatsHolder:
     def __init__(self):
+        threading.Thread(target=self.parallel_request).start()
+        self.stats_dic = {}
+
+    def parallel_request(self):
         stats = requests.get(STATS_URL)
         parser = json.decoder.JSONDecoder()
         self.stats_dic = parser.decode(stats.text)
+        logger.debug("Retrieved stats")
 
     def get_server_stats(self, server):
         """
