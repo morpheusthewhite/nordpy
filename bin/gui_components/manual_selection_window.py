@@ -28,7 +28,7 @@ class ManualServerWindow(Toplevel):
 
         # creating stats holder
         try:
-            self.stats_holder = StatsHolder()
+            self.stats_holder = StatsHolder(self)
         except ConnectionError:
             self.stats_holder = None
 

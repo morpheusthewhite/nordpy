@@ -1,4 +1,3 @@
-from tkinter import *
 from bin.gui_components.manual_selection_window import *
 
 DEFAULT_MANUAL_SERVER_LABEL = '-----'

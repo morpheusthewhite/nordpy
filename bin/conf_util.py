@@ -108,15 +108,21 @@ PERCENT_KEY = 'percent'
 
 
 class StatsHolder:
-    def __init__(self):
+    def __init__(self, gui):
         threading.Thread(target=self.parallel_request).start()
-        self.stats_dic = {}
+
+        global local_stats
+        self.stats_dic = local_stats
 
     def parallel_request(self):
         stats = requests.get(STATS_URL)
         parser = json.decoder.JSONDecoder()
         self.stats_dic = parser.decode(stats.text)
         logger.debug("Retrieved stats")
+
+        # updating stored stats
+        global local_stats
+        local_stats = self.stats_dic
 
     def get_server_stats(self, server):
         """
@@ -128,3 +134,18 @@ class StatsHolder:
             return str(self.stats_dic[server+".nordvpn.com"][PERCENT_KEY])+"%"
         except KeyError:
             return ""
+
+
+# stored stats
+local_stats = None
+
+
+def __update_local_stats__():
+    global local_stats
+    stats_text = requests.get(STATS_URL).text
+    parser = json.decoder.JSONDecoder()
+    local_stats = parser.decode(stats_text)
+    logger.info('retrieved and stored stats')
+
+
+threading.Thread(target=__update_local_stats__).start()
