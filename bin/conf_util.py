@@ -139,16 +139,22 @@ class StatsHolder:
             return ""
 
 
-# stored stats
+# stored stats, updated at the start if possible
 local_stats = None
 
 
 def __update_local_stats__():
+    """
+    retrieves the server stats and stores them (executed in a parallel thread)
+    """
     global local_stats
-    stats_text = requests.get(STATS_URL).text
-    parser = json.decoder.JSONDecoder()
-    local_stats = parser.decode(stats_text)
-    logger.info('retrieved and stored stats')
+    try:
+        stats_text = requests.get(STATS_URL).text
+        parser = json.decoder.JSONDecoder()
+        local_stats = parser.decode(stats_text)
+        logger.info('retrieved and stored stats')
+    except requests.ConnectionError:
+        return
 
 
 threading.Thread(target=__update_local_stats__).start()

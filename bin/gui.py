@@ -1,3 +1,5 @@
+from queue import Queue
+
 from bin.gui_components.option_frame import *
 from bin.gui_components.manual_selection_frame import *
 from bin.conf_util import exists_conf_for, update_conf_files
@@ -8,6 +10,7 @@ from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 from bin.gui_components.settings_frame import SettingsFrame
 from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR
+import threading
 
 logger = get_logger(__name__)
 
@@ -54,6 +57,9 @@ class gui(Tk):
             self.optionsFrame.set_selected_country(country)
 
         self.on_manual_change()
+
+        # queue used to communicate with secondary thread
+        self.queue = Queue()
 
     def __initStatus__(self):
         self.statusFrame = Frame(self)
@@ -116,6 +122,9 @@ class gui(Tk):
     def setStatusConnecting(self):
         self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
 
+    def set_status_requesting(self):
+        self.statusFrame.statusDinamic.configure(text="Retrieving recommended server", foreground="white")
+
     def connect(self):
         if self.manual_frame.get_is_manual():
             self.manual_connection()
@@ -133,18 +142,29 @@ class gui(Tk):
         selected_server_type = self.optionsFrame.get_selected_server()
         selected_country = self.optionsFrame.get_selected_country()
 
-        try:
-            recommended_server = get_recommended_server(selected_server_type, selected_country)
-            self.previously_recommended_server = recommended_server
-        except RequestException:
+        # launching thread
+        parallel_request = threading.Thread(target=self.parallel_get_recommended_server,
+                                            args=(self, selected_server_type, selected_country))
+        parallel_request.start()
+
+        # updating gui
+        self.set_status_requesting()
+        self.update_idletasks()
+
+        parallel_request.join()
+        recommended_server = self.queue.get_nowait()
+
+        if recommended_server == "RequestException":
             messagebox.showinfo(title="Info", message="Connection with nordvpn failed, using last server")
             recommended_server = self.previously_recommended_server
-        except RequestsConnectionError:
+        elif recommended_server == "RequestsConnectionError":
             messagebox.showerror(title="Error", message="No connection available, please reconnect and try again")
+            self.setStatusDisconnected()
             return
 
         if recommended_server is None:
             messagebox.showwarning(title="Error", message="Sorry, server not found! Please try a different server.")
+            self.setStatusDisconnected()
             return
 
         protocol_selected = self.connectionProtocol.get()
@@ -162,6 +182,19 @@ class gui(Tk):
         update_settings(selected_server_type, protocol_selected, selected_country, recommended_server)
 
         self.connect_to_VPN(recommended_server, protocol_selected)
+
+    def parallel_get_recommended_server(self, gui, selected_server_type, selected_country):
+        """
+        function executed by secondary thread to require recommended server
+        """
+        try:
+            result = get_recommended_server(selected_server_type, selected_country)
+        except RequestException:
+            result = 'RequestException'
+        except RequestsConnectionError:
+            result = 'RequestsConnectionError'
+
+        gui.queue.put_nowait(result)
 
     def connect_to_VPN(self, server, protocol):
         self.setStatusConnecting()
