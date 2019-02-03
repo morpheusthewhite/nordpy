@@ -31,16 +31,11 @@ class AdvancedSettingsWindow(Toplevel):
             advanced_settings_save(DEFAULT_SCALE_FACTOR)
             self.set_scale(DEFAULT_SCALE_FACTOR)
 
-        self.center_window(300, 150)
+        self.center_window(300, 115)
 
         self.grab_set()  # used to disable the underlying window
 
     def __init_window_size_frame__(self):
-        # label above the spinbox
-        self.s_label_info = Label(self, text='The following factor affects the width and \nheight'
-                                             ' of the main window(not font)')
-        self.s_label_info.pack(pady=1)
-
         # variable for the scale value
         self.scale_var = DoubleVar()
 

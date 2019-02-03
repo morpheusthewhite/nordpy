@@ -26,6 +26,10 @@ If the size of the window does not fit entirely the gui components change the sc
 <li> The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start). </li>
 <li> The percent associated to each server in the window for manual choice is the <b>load</b> (a big load implies a slower connection)</li>
 
+#### Advanced Settings
+
+<li> Scale Factor: this parameter affects the size of a window (will be restored at each start)</li>
+
 #### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  
 
