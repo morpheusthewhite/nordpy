@@ -1,10 +1,12 @@
 import subprocess
 from os import linesep
 
+from bin.vpn_util.exceptions import LoginError
 from bin.vpn_util.openvpn import get_path_to_conf, PROTOCOLS
 from bin.logging_util import get_logger
 
 logger = get_logger(__name__)
+NM_TIMEOUT = 10
 
 
 def get_connection_name(server, protocol):
@@ -67,10 +69,18 @@ def nm_launch(connection_name, password):
     :param connection_name: the name of the connection that will be started
     :param password: the password of the nordVPN account
     """
-    args = ['nmcli', '--ask', 'connection', 'up', connection_name]
+    args = ['nmcli', '--ask', '--wait', str(NM_TIMEOUT), 'connection', 'up', connection_name]
 
-    subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                     universal_newlines=True).communicate(password + linesep)
+    (out, err) = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                                  stderr=subprocess.PIPE, universal_newlines=True).communicate(password + linesep)
+
+    if 'A password is required.' in out:
+        # that text is found if and only if the password inserted was wrong (it is requested for the second time)
+        raise LoginError
+
+    if 'Error' in err:
+        raise ConnectionError
+
     return
 
 

@@ -4,7 +4,7 @@ from os import path
 from bin.conf_util import get_available_servers_dict, StatsHolder
 from bin.logging_util import get_logger
 from bin.pathUtil import CURRENT_PATH
-from requests import ConnectionError
+from requests import ConnectionError as RequestsConnectionError
 
 SERVERS_DICT = get_available_servers_dict()
 logger = get_logger(__name__)
@@ -29,7 +29,7 @@ class ManualServerWindow(Toplevel):
         # creating stats holder
         try:
             self.stats_holder = StatsHolder(self)
-        except ConnectionError:
+        except RequestsConnectionError:
             self.stats_holder = None
 
     def __init_listboxes__(self):
