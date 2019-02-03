@@ -2,6 +2,9 @@ import subprocess
 from os import linesep
 
 from bin.vpn_util.openvpn import get_path_to_conf, PROTOCOLS
+from bin.logging_util import get_logger
+
+logger = get_logger(__name__)
 
 
 def get_connection_name(server, protocol):
@@ -58,26 +61,26 @@ def nm_stop(connection_name):
     return
 
 
-def nm_launch(connection_name):
+def nm_launch(connection_name, password):
     """
     starts a connection with a given name
     :param connection_name: the name of the connection that will be started
+    :param password: the password of the nordVPN account
     """
-    args = ['nmcli', 'connection', 'up', connection_name]
+    args = ['nmcli', '--ask', 'connection', 'up', connection_name]
 
-    subprocess.Popen(args).wait()
+    subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
+                     universal_newlines=True).communicate(password + linesep)
     return
 
 
-def nm_set_credentials(username, password, connection_name):
+def nm_set_credentials(username, connection_name):
     """
     starts a connection with a given name
     :param username: the username of the NordVPN account
-    :param password: the password of the NordVPN account
     :param connection_name: the name of the connection that will be started
     """
-    args = ['nmcli', 'connection', 'modify', connection_name, '+vpn.data',
-            'username='+username, 'vpn.secrets', 'password='+password]
+    args = ['nmcli', 'connection', 'modify', connection_name, '+vpn.data', 'username='+username]
 
     subprocess.Popen(args).wait()
     return
@@ -157,7 +160,10 @@ def nm_connect(server, protocol, username, password):
     pathToConf = get_path_to_conf(server, protocol)
     connection_name = get_connection_name(server, protocol)
 
-    nm_import(pathToConf)
-    nm_set_credentials(username, password, connection_name)
+    logger.info('Importing and configuring ' + pathToConf)
 
-    nm_launch(connection_name)
+    # preparing connection
+    nm_import(pathToConf)
+    nm_set_credentials(username, connection_name)
+
+    nm_launch(connection_name, password)

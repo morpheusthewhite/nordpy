@@ -201,7 +201,7 @@ class gui(Tk):
         self.update_idletasks()
 
         try:
-            startVPN(server, protocol)
+            startVPN(server, protocol, True)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
