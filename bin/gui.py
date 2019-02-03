@@ -9,7 +9,7 @@ from bin.settings import existing_corrected_saved_settings, load_settings, updat
 from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 from bin.gui_components.settings_frame import SettingsFrame
-from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR
+from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE
 import threading
 
 logger = get_logger(__name__)
@@ -36,10 +36,12 @@ class gui(Tk):
         self.__initButtons__()
 
         if advanced_settings_are_correct():
-            scale_factor = advanced_settings_read()
+            (scale_factor, nm_use) = advanced_settings_read()
             self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, scale_factor)
+            self.nm_use = nm_use
         else:
             self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT)
+            self.nm_use = DEFAULT_NM_USE
 
         running_vpn = get_running_vpn()
         if running_vpn is not None:
@@ -108,7 +110,7 @@ class gui(Tk):
 
     def setStatusConnected(self, serverName, protocol):
         self.statusFrame.statusDinamic.configure(text="Connected to " + serverName + " by " +
-                                                      PROTOCOLS[protocol], foreground="green")
+                                                      protocol, foreground="green")
 
         self.buttonsFrame.connect.configure(state=DISABLED)
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
@@ -201,7 +203,7 @@ class gui(Tk):
         self.update_idletasks()
 
         try:
-            startVPN(server, protocol, True)
+            connected_to = startVPN(server, protocol, self.nm_use)
 
         except ConnectionError:
             messagebox.showwarning(title="Error", message="Error Connecting")
@@ -213,12 +215,14 @@ class gui(Tk):
             self.setStatusDisconnected()
             return
 
-        if protocol == IKEV2_PROTOCOL_NUMBER:
+        if connected_to == IPSEC_CONNECTION_STRING:
             self.running_connection = IPSEC_CONNECTION_STRING
-        else:
+        elif connected_to == OPENVPN_CONNECTION_STRING:
             self.running_connection = OPENVPN_CONNECTION_STRING
+        else:
+            self.running_connection = NM_CONNECTION_STRING
 
-        self.setStatusConnected(server, protocol)
+        self.setStatusConnected(server, self.running_connection)
 
     def disconnect(self):
         stop_vpn(self.running_connection)

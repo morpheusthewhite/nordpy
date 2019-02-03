@@ -120,14 +120,17 @@ def load_settings():
 
 ADV_SETTINGS = 'OTHER'
 FACTOR_SCALE_KEY = 'Factor Scale'
+NM_USE_KEY = 'Nm'
 
 
-def advanced_settings_save(factor_scale):
+def advanced_settings_save(factor_scale, nm_use):
     """
     Saves advanced settings
     :param factor_scale: the scale factor for the dimensions of the main window
+    :param nm_use: if nm should be used
     """
-    configparser[ADV_SETTINGS] = {FACTOR_SCALE_KEY: str(factor_scale)}
+    configparser[ADV_SETTINGS] = {FACTOR_SCALE_KEY: str(factor_scale),
+                                  NM_USE_KEY: str(nm_use)}
     logger.debug('Saved '+str(factor_scale))
 
     logger.debug("Updating advanced setting file")
@@ -143,8 +146,9 @@ def advanced_settings_read():
     try:
         configparser.read(SETTING_FILE)
         scale_factor = float(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
-        logger.debug("Read a factor scale of "+str(scale_factor))
-        return scale_factor
+        nm_use = (configparser[ADV_SETTINGS][NM_USE_KEY]) != 'False'
+        logger.debug("Read a factor scale of " + str(scale_factor) + ' and ' + str(nm_use))
+        return scale_factor, nm_use
     except KeyError:
         logger.debug("Key not found")
         return None
@@ -157,6 +161,7 @@ def advanced_settings_are_correct():
     try:
         configparser.read(SETTING_FILE)
         scale_factor = float(configparser[ADV_SETTINGS][FACTOR_SCALE_KEY])
+        configparser[ADV_SETTINGS][NM_USE_KEY]  # called to trigger a KeyError if it is missing
         return scale_factor <= 3 and scale_factor >= 0.5
     except (KeyError, ValueError):
         return False

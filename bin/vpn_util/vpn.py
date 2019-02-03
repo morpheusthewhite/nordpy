@@ -11,7 +11,7 @@ def startVPN(server, protocol, nm):
     :param server: the name of the server
     :param protocol: the protocol to be used
     :param nm: a boolean: True if network manager should be used, false otherwise
-    :return: a Popen object if a openvpn started successfully, None if it is an ikev2
+    :return: a string representing the connection established
     """
     if not check_credentials():
         try:
@@ -23,10 +23,13 @@ def startVPN(server, protocol, nm):
 
     if protocol == IKEV2_PROTOCOL_NUMBER:  # if it is ikev2/ipvsec
         ikev2_connect(username, password, server)
+        return IPSEC_CONNECTION_STRING
     elif nm and nm_openvpn_exists():
         nm_connect(server, protocol, username, password)
+        return NM_CONNECTION_STRING
     else:
         start_openvpn(server, protocol)
+        return OPENVPN_CONNECTION_STRING
 
 
 def stop_vpn(running_connection):
@@ -49,11 +52,11 @@ def get_running_vpn():
     checks if some type of VPN connection is already running
     :return: a string representing what is running, None otherwise
     """
-    if checkOpenVPN():
+    if nm_running_vpn():
+        return NM_CONNECTION_STRING
+    elif checkOpenVPN():
         return OPENVPN_CONNECTION_STRING
     elif ikev2_is_running():
         return IPSEC_CONNECTION_STRING
-    elif nm_running_vpn():
-        return NM_CONNECTION_STRING
 
     return None

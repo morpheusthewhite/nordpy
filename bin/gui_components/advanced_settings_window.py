@@ -5,6 +5,8 @@ from bin.credentials import credentials_file_path
 from bin.settings import advanced_settings_are_correct, advanced_settings_read, advanced_settings_save
 
 DEFAULT_SCALE_FACTOR = 1
+DEFAULT_NM_USE = True
+
 
 class AdvancedSettingsWindow(Toplevel):
     def __init__(self):
@@ -18,24 +20,27 @@ class AdvancedSettingsWindow(Toplevel):
         self.remove_credentials_button = Button(self, text='Reset credentials', command=self.remove_cred)
         self.remove_credentials_button.pack(pady=10)
 
-        self.__init_window_size_frame__()
+        self.__init_scale_factor_frame__()
+        self.__init_nm_frame__()
 
         self.save_button = Button(self, text="Save", command=self.save_current_settings, height=6)
         self.save_button.pack(ipady=10, pady=10)
 
         # retrieving existing default configuration
         if(advanced_settings_are_correct()):
-            scale_factor = advanced_settings_read()
+            (scale_factor, nm_use) = advanced_settings_read()
             self.set_scale(scale_factor)
+            self.set_nm_use(nm_use)
         else:
-            advanced_settings_save(DEFAULT_SCALE_FACTOR)
+            advanced_settings_save(DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE)
             self.set_scale(DEFAULT_SCALE_FACTOR)
+            self.set_nm_use(DEFAULT_NM_USE)
 
-        self.center_window(300, 115)
+        self.center_window(300, 150)
 
         self.grab_set()  # used to disable the underlying window
 
-    def __init_window_size_frame__(self):
+    def __init_scale_factor_frame__(self):
         # variable for the scale value
         self.scale_var = DoubleVar()
 
@@ -48,6 +53,17 @@ class AdvancedSettingsWindow(Toplevel):
         self.scale_sbox.pack(side=LEFT)
         self.window_size_frame.pack()
 
+    def __init_nm_frame__(self):
+        # getting background color from window background (needed by checkbox)
+        background_color = self.cget('background')
+
+        # initializing checkbutton variable
+        self.nm_use = BooleanVar()
+
+        self.nm_checkbutton = Checkbutton(self, text='Use Network Manager if possible',
+                                          selectcolor=background_color, variable=self.nm_use)
+        self.nm_checkbutton.pack(pady=8)
+
     def remove_cred(self):
         if messagebox.askyesno(parent=self, title='Confirm', message="Are you sure you want "
                                                                      "to remove stored credentials?"):
@@ -57,7 +73,7 @@ class AdvancedSettingsWindow(Toplevel):
                 pass
 
     def save_current_settings(self):
-        advanced_settings_save(self.get_scale())
+        advanced_settings_save(self.get_scale(), self.get_nm_use())
         messagebox.showinfo(parent=self, title="Restart required", message='Restart the application to apply changes')
 
     def set_scale(self, n):
@@ -65,6 +81,12 @@ class AdvancedSettingsWindow(Toplevel):
 
     def get_scale(self):
         return self.scale_var.get()
+
+    def get_nm_use(self):
+        return self.nm_use.get()
+
+    def set_nm_use(self, use):
+        self.nm_use.set(use)
 
     def center_window(self, width=300, height=200):
         # gets screen width and height
