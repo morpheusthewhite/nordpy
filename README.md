@@ -1,7 +1,8 @@
 # NordPy
 
-[![release 1.1](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/releases/tag/1.1)
+[![release 1.1](https://img.shields.io/github/tag/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/releases/tag/1.1)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/issues)
+[![contributions welcome](https://img.shields.io/github/license/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/blob/master/LICENSE)
 
 A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server or to choose manually the preferred server (stats for each server are shown in the relative window).
 
