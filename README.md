@@ -8,15 +8,26 @@ All server types on NordVPN site are available to be selected in the window.
 
 For <b>Debian/Ubuntu</b>, <b>Fedora/Red Hat</b> and <b>Arch Linux</b> users:
 
-To install all dependencies, download config files and to add a desktop entry in the main menu just run install.sh
+To install all dependencies, download config files and to add a desktop entry in the main menu just run `install.sh`
 
 For <b>other distros</b>:
 
-install the following packages
+install the following packages:
+
 ```
-python3 python3-tk python3-requests openvpn wget strongswan strongswan-ikev2 libstrongswan-standard-plugins libstrongswan-extra-plugins unzip libstrongswan-extra-plugins libcharon-extra-plugins
+python3 python3-tk python3-requests openvpn wget unzip
 ```
-then run install.sh
+and
+```
+strongswan strongswan-ikev2 libstrongswan-standard-plugins libstrongswan-extra-plugins libstrongswan-extra-plugins libcharon-extra-plugins
+```
+to support ikev2 (facultative)
+```
+networkmanager-openvpn
+```
+to support Network Manager (facultative).
+
+Then run `install.sh`
 
 ## Usage
 Open the application, select your preferred server type (also manually) and protocol and just press connect. Once you are connected you can even close the application and reopen it when you want to disconnect the VPN.
@@ -28,7 +39,10 @@ If the size of the window does not fit entirely the gui components change the sc
 
 #### Advanced Settings
 
+![Alt text](media/screenshots/screen05.png?raw=true "Preview")
+
 <li> Scale Factor: this parameter affects the size of a window (will be restored at each start)</li>
+<li> Network Manager: if checked NordPy will try to connect through networkmanager-openvpn plugin (checked by default). Works only if network manager is enabled</li>
 
 #### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  
