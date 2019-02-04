@@ -204,6 +204,7 @@ def ikev2_connect(username, password, server):
     # waiting until confs are loaded (otherwise configuration needed will not be found)
     __ikev2_wait__()
     __ikev2_wait__()
+    __ikev2_wait__()
 
     # launches the connection
     __ikev2_launch__()

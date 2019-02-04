@@ -19,7 +19,7 @@ python3 python3-tk python3-requests openvpn wget unzip
 ```
 and
 ```
-strongswan strongswan-ikev2 libstrongswan-standard-plugins libstrongswan-extra-plugins libstrongswan-extra-plugins libcharon-extra-plugins
+strongswan strongswan-ikev2 libstrongswan-standard-plugins libstrongswan-extra-plugins libcharon-extra-plugins
 ```
 to support ikev2 (facultative)
 ```
