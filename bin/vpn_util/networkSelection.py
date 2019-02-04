@@ -1,4 +1,4 @@
-from requests import get
+from requests import get, Timeout
 from bin.logging_util import get_logger
 
 AUTOMATIC_CHOICE_STRING = 'Choose Automatically'
@@ -27,6 +27,7 @@ COUNTRY_CODES={"Albania": 2,"Argentina": 10,"Australia": 13,"Austria": 14,"Azerb
                "Slovakia": 196,"Slovenia": 197,"South Africa": 200,"Spain": 202,"Sweden": 208,"Switzerland": 209,
                "Taiwan": 211,"Thailand": 214,"Turkey": 220,"Ukraine": 225,"United Kingdom": 227,
                "United States": 228,"United Arab Emirates":226,"Vietnam": 234}
+REQUEST_TIMEOUT = 10
 logger = get_logger(__name__)
 
 
@@ -42,7 +43,11 @@ def get_recommended_server(server_type, country):
     :param country: the country (can be chosen automatically)
     :return: the recommmended server
     """
-    response = get(get_nordvpn_url(server_type, country))
+    try:
+        response = get(get_nordvpn_url(server_type, country), timeout=REQUEST_TIMEOUT)
+    except Timeout:
+        raise RequestException
+
     # if no connection is available the get will raise a ConnectionError, catched by the calling function
 
     # controlling incorrect response
