@@ -44,9 +44,9 @@ Type=Application
 Version=1.0
 Name=NordPy
 Comment=NordVPN client application for connecting to recommended servers
-Path="$current_dir"
-Exec="$current_dir"/nordpy.py
-Icon="$current_dir"/media/nordvpn.png
+Path=$current_dir
+Exec=\"$current_dir/nordpy.py\"
+Icon=$current_dir/media/nordvpn.png
 Terminal=false
 Categories=Internet;System;Utilities;" | sudo tee $DESK_PATH/nordpy.desktop > /dev/null
 
