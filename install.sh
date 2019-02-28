@@ -50,8 +50,7 @@ Icon=$current_dir/media/nordvpn.png
 Terminal=false
 Categories=Internet;System;Utilities;" | sudo tee $DESK_PATH/nordpy.desktop > /dev/null
 
-sudo chmod +x /usr/local/share/applications/nordpy.desktop
-
+sudo chmod +x $DESK_PATH/nordpy.desktop
 
 # downloading and extracting conf files from NordVPN
 wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip
