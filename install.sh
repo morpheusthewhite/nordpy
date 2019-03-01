@@ -6,6 +6,8 @@ if ! [ -z `which apt-get 2> /dev/null` ]; # Debian
     then sudo apt-get install python3 python3-tk python3-requests openvpn wget strongswan strongswan-ikev2 \
     libstrongswan-standard-plugins unzip libstrongswan-extra-plugins \
     libcharon-extra-plugins
+    # if some packages are missing the script try to install a minimal and fundamental set of them
+    sudo apt-get install python3 python3-tk python3-requests openvpn wget unzip
     if [ `nmcli networking` = "enabled" ]
     then sudo apt-get install network-manager-openvpn network-manager-openvpn-gnome
     fi
@@ -19,6 +21,8 @@ if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
 fi
 if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
     then sudo pacman -Sy python3 tk python-requests openvpn wget unzip strongswan
+    # again, the script try to install a fundamental set of packages
+    sudo pacman -Sy python3 tk python-requests openvpn wget unzip
     if [ `nmcli networking` = "enabled" ]
     then sudo pacman -Sy networkmanager-openvpn
     fi
