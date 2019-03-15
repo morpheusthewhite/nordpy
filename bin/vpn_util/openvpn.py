@@ -1,7 +1,7 @@
 from bin.credentials import *
 from bin.root import *
 from bin.logging_util import get_logger
-from bin.vpn_util.exceptions import LoginError
+from bin.vpn_util.exceptions import LoginError, OpenresolvError
 
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
@@ -24,12 +24,15 @@ def get_path_to_conf(server, protocol):
 def start_openvpn(server, protocol):
     """
     starts openvpn connection with a certain protocol to a specific server. Raise a ConnectionError
-    if the connection failed
+    if the connection failed, a LoginError if the credentials are wrong or a OpenresolvError if openresolv is missing
     :param server: the server to which the connection will be established
     :param protocol: the protocol to be used (an integer)
     """
     pathToConf = get_path_to_conf(server, protocol)
-    args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME]
+    args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,
+            # to prevent dns leaks
+            "--script-security", "2", "--up", "/etc/openvpn/update-resolv-conf", "--down",
+            "/etc/openvpn/update-resolv-conf"]
 
     tries = 0
     while tries < MAXIMUM_TRIES:
@@ -53,6 +56,10 @@ def start_openvpn(server, protocol):
             elif "AUTH_FAILED" in line:
                 # something's wrong
                 raise LoginError
+
+            # openresolv is not installed
+            elif "script fails with" in line:
+                raise OpenresolvError
 
     raise ConnectionError
 

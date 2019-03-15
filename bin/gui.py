@@ -214,6 +214,10 @@ class gui(Tk):
             os.remove(credentials_file_path)
             self.setStatusDisconnected()
             return
+        except OpenresolvError:
+            messagebox.showwarning(title="Error", message="Openresolv is missing, run install.sh")
+            self.setStatusDisconnected()
+            return
 
         if connected_to == IPSEC_CONNECTION_STRING:
             self.running_connection = IPSEC_CONNECTION_STRING
