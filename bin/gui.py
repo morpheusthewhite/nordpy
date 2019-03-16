@@ -223,8 +223,11 @@ class gui(Tk):
             self.running_connection = IPSEC_CONNECTION_STRING
         elif connected_to == OPENVPN_CONNECTION_STRING:
             self.running_connection = OPENVPN_CONNECTION_STRING
-        else:
+        elif connected_to == NM_CONNECTION_STRING:
             self.running_connection = NM_CONNECTION_STRING
+        else: # connected_to is None
+            self.setStatusDisconnected()
+            return
 
         self.setStatusConnected(server, self.running_connection)
 
