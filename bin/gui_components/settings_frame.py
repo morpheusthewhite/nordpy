@@ -23,5 +23,5 @@ class SettingsFrame(LabelFrame):
             update_settings("", 0, "", "")
 
     def open_advanced_settings(self):
-        AdvancedSettingsWindow()
+        AdvancedSettingsWindow(self.parent)
 

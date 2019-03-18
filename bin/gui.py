@@ -241,6 +241,9 @@ class gui(Tk):
         self.manual_frame.set_is_manual(False)
         self.on_manual_change()
 
+    def update_advanced_settings(self, nm_use):
+        self.nm_use = nm_use
+
     def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()

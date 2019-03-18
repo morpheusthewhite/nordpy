@@ -9,9 +9,10 @@ DEFAULT_NM_USE = True
 
 
 class AdvancedSettingsWindow(Toplevel):
-    def __init__(self):
+    def __init__(self, main_gui):
         super().__init__()
         self.wm_title("Advanced Settings")
+        self.main_gui = main_gui
 
         # sets the icon
         self.__imgicon__ = PhotoImage(file=os.path.join(CURRENT_PATH + "media", "manual.png"))
@@ -74,7 +75,8 @@ class AdvancedSettingsWindow(Toplevel):
 
     def save_current_settings(self):
         advanced_settings_save(self.get_scale(), self.get_nm_use())
-        messagebox.showinfo(parent=self, title="Restart required", message='Restart the application to apply changes')
+        self.main_gui.update_advanced_settings(self.get_nm_use())
+        messagebox.showinfo(parent=self, title="Restart required", message='Restart the application to apply scale')
 
     def set_scale(self, n):
         self.scale_var.set(n)
