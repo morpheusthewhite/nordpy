@@ -33,6 +33,11 @@ fi
 UPDATE_RESOLV_CONF_URL='https://raw.githubusercontent.com/alfredopalhares/openvpn-update-resolv-conf/master/update-resolv-conf.sh'
 sudo wget $UPDATE_RESOLV_CONF_URL -O /etc/openvpn/update-resolv-conf && sudo chmod +x /etc/openvpn/update-resolv-conf
 
+# fixing resolv.conf conflicts between NetworkManager and openresolv
+if [ `nmcli networking` = "enabled" ]
+then echo -e "[main]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/no-dns.conf > /dev/null
+fi
+
 # install certificates (needed by ipsec)
 sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der
 
