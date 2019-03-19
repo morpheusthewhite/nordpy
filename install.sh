@@ -37,6 +37,13 @@ sudo wget $UPDATE_RESOLV_CONF_URL -O /etc/openvpn/update-resolv-conf && sudo chm
 if [ `nmcli networking` = "enabled" ]
 then echo -e "[main]\ndns=none" | sudo tee /etc/NetworkManager/conf.d/no-dns.conf > /dev/null
 fi
+# and using some default global dns to solve DNS_BAD_CONFIG on reboot
+DNS1="208.67.222.222"  # opendns
+DNS2="208.67.220.220"  # opendns
+echo "\n# added to solve DNS_BAD_CONFIG by NordPy" | sudo tee -a /etc/dhcp/dhclient.conf > /dev/null
+echo "prepend domain-name-servers $DNS1;" | sudo tee -a /etc/dhcp/dhclient.conf > /dev/null
+echo "prepend domain-name-servers $DNS2;" | sudo tee -a /etc/dhcp/dhclient.conf > /dev/null
+
 
 # install certificates (needed by ipsec)
 sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der
