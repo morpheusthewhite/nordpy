@@ -168,7 +168,7 @@ def __ikev2_ipsec_reload__():
     """
     restarts ipsec (used to load saved settings)
     """
-    args = ['sudo', 'ipsec', 'reload']
+    args = ['sudo', 'ipsec', 'restart']
     (out, _) = Popen(args, stdout=PIPE, universal_newlines=True).communicate()
 
     if 'not running' in out:
