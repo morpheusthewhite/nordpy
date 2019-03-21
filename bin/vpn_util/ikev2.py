@@ -171,9 +171,6 @@ def __ikev2_ipsec_reload__():
     args = ['sudo', 'ipsec', 'restart']
     (out, _) = Popen(args, stdout=PIPE, universal_newlines=True).communicate()
 
-    if 'not running' in out:
-        Popen(['sudo', 'ipsec', 'start']).communicate()
-
     return
 
 def __ikev2_wait__():
