@@ -8,7 +8,10 @@ A python application with gui to connect automatically to the recommended NordVP
 
 All server types on NordVPN site are available to be selected in the window.
 
+<b>Tested against DNS leaks (NetworkManager use is discouraged (and disabled by default) as it leaks DNS)</b>
+
 <b> NOTE </b>: ikev2 support is tested on Debian, Arch and derivatives (if something's not right button won't show up)
+
 ### Installation and requirements
 
 For <b>Debian/Ubuntu</b>, <b>Fedora/Red Hat</b> and <b>Arch Linux</b> users:
@@ -47,7 +50,7 @@ If the size of the window does not fit entirely the gui components change the sc
 ![Alt text](media/screenshots/screen05.png?raw=true "Preview")
 
 <li> Scale Factor: this parameter affects the size of a window (will be restored at each start)</li>
-<li> Network Manager: if checked NordPy will try to connect through networkmanager-openvpn plugin (checked by default). Works only if network manager is enabled</li>
+<li> Network Manager: if checked NordPy will try to connect through networkmanager-openvpn plugin (disabled by default). Works only if network manager is enabled. It is discouraged the use, as it leaks DNS.</li>
 
 #### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  

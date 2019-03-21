@@ -5,7 +5,7 @@ from bin.credentials import credentials_file_path
 from bin.settings import advanced_settings_are_correct, advanced_settings_read, advanced_settings_save
 
 DEFAULT_SCALE_FACTOR = 1
-DEFAULT_NM_USE = True
+DEFAULT_NM_USE = False
 
 
 class AdvancedSettingsWindow(Toplevel):
