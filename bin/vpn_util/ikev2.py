@@ -115,7 +115,7 @@ def __ikev2_reset_load__():
 SUCCESS_STRING = "connection 'NordVPN' established successfully"
 FAILURE_STRING = "establishing connection 'NordVPN' failed"
 AUTH_FAILURE_STRING = "EAP authentication failed"
-
+CONFIG_NOT_FOUND_STRING = "no config named 'NordVPN'"
 
 def __ikev2_launch__():
     """
@@ -123,14 +123,19 @@ def __ikev2_launch__():
     if no connection is available
     """
     args = ['sudo', 'ipsec', 'up', 'NordVPN']
-    ipsec_start_command = Popen(args, stdout=PIPE, universal_newlines=True)
 
-    (out, _) = ipsec_start_command.communicate()
-    logger.info(out)
-    if AUTH_FAILURE_STRING in out:
-        raise LoginError
-    elif FAILURE_STRING in out:
-        raise ConnectionError
+    out = CONFIG_NOT_FOUND_STRING
+
+    # trying to start connection if the connection is not found
+    while CONFIG_NOT_FOUND_STRING in out or out == '':
+        ipsec_start_command = Popen(args, stdout=PIPE, universal_newlines=True)
+
+        (out, _) = ipsec_start_command.communicate()
+        logger.info(out)
+        if AUTH_FAILURE_STRING in out:
+            raise LoginError
+        elif FAILURE_STRING in out:
+            raise ConnectionError
 
     return
 
@@ -173,13 +178,6 @@ def __ikev2_ipsec_reload__():
 
     return
 
-def __ikev2_wait__():
-    """
-    wait until ikev2 is ready to establish a connection by executing a simple status
-    """
-    args = ['sudo', 'ipsec', 'statusall']
-    Popen(args).wait()
-
 def ikev2_connect(username, password, server):
     """
     starts a ikev2 connection. Launches a ConnectionError if no connection is available, a LoginError if the
@@ -197,11 +195,6 @@ def ikev2_connect(username, password, server):
 
     # reload ipsec configurations
     __ikev2_ipsec_reload__()
-
-    # waiting until confs are loaded (otherwise configuration needed will not be found)
-    __ikev2_wait__()
-    __ikev2_wait__()
-    __ikev2_wait__()
 
     # launches the connection
     __ikev2_launch__()
