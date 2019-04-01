@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from bin.gui_components.root_password_window import RootPermissionWindow
-from bin.gui import *
+import os
 
 def main():
     # if file is launched without root privileges
@@ -21,6 +21,7 @@ def main():
         nordpy_args = ['sudo', 'python3',  *sys.argv]
         subprocess.call(nordpy_args)
     else:
+        from bin.gui import gui
         app = gui()
         app.mainloop()
 
