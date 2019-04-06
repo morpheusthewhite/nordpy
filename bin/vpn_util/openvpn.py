@@ -31,8 +31,8 @@ def start_openvpn(server, protocol):
     pathToConf = get_path_to_conf(server, protocol)
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,
             # to prevent dns leaks
-            "--script-security", "2", "--up", "/etc/openvpn/update-resolv-conf", "--down",
-            "/etc/openvpn/update-resolv-conf"]
+            "--script-security", "2", "--up", os.path.join(CURRENT_PATH, "scripts", "nordpy_up.sh"), "--down",
+            os.path.join(CURRENT_PATH, "scripts", "nordpy_down.sh")]
 
     tries = 0
     while tries < MAXIMUM_TRIES:
