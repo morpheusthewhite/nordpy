@@ -4,7 +4,7 @@ import json
 import threading
 
 logger = get_logger(__name__)
-
+XOR_OVPN_FOLDER="ovpn_{protocol}_xor"
 
 def exists_conf_for(server_name, protocol):
     """
@@ -108,53 +108,54 @@ PERCENT_KEY = 'percent'
 
 
 class StatsHolder:
-    def __init__(self, gui):
-        threading.Thread(target=self.parallel_request).start()
+    def __init__(self):
+        threading.Thread(target=self.stats_parallel_request).start()
 
-        global local_stats
-        if local_stats is not None:
-            self.stats_dic = local_stats
-        else:
-            self.stats_dic = {}
+        self.stats_dic = {}
 
-    def parallel_request(self):
-        stats = requests.get(STATS_URL)
+    def stats_parallel_request(self):
+        try:
+            stats = requests.get(STATS_URL)
+        except requests.ConnectionError:
+            return
+
         parser = json.decoder.JSONDecoder()
         self.stats_dic = parser.decode(stats.text)
         logger.debug("Retrieved stats")
 
-        # updating stored stats
-        global local_stats
-        local_stats = self.stats_dic
 
-    def get_server_stats(self, server):
+    def get_server_stats_as_str(self, server):
         """
         returns the load of a specific server
         :param server: the server whose load is needed
-        :return: the load as a string
+        :return: the load as a string (with percent character)
         """
         try:
             return str(self.stats_dic[server+".nordvpn.com"][PERCENT_KEY])+"%"
         except KeyError:
             return ""
 
+    def get_server_stats_as_int(self, server):
+        """
+        returns the load of a specific server
+        :param server: the server whose load is needed (in the form xxx.nordvpn.com)
+        :return: the load as int. Raises a ConnectionError if no connection is available; raises a KeyError
+        is the stats for the requested server are not available
+        """
+        if self.stats_dic == {}:
+            raise requests.ConnectionError
 
-# stored stats, updated at the start if possible
-local_stats = None
+        return self.stats_dic[server][PERCENT_KEY]
+
+    def has_stats(self):
+        """
+        :return: true if some stats are saved, false otherwise
+        """
+        return self.stats_dic != {}
 
 
-def __update_local_stats__():
-    """
-    retrieves the server stats and stores them (executed in a parallel thread)
-    """
-    global local_stats
-    try:
-        stats_text = requests.get(STATS_URL).text
-        parser = json.decoder.JSONDecoder()
-        local_stats = parser.decode(stats_text)
-        logger.info('retrieved and stored stats')
-    except requests.ConnectionError:
-        return
+global_stats_holder = StatsHolder()
 
 
-threading.Thread(target=__update_local_stats__).start()
+# updating stats in another thread
+threading.Thread(target=global_stats_holder.stats_parallel_request()).start()
