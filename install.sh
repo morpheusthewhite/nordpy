@@ -6,7 +6,7 @@ function dependencies_error(){
 
 # asking if obsfuscated server support is required
 echo "Do you want to install support for obfuscated servers (it will reinstall openvpn)?[y/n] (Recommended: n)"
-read ANSWER
+read -r ANSWER
 if [ "$ANSWER" = "Y" ] ; then ANSWER=y; fi;
 if [ "$ANSWER" = "N" ] ; then ANSWER=n; fi;
 
@@ -36,16 +36,19 @@ then sudo apt-get remove -y openvpn || sudo dnf remove -y openvpn || sudo pacman
     mkdir ovpn_tcp ovpn_udp
 
     # linking all files into ovpn_[protocol]
+    (
     cd ovpn_tcp_xor
     for file in ./* ; do ln -s ../ovpn_tcp_xor/$file ../ovpn_tcp/$file ; done
-    cd ../ovpn_udp_xor/
+    )
+    (
+    cd ovpn_udp_xor/
     for file in ./* ; do ln -s ../ovpn_udp_xor/$file ../ovpn_udp/$file ; done
-    cd ..
+    )
 elif [ "$ANSWER" = 'n' ]
     then
     # removing previously built version
     sudo apt-get remove openpn -y || sudo dnf remove -y openvpn || sudo pacman -R --noconfirm openvpn
-    if ! [ -z `sudo which openvpn` ]; then sudo rm `sudo which openvpn`; fi;
+    if ! [ -z $(sudo which openvpn) ]; then sudo rm $(sudo which openvpn); fi;
 
     # installing the official version with package manager
     sudo apt-get install openvpn -y || sudo dnf install -y openvpn || sudo pacman -Sy --noconfirm openvpn ||
@@ -59,33 +62,33 @@ fi
 
 INSTALLATION_COMPLETED_MSG='Required packages installed'
 
-if ! [ -z `which apt-get 2> /dev/null` ]; # Debian
+if ! [ -z $(which apt-get 2> /dev/null) ]; # Debian
     then sudo apt-get install -y python3 python3-tk python3-requests wget strongswan strongswan-ikev2 \
     libstrongswan-standard-plugins unzip libstrongswan-extra-plugins\
     libcharon-extra-plugins > /dev/null || sudo apt-get install -y python3 python3-tk python3-requests wget unzip > /dev/null
     # if some packages are missing the script try to install a minimal and fundamental set of them
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ `nmcli networking` = "enabled" -a "$ANSWER" = 'n' ]
+    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo apt-get install -y network-manager-openvpn network-manager-openvpn-gnome > /dev/null
     fi
 fi
-if ! [ -z `which dnf 2> /dev/null` ]; # Fedora
+if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
     then sudo dnf install -y python3 python3-tkinter python3-requests wget unzip> /dev/null
     # sudo dnf install strongswan strongswan-charon-nm libreswan ldns unbound-libs
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ `nmcli networking` = "enabled" -a "$ANSWER" = 'n' ]
+    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo dnf install -y NetworkManager-openvpn NetworkManager-openvpn-gnome > /dev/null
     fi
 fi
-if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
+if ! [ -z $(which pacman 2> /dev/null) ]; # Arch Linux
     then sudo pacman -Sy --noconfirm python3 tk python-requests wget unzip strongswan > /dev/null||
      sudo pacman -Sy --noconfirm python3 tk python-requests wget unzip > /dev/null
     # again, the script try to install a fundamental set of packages
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ `nmcli networking` = "enabled" -a "$ANSWER" = 'n' ]
+    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo pacman -Sy --noconfirm networkmanager-openvpn > /dev/null
     fi
 fi
@@ -93,7 +96,7 @@ fi
 echo "installing certificates (needed by ipsec)"
 sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der -o /dev/null 2> /dev/null
 
-current_dir=`pwd`
+current_dir=$(pwd)
 
 # check which path to desktop files exists
 if [ -d /usr/local/share/applications ]
