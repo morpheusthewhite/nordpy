@@ -91,7 +91,7 @@ if ! [ -z `which pacman 2> /dev/null` ]; # Arch Linux
 fi
 
 echo "installing certificates (needed by ipsec)"
-sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der -o /dev/null
+sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/cacerts/NordVPN.der -o /dev/null 2> /dev/null
 
 current_dir=`pwd`
 
