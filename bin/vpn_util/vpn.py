@@ -34,7 +34,7 @@ def startVPN(server, protocol, nm):
 
 def stop_vpn(running_connection):
     if running_connection == OPENVPN_CONNECTION_STRING:
-        subprocess.call(["sudo", "killall", "openvpn"])
+        openvpn_stop()
     elif running_connection == IPSEC_CONNECTION_STRING:
         ikev2_disconnect()
     elif running_connection == NM_CONNECTION_STRING:

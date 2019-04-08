@@ -1,7 +1,7 @@
 from tkinter import *
 from os import path
 
-from bin.conf_util import get_available_servers_dict, StatsHolder
+from bin.conf_util import get_available_servers_dict, global_stats_holder
 from bin.logging_util import get_logger
 from bin.pathUtil import CURRENT_PATH
 from requests import ConnectionError as RequestsConnectionError
@@ -28,7 +28,7 @@ class ManualServerWindow(Toplevel):
 
         # creating stats holder
         try:
-            self.stats_holder = StatsHolder(self)
+            self.stats_holder = global_stats_holder
         except RequestsConnectionError:
             self.stats_holder = None
 
@@ -84,7 +84,7 @@ class ManualServerWindow(Toplevel):
                 self.domain_servers_listbox.insert(END, server)
         else:
             for server in SERVERS_DICT[domain_selected]:
-                self.domain_servers_listbox.insert(END, server+"  "+self.stats_holder.get_server_stats(server))
+                self.domain_servers_listbox.insert(END, server +"  " + self.stats_holder.get_server_stats_as_str(server))
 
 
     def ok_pressed(self):

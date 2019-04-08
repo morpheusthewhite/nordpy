@@ -1,5 +1,9 @@
 from requests import get, Timeout
 from bin.logging_util import get_logger
+from bin.conf_util import XOR_OVPN_FOLDER, PERCENT_KEY
+from bin.pathUtil import CURRENT_PATH
+import os
+import requests
 
 AUTOMATIC_CHOICE_STRING = 'Choose Automatically'
 NORDVPN_CODES = {"Standard VPN": "11", "Double VPN": "1", "Onion over VPN": "3", "Dedicated IP": "9", "P2P": "15", "Obfuscated": "17"}
@@ -43,6 +47,9 @@ def get_recommended_server(server_type, country):
     :param country: the country (can be chosen automatically)
     :return: the recommmended server
     """
+    if server_type == 'Obfuscated':
+        return get_obfuscated_server()
+
     try:
         response = get(get_nordvpn_url(server_type, country), timeout=REQUEST_TIMEOUT)
     except Timeout:
@@ -91,3 +98,43 @@ def get_nordvpn_url(server_type, country):
     logger.debug("resulting url: "+resulting_url)
     return resulting_url
 
+
+def get_obfuscated_server():
+    """
+    Select the best obfuscated server according to the loads
+    :param gui: the gui instance that invokes this method
+    :return: a string representing the best server, '' if no stats were found. Raises a ConnectionError if no
+    connection is available
+    """
+    from bin.conf_util import global_stats_holder
+    global_stats_holder.stats_parallel_request()
+
+    if not global_stats_holder.has_stats():
+        raise requests.ConnectionError
+
+    ovpn_folder = os.path.join(CURRENT_PATH, XOR_OVPN_FOLDER.format(protocol="tcp"))
+
+    if not os.path.exists(ovpn_folder):
+        return None
+
+    best_server = ''
+    best_load = 101
+
+    for filename in os.listdir(ovpn_folder):
+        # clearing filenames (removes suffix from files). It is indifferent the protocol used
+        server_name = filename.replace(".tcp.ovpn", "")
+
+        try:
+            # will raise a ConnectionError if no data was collected
+            load = global_stats_holder.get_server_stats_as_int(server_name)
+        except KeyError:
+            # the server is not in the list
+            continue
+
+        if load < best_load:
+            best_server = server_name
+            best_load = load
+
+    logger.info("Obfuscated server selected: "+best_server)
+
+    return best_server # returning the server name in the expected form

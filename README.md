@@ -37,6 +37,22 @@ to support Network Manager (facultative).
 
 Then run `install.sh`
 
+### Installing with support for obfuscated servers
+
+At the launch of the installation script you will be asked
+
+```
+Do you want to install support for obfuscated servers (it will reinstall openvpn)?[y/n] (Recommended: n)
+```
+
+if you answer is `y` then openvpn will be built from source (version 2.4.4) applying patch for obfuscation. If you do not run Debian/Ubuntu, Fedora or Arch, you should provide the following packages and then run `install.sh`
+
+```
+automake autoconf perl gnupg quilt libtool openssl-devel lzo-devel pam-devel net-tools
+```
+
+<b>Note</b>: Installing support for obfuscated servers breaks Network Manager openvpn support in some distros (in that case you should disable it in the advanced options)
+
 ## Usage
 Open the application, select your preferred server type (also manually) and protocol and just press connect. Once you are connected you can even close the application and reopen it when you want to disconnect the VPN.
 If the size of the window does not fit entirely the gui components change the scale factor in the advanced settings.

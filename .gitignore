@@ -1,6 +1,10 @@
 bin/__pycache__/
-credentials
-ovpn_tcp/
-ovpn_udp/
-settings.ini
 *.pyc
+
+ovpn_tcp/
+ovpn_tcp_xor/
+ovpn_udp/
+ovpn_udp_xor/
+
+credentials
+settings.ini

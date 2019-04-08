@@ -2,13 +2,22 @@ from bin.credentials import *
 from bin.root import *
 from bin.logging_util import get_logger
 from bin.vpn_util.exceptions import LoginError, OpenresolvError
+import signal
 
 OVA_SUFFIX = ".ovpn"
 PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
 MAXIMUM_TRIES = 2
 IKEV2_PROTOCOL_NUMBER = 2
-
+TIMEOUT_TIME = 10
 logger = get_logger(__name__)
+
+
+def timeout_handler(signum, frame):
+    raise TimeoutError
+
+
+# registers the handler for the signal
+signal.signal(signal.SIGALRM, timeout_handler)
 
 
 def get_path_to_conf(server, protocol):
@@ -36,32 +45,55 @@ def start_openvpn(server, protocol):
 
     tries = 0
     while tries < MAXIMUM_TRIES:
-
         openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
 
-        while True:
-            line = openvpn.stdout.readline()
+        signal.alarm(TIMEOUT_TIME)
 
-            if not line.strip() == '':
-                logger.debug("[OPENVPN]: "+line)
+        try:
+            while True:
+                line = openvpn.stdout.readline()
 
-            if "Initialization Sequence Completed" in line:
-                # success !
-                return openvpn
-            elif "connection failed" in line or "Exiting" in line:
-                tries += 1
-                openvpn.terminate()
-                break
+                if not line.strip() == '':
+                    logger.debug("[OPENVPN]: "+line)
 
-            elif "AUTH_FAILED" in line:
-                # something's wrong
-                raise LoginError
+                if "Initialization Sequence Completed" in line:
+                    # success !
+                    signal.alarm(0)
+                    return openvpn
+                elif "connection failed" in line or "Exiting" in line:
+                    tries += 1
+                    openvpn.terminate()
+                    break
 
-            # openresolv is not installed
-            elif "script fails with" in line:
-                raise OpenresolvError
+                elif "AUTH_FAILED" in line:
+                    # something's wrong
+                    signal.alarm(0)
+                    raise LoginError
+
+                # missing script
+                elif "script fails with" in line:
+                    signal.alarm(0)
+                    raise OpenresolvError
+
+        except TimeoutError:
+            logger.warning("expired timeout for openvpn connection")
+            tries += 1
+            openvpn.kill()
+
+    signal.alarm(0)
+
+    # sometimes openvpn.kill() doesn't close the launched processes
+    openvpn_stop()
 
     raise ConnectionError
+
+
+def openvpn_stop():
+    """
+    Closes all runnning openvpn processes
+    """
+    subprocess.Popen(["sudo", "killall", "openvpn"]).communicate()
+
 
 def checkOpenVPN():
     """
