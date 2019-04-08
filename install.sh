@@ -7,6 +7,8 @@ function dependencies_error(){
 # asking if obsfuscated server support is required
 echo "Do you want to install support for obfuscated servers (it will reinstall openvpn)?[y/n] (Recommended: n)"
 read ANSWER
+if [ "$ANSWER" = "Y" ] ; then ANSWER=y; fi;
+if [ "$ANSWER" = "N" ] ; then ANSWER=n; fi;
 
 # clearing downloaded .ovpn
 rm -rf ovpn_*
