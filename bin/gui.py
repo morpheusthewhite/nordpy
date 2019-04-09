@@ -18,7 +18,7 @@ DEFAUL_WIDTH = 370
 DEFAUL_HEIGHT = 340
 
 class gui(Tk):
-    def __init__(self):
+    def __init__(self, root_password):
         super().__init__()
         self.wm_title("NordPY")
 
@@ -34,6 +34,9 @@ class gui(Tk):
         self.__init_protocol__()
         self.__initStatus__()
         self.__initButtons__()
+
+        # initializing field for root password
+        self.root_password = root_password
 
         if advanced_settings_are_correct():
             (scale_factor, nm_use) = advanced_settings_read()
@@ -128,6 +131,8 @@ class gui(Tk):
         self.statusFrame.statusDinamic.configure(text="Retrieving recommended server", foreground="white")
 
     def connect(self):
+        get_root_permissions(self.root_password)
+
         if self.manual_frame.get_is_manual():
             self.manual_connection()
         else:
@@ -233,6 +238,8 @@ class gui(Tk):
         self.setStatusConnected(server, self.running_connection)
 
     def disconnect(self):
+        get_root_permissions(self.root_password)
+
         stop_vpn(self.running_connection)
         self.setStatusDisconnected()
 

@@ -14,15 +14,11 @@ def main():
         if password_inserted is None:
             return
 
-        import subprocess, bin.root
+        import bin.root
         bin.root.get_root_permissions(password_inserted)
 
-        import sys
-        nordpy_args = ['sudo', 'python3',  *sys.argv]
-        subprocess.call(nordpy_args)
-    else:
         from bin.gui import gui
-        app = gui()
+        app = gui(password_inserted)
         app.mainloop()
 
 
