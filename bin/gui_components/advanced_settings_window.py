@@ -3,6 +3,7 @@ from tkinter import messagebox
 from bin.pathUtil import *
 from bin.credentials import credentials_file_path
 from bin.settings import advanced_settings_are_correct, advanced_settings_read, advanced_settings_save
+from bin.root import get_root_permissions
 
 DEFAULT_SCALE_FACTOR = 1
 DEFAULT_NM_USE = False
@@ -66,6 +67,8 @@ class AdvancedSettingsWindow(Toplevel):
         self.nm_checkbutton.pack(pady=8)
 
     def remove_cred(self):
+        get_root_permissions()
+
         if messagebox.askyesno(parent=self, title='Confirm', message="Are you sure you want "
                                                                      "to remove stored credentials?"):
             try:

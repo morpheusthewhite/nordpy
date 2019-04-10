@@ -4,14 +4,28 @@ from bin.logging_util import get_logger
 logger = get_logger(__name__)
 
 
-def get_root_permissions(sudo_password):
+def get_root_permissions(sudo_password=None):
     """
-    Obtains root permission by launching a simple sudo command
+    Obtains root permission by launching a simple sudo command, asking for password is sudo_password is None
     :param sudo_password: the root password
     """
+    if has_root_privileges():
+        return
+
+    if sudo_password is None:
+        sudo_password = ask_root_password()
+
     obtainsRoot = subprocess.Popen(["sudo", "-S", "ls"], stdin=subprocess.PIPE, universal_newlines=True,
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     obtainsRoot.communicate(input=sudo_password + "\n")
+
+
+def has_root_privileges():
+    """
+    checks if the process has temporarily obtained root privileges
+    :return: True if it has, False otherwise
+    """
+    return test_root_password("")
 
 
 def test_root_password(sudo_password):

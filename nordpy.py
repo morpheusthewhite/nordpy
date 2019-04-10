@@ -18,7 +18,7 @@ def main():
         bin.root.get_root_permissions(password_inserted)
 
         from bin.gui import gui
-        app = gui(password_inserted)
+        app = gui()
         app.mainloop()
 
 
