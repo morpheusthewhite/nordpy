@@ -12,7 +12,7 @@ All server types on NordVPN site are available to be selected in the window.
 
 <b> NOTE </b>: ikev2 support is tested on Debian, Arch and derivatives (if something's not right button won't show up)
 
-### Installation and requirements
+## Installation and requirements
 
 For <b>Debian/Ubuntu</b>, <b>Fedora/Red Hat</b> and <b>Arch Linux</b> users:
 
@@ -81,3 +81,13 @@ After connection has been established:
 
 Once closed and restarted:  
 ![Alt text](media/screenshots/screen04.png?raw=true "Preview")
+
+## Caveat
+
+NordPy will not work on Fedora 29 since launching a `tkinter.OptionMenu`
+will cause the application to crash with `Floating point exception (core dumped)`.
+
+For more info and bug progress see [the bug I reported](https://bugzilla.redhat.com/show_bug.cgi?id=1699049)
+and [the entire discussion](https://github.com/morpheusthewhite/NordPy/issues/17) on the issues page.
+
+
