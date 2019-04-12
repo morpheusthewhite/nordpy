@@ -16,6 +16,7 @@ def main():
 
         import bin.root
         bin.root.get_root_permissions(password_inserted)
+        del password_inserted
 
         from bin.gui import gui
         app = gui()
