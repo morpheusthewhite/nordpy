@@ -67,7 +67,7 @@ class AdvancedSettingsWindow(Toplevel):
         self.nm_checkbutton.pack(pady=8)
 
     def remove_cred(self):
-        if not get_root_permissions():
+        if not get_root_permissions(parent=self):
             return
 
         if messagebox.askyesno(parent=self, title='Confirm', message="Are you sure you want "

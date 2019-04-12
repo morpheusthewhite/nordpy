@@ -4,7 +4,7 @@ from bin.logging_util import get_logger
 logger = get_logger(__name__)
 
 
-def get_root_permissions(sudo_password=None):
+def get_root_permissions(sudo_password=None, parent=None):
     """
     Obtains root permission by launching a simple sudo command, asking for password is sudo_password is None.
     :param sudo_password: the root password
@@ -14,7 +14,7 @@ def get_root_permissions(sudo_password=None):
         return True
 
     if sudo_password is None:
-        sudo_password = ask_root_password()
+        sudo_password = ask_root_password(parent)
 
         # no password has been inserted
         if sudo_password is None:
@@ -60,12 +60,16 @@ def wrong_root_password():
     messagebox.showwarning(title="Wrong password", message="Wrong root password, insert it again")
 
 
-def ask_root_password():
+def ask_root_password(parent=None):
     """
     Shows a window dialog that asks for the root password
     :return: the correct root password if inserted correctly, None otherwise
     """
-    root_password = simpledialog.askstring("Password", "Enter root password:", show='*')
+
+    if parent is None:
+        root_password = simpledialog.askstring("Password", "Enter root password:", show='*')
+    else:
+        root_password = simpledialog.askstring("Password", "Enter root password:", parent=parent, show='*')
 
     if root_password is None:
         return None
