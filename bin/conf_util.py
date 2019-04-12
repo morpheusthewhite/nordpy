@@ -158,4 +158,4 @@ global_stats_holder = StatsHolder()
 
 
 # updating stats in another thread
-threading.Thread(target=global_stats_holder.stats_parallel_request()).start()
+threading.Thread(target=global_stats_holder.stats_parallel_request).start()
