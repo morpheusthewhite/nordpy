@@ -128,7 +128,8 @@ class gui(Tk):
         self.statusFrame.statusDinamic.configure(text="Retrieving recommended server", foreground="white")
 
     def connect(self):
-        get_root_permissions()
+        if not get_root_permissions():
+            return
 
         if self.manual_frame.get_is_manual():
             self.manual_connection()
@@ -235,7 +236,8 @@ class gui(Tk):
         self.setStatusConnected(server, self.running_connection)
 
     def disconnect(self):
-        get_root_permissions()
+        if not get_root_permissions():
+            return
 
         stop_vpn(self.running_connection)
         self.setStatusDisconnected()

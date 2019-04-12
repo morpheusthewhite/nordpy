@@ -67,7 +67,8 @@ class AdvancedSettingsWindow(Toplevel):
         self.nm_checkbutton.pack(pady=8)
 
     def remove_cred(self):
-        get_root_permissions()
+        if not get_root_permissions():
+            return
 
         if messagebox.askyesno(parent=self, title='Confirm', message="Are you sure you want "
                                                                      "to remove stored credentials?"):
