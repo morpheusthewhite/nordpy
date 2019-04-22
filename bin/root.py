@@ -32,7 +32,13 @@ def has_root_privileges():
     checks if the process has temporarily obtained root privileges
     :return: True if it has, False otherwise
     """
-    return test_root_password("")
+    (_, err) = subprocess.Popen(["sudo", "-n", "ls"], stdin=subprocess.PIPE, universal_newlines=True,
+                                  stderr=subprocess.PIPE, stdout=subprocess.DEVNULL).communicate()
+
+    if "password is required" in err:
+        return False
+
+    return True
 
 
 def test_root_password(sudo_password):
@@ -41,8 +47,8 @@ def test_root_password(sudo_password):
     :param sudo_password: the root password
     :return True if it is correct, False otherwise
     """
-    check_root = subprocess.Popen(["sudo -S ls"], stdin=subprocess.PIPE, universal_newlines=True,
-                                   stderr=subprocess.PIPE, stdout=subprocess.DEVNULL, shell=True)
+    check_root = subprocess.Popen(["sudo", "-S", "ls"], stdin=subprocess.PIPE, universal_newlines=True,
+                                   stderr=subprocess.PIPE, stdout=subprocess.DEVNULL)
 
     (_, err) = check_root.communicate(input=sudo_password + "\n")
 
