@@ -1,10 +1,15 @@
+import os
+
 import requests
 from bin.logging_util import get_logger
 import json
 import threading
 
+from bin.pathUtil import CURRENT_PATH
+
 logger = get_logger(__name__)
-XOR_OVPN_FOLDER="ovpn_{protocol}_xor"
+XOR_OVPN_FOLDER = "ovpn_{protocol}_xor"
+
 
 def exists_conf_for(server_name, protocol):
     """
@@ -14,7 +19,6 @@ def exists_conf_for(server_name, protocol):
     :return: True if exists, False otherwise
     """
     import os.path
-    from bin.vpn_util.openvpn import get_path_to_conf
 
     conf_filename = get_path_to_conf(server_name, protocol)
     logger.debug("Checking if exists "+conf_filename)
@@ -159,3 +163,17 @@ global_stats_holder = StatsHolder()
 
 # updating stats in another thread
 threading.Thread(target=global_stats_holder.stats_parallel_request).start()
+
+
+def get_path_to_conf(server, protocol):
+    """
+    calculates the path to the .ovpn file from the given server and protocol
+    :param server: the name of the server
+    :param protocol: the protocol to be used
+    :return: the path to the file
+    """
+    return os.path.join(CURRENT_PATH + "ovpn_" + PROTOCOLS[protocol], server + "." + PROTOCOLS[protocol] + OVA_SUFFIX)
+
+
+OVA_SUFFIX = ".ovpn"
+PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]

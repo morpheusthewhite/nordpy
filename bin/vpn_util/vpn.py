@@ -7,7 +7,8 @@ IPSEC_EXISTS = ipsec_exists()
 def startVPN(server, protocol, nm):
     """
     Starts VPN with the given server and protocol. Raises a ConnectionError if no connection is available
-    and a LoginError if the credentials are wrong
+    and a LoginError if the credentials are wrong, a KillswitchError if some problems were encountered in
+    setting up the killswitch
     :param server: the name of the server
     :param protocol: the protocol to be used
     :param nm: a boolean: True if network manager should be used, false otherwise
@@ -41,6 +42,7 @@ def stop_vpn(running_connection):
         nm_disconnect()
 
     return
+
 
 OPENVPN_CONNECTION_STRING = 'UDP/TCP'
 IPSEC_CONNECTION_STRING = 'Ikev2'

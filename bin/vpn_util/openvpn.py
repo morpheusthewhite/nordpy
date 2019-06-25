@@ -1,11 +1,12 @@
+from bin.conf_util import get_path_to_conf
 from bin.credentials import *
 from bin.root import *
 from bin.logging_util import get_logger
 from bin.vpn_util.exceptions import LoginError, OpenresolvError
+from bin.vpn_util.killswitch import killswitch_up, killswitch_down
+
 import signal
 
-OVA_SUFFIX = ".ovpn"
-PROTOCOLS = ["udp", "tcp", "Ikev2/IPsec"]
 MAXIMUM_TRIES = 2
 IKEV2_PROTOCOL_NUMBER = 2
 TIMEOUT_TIME = 10
@@ -18,16 +19,6 @@ def timeout_handler(signum, frame):
 
 # registers the handler for the signal
 signal.signal(signal.SIGALRM, timeout_handler)
-
-
-def get_path_to_conf(server, protocol):
-    """
-    calculates the path to the .ovpn file from the given server and protocol
-    :param server: the name of the server
-    :param protocol: the protocol to be used
-    :return: the path to the file
-    """
-    return CURRENT_PATH + "ovpn_" + PROTOCOLS[protocol] + "/" + server + "." + PROTOCOLS[protocol] + OVA_SUFFIX
 
 
 def start_openvpn(server, protocol):
@@ -45,6 +36,10 @@ def start_openvpn(server, protocol):
 
     tries = 0
     while tries < MAXIMUM_TRIES:
+
+        # activate killswitch
+        killswitch_up(server, protocol)
+
         openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
 
         signal.alarm(TIMEOUT_TIME)
@@ -62,23 +57,25 @@ def start_openvpn(server, protocol):
                     return openvpn
                 elif "connection failed" in line or "Exiting" in line:
                     tries += 1
-                    openvpn.terminate()
+                    openvpn_stop()
                     break
 
                 elif "AUTH_FAILED" in line:
                     # something's wrong
                     signal.alarm(0)
+                    killswitch_down()
                     raise LoginError
 
                 # missing script
                 elif "script fails with" in line:
                     signal.alarm(0)
+                    killswitch_down()
                     raise OpenresolvError
 
         except TimeoutError:
             logger.warning("expired timeout for openvpn connection")
             tries += 1
-            openvpn.kill()
+            openvpn_stop()
 
     signal.alarm(0)
 
@@ -92,6 +89,7 @@ def openvpn_stop():
     """
     Closes all runnning openvpn processes
     """
+    killswitch_down()
     subprocess.Popen(["sudo", "killall", "openvpn"]).communicate()
 
 

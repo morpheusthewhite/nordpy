@@ -1,6 +1,6 @@
 from bin.pathUtil import CURRENT_PATH
 from bin.vpn_util.networkSelection import MODES
-from bin.vpn_util.openvpn import get_path_to_conf
+from bin.conf_util import get_path_to_conf
 import os
 import configparser as cp
 from bin.logging_util import get_logger
