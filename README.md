@@ -8,9 +8,18 @@ A python application with gui to connect automatically to the recommended NordVP
 
 All server types on NordVPN site are available to be selected in the window.
 
-<b>Tested against DNS leaks (NetworkManager use is discouraged (and disabled by default) as it leaks DNS)</b>
+<b>Tested against DNS leaks (NetworkManager use is discouraged (and disabled by default) as it may leak DNS)</b>
 
 <b> NOTE </b>: ikev2 support is tested on Debian, Arch and derivatives (if something's not right button won't show up)
+
+## Features
+
+- Automatic connection to recommended server (according to nordvpn.com)
+- TCP, UDP and IKEv2/IPsec protocols are available
+- Connection (TCP and UDP) can be established with either `openvpn` or `NetworkManager-openvpn` (will show connection in the system interface)
+- No DNS leak (when using `openvpn`)
+- Killswitch (when using `openvpn`)
+
 
 ## Installation and requirements
 
