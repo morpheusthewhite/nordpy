@@ -98,15 +98,6 @@ sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/ca
 
 current_dir=$(pwd)
 
-# check which path to desktop files exists
-if [ -d /usr/local/share/applications ]
-then
-    DESK_PATH=/usr/local/share/applications
-else
-    DESK_PATH=/usr/share/applications
-fi
-echo "Saving desktop shortcut in "$DESK_PATH
-
 echo "[Desktop Entry]
 
 Type=Application
@@ -117,9 +108,9 @@ Path=$current_dir
 Exec=\"$current_dir/nordpy.py\"
 Icon=$current_dir/media/nordvpn.png
 Terminal=false
-Categories=Internet;System;Utilities;" | sudo tee $DESK_PATH/nordpy.desktop > /dev/null
+Categories=Internet;System;Utilities;" | tee nordpy.desktop > /dev/null
 
-sudo chmod +x $DESK_PATH/nordpy.desktop
+xdg-desktop-menu install --novendor nordpy.desktop
 
 echo "downloading and extracting conf files from NordVPN"
 wget https://downloads.nordcdn.com/configs/archives/servers/ovpn.zip -o /dev/null
