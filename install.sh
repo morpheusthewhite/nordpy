@@ -83,13 +83,13 @@ if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
     fi
 fi
 if ! [ -z $(which pacman 2> /dev/null) ]; # Arch Linux
-    then sudo pacman -Sy --noconfirm python3 tk python-requests wget unzip strongswan > /dev/null||
-     sudo pacman -Sy --noconfirm python3 tk python-requests wget unzip > /dev/null
+    then sudo pacman -Sy --needed --noconfirm python3 tk python-requests wget unzip strongswan > /dev/null||
+     sudo pacman -Sy --needed --noconfirm python3 tk python-requests wget unzip > /dev/null
     # again, the script try to install a fundamental set of packages
 
     echo $INSTALLATION_COMPLETED_MSG
     if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
-    then sudo pacman -Sy --noconfirm networkmanager-openvpn > /dev/null
+    then sudo pacman -Sy --needed --noconfirm networkmanager-openvpn > /dev/null
     fi
 fi
 
