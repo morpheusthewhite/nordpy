@@ -2,7 +2,8 @@ import subprocess
 from os import linesep
 
 from bin.vpn_util.exceptions import LoginError
-from bin.vpn_util.openvpn import get_path_to_conf, PROTOCOLS
+from bin.vpn_util.openvpn import get_path_to_conf
+from bin.conf_util import PROTOCOLS
 from bin.logging_util import get_logger
 
 logger = get_logger(__name__)
