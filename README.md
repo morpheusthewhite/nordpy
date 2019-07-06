@@ -32,7 +32,7 @@ For <b>other distros</b>:
 install the following packages:
 
 ```
-python3 python3-tk python3-requests openvpn wget unzip
+python3 python3-tk python3-requests openvpn wget unzip net-tools
 ```
 and
 ```
