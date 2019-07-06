@@ -28,20 +28,20 @@ class gui(Tk):
         # getting color for background (some widget will need it)
         self.background_color = self.cget('background')
 
-        self.settings_frame = SettingsFrame(self)
-        self.manual_frame = ManualSelectionFrame(self, self.background_color)
+        if advanced_settings_are_correct():
+            (self.scale_factor, self.nm_use) = advanced_settings_read()
+            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, self.scale_factor)
+            self.nm_use = self.nm_use
+        else:
+            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT)
+            self.nm_use = DEFAULT_NM_USE
+
+        self.settings_frame = SettingsFrame(self, self.scale_factor)
+        self.manual_frame = ManualSelectionFrame(self, self.background_color, self.scale_factor)
         self.optionsFrame = OptionFrame(self)
         self.__init_protocol__()
         self.__initStatus__()
         self.__initButtons__()
-
-        if advanced_settings_are_correct():
-            (scale_factor, nm_use) = advanced_settings_read()
-            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, scale_factor)
-            self.nm_use = nm_use
-        else:
-            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT)
-            self.nm_use = DEFAULT_NM_USE
 
         running_vpn = get_running_vpn()
         if running_vpn is not None:

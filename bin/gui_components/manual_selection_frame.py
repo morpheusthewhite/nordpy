@@ -3,8 +3,9 @@ from bin.gui_components.manual_selection_window import *
 DEFAULT_MANUAL_SERVER_LABEL = '-----'
 
 class ManualSelectionFrame(LabelFrame):
-    def __init__(self, parent, background_color):
+    def __init__(self, parent, background_color, scale_factor=1):
         super(ManualSelectionFrame, self).__init__(parent, text="Manual Selection")
+        self.scale_factor = scale_factor
 
         self.action_frame = Frame(self)
         self.use_manual = BooleanVar()
@@ -26,7 +27,7 @@ class ManualSelectionFrame(LabelFrame):
         self.pack(fill='x')
 
     def select_server_manually(self):
-        ManualServerWindow(self)
+        ManualServerWindow(self, self.scale_factor)
 
     def __manual_frame_state_change__(self):
         if self.use_manual.get():

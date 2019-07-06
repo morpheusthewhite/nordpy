@@ -3,6 +3,7 @@
 from bin.gui_components.root_password_window import RootPermissionWindow
 import os
 
+
 def main():
     # if file is launched without root privileges
     if os.geteuid() != 0:

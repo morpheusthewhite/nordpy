@@ -10,10 +10,11 @@ DEFAULT_NM_USE = False
 
 
 class AdvancedSettingsWindow(Toplevel):
-    def __init__(self, main_gui):
+    def __init__(self, main_gui, scale_factor=1):
         super().__init__()
         self.wm_title("Advanced Settings")
         self.main_gui = main_gui
+        self.scale_factor = scale_factor
 
         # sets the icon
         self.__imgicon__ = PhotoImage(file=os.path.join(CURRENT_PATH + "media", "manual.png"))
@@ -38,7 +39,7 @@ class AdvancedSettingsWindow(Toplevel):
             self.set_scale(DEFAULT_SCALE_FACTOR)
             self.set_nm_use(DEFAULT_NM_USE)
 
-        self.center_window(300, 150)
+        self.center_window(300 * scale_factor, 150 * scale_factor)
 
         self.grab_set()  # used to disable the underlying window
 

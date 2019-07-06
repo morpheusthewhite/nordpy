@@ -11,7 +11,7 @@ logger = get_logger(__name__)
 
 
 class ManualServerWindow(Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, scale_factor=1):
         super(ManualServerWindow, self).__init__()
         self.wm_title("Select your server")
         self.parent = parent  # this will be needed when a server is chosen
@@ -20,7 +20,7 @@ class ManualServerWindow(Toplevel):
         self.__imgicon__ = PhotoImage(file=path.join(CURRENT_PATH + "media", "manual.png"))
         self.tk.call('wm', 'iconphoto', self._w, self.__imgicon__)
 
-        self.center_window(300, 190)
+        self.center_window(300 * scale_factor, 190 * scale_factor)
         self.__init_listboxes__()
         self.__init_buttons__()
 
