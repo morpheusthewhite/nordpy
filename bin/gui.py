@@ -30,11 +30,10 @@ class gui(Tk):
 
         if advanced_settings_are_correct():
             (self.scale_factor, self.nm_use) = advanced_settings_read()
-            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, self.scale_factor)
-            self.nm_use = self.nm_use
         else:
-            self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT)
-            self.nm_use = DEFAULT_NM_USE
+            (self.scale_factor, self.nm_use) = (DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE)
+
+        self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, self.scale_factor)
 
         self.settings_frame = SettingsFrame(self, self.scale_factor)
         self.manual_frame = ManualSelectionFrame(self, self.background_color, self.scale_factor)
