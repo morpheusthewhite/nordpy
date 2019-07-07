@@ -46,10 +46,6 @@ then sudo apt-get remove -y openvpn || sudo dnf remove -y openvpn || sudo pacman
     )
 elif [ "$ANSWER" = 'n' ]
     then
-    # removing previously built version
-    sudo apt-get remove openvpn -y || sudo dnf remove -y openvpn || sudo pacman -R --noconfirm openvpn
-    if ! [ -z $(sudo which openvpn) ]; then sudo rm $(sudo which openvpn); fi;
-
     # installing the official version with package manager
     sudo apt-get install openvpn -y || sudo dnf install -y openvpn || sudo pacman -Sy --noconfirm openvpn ||
     (echo "Your distro is not supported, please follow README" && exit 1)
