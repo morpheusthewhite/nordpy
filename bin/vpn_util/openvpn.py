@@ -89,8 +89,8 @@ def openvpn_stop():
     """
     Closes all runnning openvpn processes
     """
-    killswitch_down()
     subprocess.Popen(["sudo", "killall", "openvpn"]).communicate()
+    killswitch_down()
 
 
 def checkOpenVPN():

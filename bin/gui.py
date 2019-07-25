@@ -17,6 +17,7 @@ logger = get_logger(__name__)
 DEFAUL_WIDTH = 370
 DEFAUL_HEIGHT = 340
 
+
 class gui(Tk):
     def __init__(self):
         super().__init__()

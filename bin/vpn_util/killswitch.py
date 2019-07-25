@@ -2,8 +2,10 @@ import subprocess
 import os
 
 from bin.conf_util import get_path_to_conf, PROTOCOLS
+from bin.logging_util import get_logger
 
 TABLES_FILENAME = 'stored_iptables'
+logger = get_logger(__name__)
 
 
 class KillswitchError(RuntimeError):
@@ -76,6 +78,8 @@ def killswitch_up(server_name, protocol):
 
     (ip, port) = read_remote_ip_port(get_path_to_conf(server_name, protocol))
 
+    logger.info("Turning on killswitch")
+
     # update iptables
     subprocess.Popen(["sudo", os.path.join("scripts", "ip-ks.sh"),
                       ip, port, interface, PROTOCOLS[protocol]]).communicate()
@@ -83,6 +87,7 @@ def killswitch_up(server_name, protocol):
 
 
 def killswitch_down():
+    logger.info("Turning off killswitch")
     iptables_restore()
 
     return
