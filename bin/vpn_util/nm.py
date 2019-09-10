@@ -133,7 +133,11 @@ def nm_running_vpn():
     :return: False if no connection to vpn are running, the name of the connection otherwise
     """
     args = ['nmcli', 'conn', 'show', '--active']
-    list_process = subprocess.Popen(args, universal_newlines=True, stdout=subprocess.PIPE)
+
+    try:
+        list_process = subprocess.Popen(args, universal_newlines=True, stdout=subprocess.PIPE)
+    except FileNotFoundError:  # if nmcli is not installed an exception is raised
+        return False
 
     (out, _) = list_process.communicate()
 
