@@ -95,6 +95,9 @@ sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/ca
 
 current_dir=$(pwd)
 
+# remove previous link
+sudo rm /usr/local/bin/nordpy
+
 # create symlink to launch NordPy from command line
 sudo ln -s "$current_dir"/nordpy.py /usr/local/bin/nordpy
 
