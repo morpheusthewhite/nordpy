@@ -66,7 +66,7 @@ if ! [ -z $(which apt-get 2> /dev/null) ]; # Debian
     # if some packages are missing the script try to install a minimal and fundamental set of them
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
+    if [ $(nmcli networking 2> /dev/null | echo disabled) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo apt-get install -y network-manager-openvpn network-manager-openvpn-gnome > /dev/null
     fi
 fi
@@ -75,7 +75,7 @@ if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
     # sudo dnf install strongswan strongswan-charon-nm libreswan ldns unbound-libs
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
+    if [ $(nmcli networking 2> /dev/null | echo disabled) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo dnf install -y NetworkManager-openvpn NetworkManager-openvpn-gnome > /dev/null
     fi
 fi
@@ -85,7 +85,7 @@ if ! [ -z $(which pacman 2> /dev/null) ]; # Arch Linux
     # again, the script try to install a fundamental set of packages
 
     echo $INSTALLATION_COMPLETED_MSG
-    if [ $(nmcli networking) = "enabled" ] && [ "$ANSWER" = 'n' ]
+    if [ $(nmcli networking 2> /dev/null | echo disabled) = "enabled" ] && [ "$ANSWER" = 'n' ]
     then sudo pacman -Sy --needed --noconfirm networkmanager-openvpn > /dev/null
     fi
 fi
@@ -96,7 +96,7 @@ sudo wget https://downloads.nordvpn.com/certificates/root.der -O /etc/ipsec.d/ca
 current_dir=$(pwd)
 
 # remove previous link
-sudo rm /usr/local/bin/nordpy
+sudo rm /usr/local/bin/nordpy 2> /dev/null
 
 # create symlink to launch NordPy from command line
 sudo ln -s "$current_dir"/nordpy.py /usr/local/bin/nordpy
