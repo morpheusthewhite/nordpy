@@ -4,6 +4,8 @@ import requests
 from bin.logging_util import get_logger
 import json
 import threading
+import sys
+
 
 from bin.pathUtil import CURRENT_PATH
 
@@ -158,11 +160,12 @@ class StatsHolder:
         return self.stats_dic != {}
 
 
-global_stats_holder = StatsHolder()
+# retrieve stats iff nordpy is opened with gui
+if not 'bin.command_line_util' in sys.modules.keys():
+    global_stats_holder = StatsHolder()
 
-
-# updating stats in another thread
-threading.Thread(target=global_stats_holder.stats_parallel_request).start()
+    # updating stats in another thread
+    threading.Thread(target=global_stats_holder.stats_parallel_request).start()
 
 
 def get_path_to_conf(server, protocol):

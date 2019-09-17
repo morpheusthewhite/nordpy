@@ -88,3 +88,13 @@ def ask_root_password(parent=None):
             return None
 
     return root_password
+
+
+def get_root_permissions_cli():
+    """
+    Get root permissions, if needed
+    """
+    args = ["sudo", "ls", "."]
+    subprocess.Popen(args, stdout=subprocess.DEVNULL).communicate()
+
+    return
