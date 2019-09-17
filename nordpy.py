@@ -8,8 +8,12 @@ import argparse
 def get_parser():
     parser = argparse.ArgumentParser(prog="nordpy",
                                      description='An application to connect to NordVPN servers')
-    parser.add_argument('--quick-connect', action="store_true",
+    connection_group = parser.add_mutually_exclusive_group()
+
+    connection_group.add_argument('--quick-connect', action="store_true",
                         help='connects to the last chosen server type')
+    connection_group.add_argument('--quick-disconnect', action="store_true",
+                        help='disconnect nordpy VPN connection')
 
     return parser
 
@@ -22,6 +26,9 @@ def main():
     if parsed_args.quick_connect:
         from bin.command_line_util import quick_connect
         quick_connect()
+    elif parsed_args.quick_disconnect:
+        from bin.command_line_util import quick_disconnect
+        quick_disconnect()
 
     elif os.geteuid() != 0:
         root_request_win = RootPermissionWindow()

@@ -2,6 +2,7 @@ import os
 from bin.root import get_root_permissions_cli
 from bin.settings import correct_saved_settings, load_settings
 from bin.vpn_util.networkSelection import get_recommended_server
+from bin.vpn_util.openvpn import start_openvpn, openvpn_stop
 
 
 def quick_connect():
@@ -19,5 +20,10 @@ def quick_connect():
 
     server = get_recommended_server(server_type, country)
 
-    from bin.vpn_util.openvpn import start_openvpn
     start_openvpn(server, protocol)
+
+
+def quick_disconnect():
+    print("Shutting down any nordpy VPN connection")
+
+    openvpn_stop()
