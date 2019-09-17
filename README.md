@@ -19,6 +19,7 @@ All server types on NordVPN site are available to be selected in the window.
 - Connection (TCP and UDP) can be established with either `openvpn` or `NetworkManager-openvpn` (will show connection in the system interface)
 - No DNS leak (when using `openvpn`)
 - Killswitch (when using `openvpn`)
+- Quick connection/disconnection from command line (according to last chosen server type)
 
 
 ## Installation and requirements
@@ -71,6 +72,11 @@ If the size of the window does not fit entirely the gui components change the sc
 #### Additional info
 <li> The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start). </li>
 <li> The percent associated to each server in the window for manual choice is the <b>load</b> (a big load implies a slower connection)</li>
+
+#### Command line interface
+`nordpy` can be called with 2 different commands (in this case the gui isn't opened):
+- `--quick-connect` starts a connection according to the last chosen preferences (you must first start a connection using the gui)
+- `--quick-disconnect` shuts down any connection that `nordpy` previously started 
 
 #### Advanced Settings
 
