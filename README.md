@@ -20,7 +20,7 @@ All server types on NordVPN site are available to be selected in the window.
 - No DNS leak (when using `openvpn`)
 - Killswitch (when using `openvpn`)
 - Quick connection/disconnection from command line (according to last chosen server type)
-
+- Easy to setup for [autoconnection](#autostart) at startup
 
 ## Installation and requirements
 
@@ -73,11 +73,6 @@ If the size of the window does not fit entirely the gui components change the sc
 <li> The button "Reset settings" resets only the settings of the connection (each time a VPN connection is established the used options are saved and restored at the next start). </li>
 <li> The percent associated to each server in the window for manual choice is the <b>load</b> (a big load implies a slower connection)</li>
 
-#### Command line interface
-`nordpy` can be called with 2 different commands (in this case the gui isn't opened):
-- `--quick-connect` starts a connection according to the last chosen preferences (you must first start a connection using the gui)
-- `--quick-disconnect` shuts down any connection that `nordpy` previously started 
-
 #### Advanced Settings
 
 ![Alt text](media/screenshots/screen05.png?raw=true "Preview")
@@ -85,7 +80,27 @@ If the size of the window does not fit entirely the gui components change the sc
 <li> Scale Factor: this parameter affects the size of a window (will be restored at each start)</li>
 <li> Network Manager: if checked NordPy will try to connect through networkmanager-openvpn plugin (disabled by default). Works only if network manager is enabled. It is discouraged the use, as it leaks DNS.</li>
 
-#### Previews
+
+#### Command line interface
+`nordpy` can be called with 2 different commands (in this case the gui isn't opened):
+- `--quick-connect` starts a connection according to the last chosen preferences (you must first start a connection using the gui)
+- `--quick-disconnect` shuts down any connection that `nordpy` previously started 
+- `--wait-connection` waits for internet connection before trying to setup VPN (useful for autostart)
+
+#### Autostart
+You can easily configure `nordpy` to establish VPN connection at the start of your system. You just need to 
+1. Install a cron implementation (I usually use `cronie`)
+2. Edit the root crontab (`sudo crontab -e`) and add the following line to it
+
+```
+@reboot PATH/TO/nordpy.py --quick-connect --wait-connection
+```
+
+(you can easily obtain your path to `nordpy` with `which nordpy`).
+
+You can disable it just by deleting the line you added to the crontab.
+
+### Previews
 ![Alt text](media/screenshots/screen01.png?raw=true "Preview")  
 
 When pressed "Select":
