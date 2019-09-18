@@ -15,6 +15,9 @@ def get_parser():
     connection_group.add_argument('--quick-disconnect', action="store_true",
                         help='disconnect nordpy VPN connection')
 
+    parser.add_argument('--wait-connection', action="store_true",
+                        help='wait connection before trying to start VPN')
+
     return parser
 
 
@@ -25,7 +28,7 @@ def main():
 
     if parsed_args.quick_connect:
         from bin.command_line_util import quick_connect
-        quick_connect()
+        quick_connect(parsed_args.wait_connection)
     elif parsed_args.quick_disconnect:
         from bin.command_line_util import quick_disconnect
         quick_disconnect()

@@ -5,7 +5,7 @@ from bin.vpn_util.networkSelection import get_recommended_server
 from bin.vpn_util.openvpn import start_openvpn, openvpn_stop
 
 
-def quick_connect():
+def quick_connect(wait_connection=False, sleep_time=5):
     print("Trying to connect to the last server type")
 
     if os.geteuid() != 0:
@@ -17,6 +17,17 @@ def quick_connect():
 
     (server_type, protocol, country, server) = load_settings()
     protocol = int(protocol)
+
+    # wait until a connection is established
+    if wait_connection:
+        import requests
+        import time
+        while True:
+            try:
+                requests.get("http://216.58.192.142")  # get google.com
+                break
+            except requests.exceptions.ConnectionError:
+                time.sleep(sleep_time)
 
     server = get_recommended_server(server_type, country)
 
