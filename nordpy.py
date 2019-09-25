@@ -13,10 +13,14 @@ def get_parser():
     connection_group.add_argument('--quick-connect', action="store_true",
                         help='connects to the last chosen server type')
     connection_group.add_argument('--quick-disconnect', action="store_true",
-                        help='disconnect nordpy VPN connection')
+                        help='disconnects nordpy VPN connection')
+    connection_group.add_argument('--status', action="store_true",
+                        help='checks if any VPN connection is running')
 
     parser.add_argument('--wait-connection', action="store_true",
                         help='wait connection before trying to start VPN')
+    parser.add_argument('--all', action="store_true",
+                        help='check status among all connection types')
 
     return parser
 
@@ -32,6 +36,9 @@ def main():
     elif parsed_args.quick_disconnect:
         from bin.command_line_util import quick_disconnect
         quick_disconnect()
+    elif parsed_args.status:
+        from bin.command_line_util import status
+        print(status(parsed_args.all))
 
     elif os.geteuid() != 0:
         root_request_win = RootPermissionWindow()

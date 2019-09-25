@@ -2,7 +2,7 @@ import os
 from bin.root import get_root_permissions_cli
 from bin.settings import correct_saved_settings, load_settings
 from bin.vpn_util.networkSelection import get_recommended_server
-from bin.vpn_util.openvpn import start_openvpn, openvpn_stop
+from bin.vpn_util.openvpn import start_openvpn, openvpn_stop, checkOpenVPN
 
 
 def quick_connect(wait_connection=False, sleep_time=5):
@@ -38,3 +38,22 @@ def quick_disconnect():
     print("Shutting down any nordpy VPN connection")
 
     openvpn_stop()
+
+
+def status(all=False):
+    """
+    Check VPN status
+    :param all: if true, check among all type of connection; if false check only openvpn
+    :return: "Enabled" if a VPN connection is running, "Disabled" otherwise
+    """
+    if not all:
+        if checkOpenVPN():
+            return "Enabled"
+        else:
+            return "Disabled"
+    else:
+        from bin.vpn_util.vpn import get_running_vpn
+        if get_running_vpn() is not None:
+            return "Enabled"
+        else:
+            return "Disabled"
