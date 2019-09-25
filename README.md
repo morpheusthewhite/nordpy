@@ -82,10 +82,12 @@ If the size of the window does not fit entirely the gui components change the sc
 
 
 #### Command line interface
-`nordpy` can be called with 2 different commands (in this case the gui isn't opened):
+`nordpy` can be called with 3 different commands (in this case the gui isn't opened):
 - `--quick-connect` starts a connection according to the last chosen preferences (you must first start a connection using the gui)
 - `--quick-disconnect` shuts down any connection that `nordpy` previously started 
-- `--wait-connection` waits for internet connection before trying to setup VPN (useful for autostart)
+- `--status` checks if any VPN is already running 
+
+All options can be listed with `nordpy --help`
 
 #### Autostart
 You can easily configure `nordpy` to establish VPN connection at the start of your system. You just need to 
