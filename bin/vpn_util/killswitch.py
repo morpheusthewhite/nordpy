@@ -3,6 +3,7 @@ import os
 
 from bin.conf_util import get_path_to_conf, PROTOCOLS
 from bin.logging_util import get_logger
+from bin.pathUtil import CURRENT_PATH
 
 TABLES_FILENAME = 'stored_iptables'
 logger = get_logger(__name__)
@@ -48,7 +49,7 @@ def iptables_save():
     (out, _) = subprocess.Popen(["sudo", "iptables-save"], stdout=subprocess.PIPE,
                                 universal_newlines=True).communicate()
 
-    with open(TABLES_FILENAME, 'w') as f:
+    with open(os.path.join(CURRENT_PATH, TABLES_FILENAME), 'w') as f:
         f.write(out)
 
     return
@@ -58,10 +59,12 @@ def iptables_restore():
     """
     restore previously saved iptables
     """
-    subprocess.Popen(["sudo", "iptables-restore", TABLES_FILENAME]).communicate()
+    tables_file = os.path.join(CURRENT_PATH, TABLES_FILENAME)
+
+    subprocess.Popen(["sudo", "iptables-restore", tables_file]).communicate()
 
     try:
-        os.remove(TABLES_FILENAME)
+        os.remove(tables_file)
     except FileNotFoundError:
         pass
 
@@ -81,7 +84,7 @@ def killswitch_up(server_name, protocol):
     logger.info("Turning on killswitch")
 
     # update iptables
-    subprocess.Popen(["sudo", os.path.join("scripts", "ip-ks.sh"),
+    subprocess.Popen(["sudo", os.path.join(CURRENT_PATH, "scripts", "ip-ks.sh"),
                       ip, port, interface, PROTOCOLS[protocol]]).communicate()
     return
 
