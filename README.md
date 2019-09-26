@@ -4,9 +4,11 @@
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/issues)
 [![contributions welcome](https://img.shields.io/github/license/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/blob/master/LICENSE)
 
-A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server or to choose manually the preferred server (stats for each server are shown in the relative window).
+A python application with gui to connect automatically to the recommended NordVPN server (as of NordVPN site) of a certain type, in a certain country or to the specific chosen server (stats for each server are shown in the relative window).
 
 All server types on NordVPN site are available to be selected in the window.
+
+KDE Plasma users can also find [the relative plasmoid](https://github.com/morpheusthewhite/nordpy-plasmoid).
 
 <b>Tested against DNS leaks (NetworkManager use is discouraged (and disabled by default) as it may leak DNS)</b>
 
@@ -21,6 +23,7 @@ All server types on NordVPN site are available to be selected in the window.
 - Killswitch (when using `openvpn`)
 - Quick connection/disconnection from command line (according to last chosen server type)
 - Easy to setup for [autoconnection](#autostart) at startup
+- Integrated with its own [plasmoid](https://github.com/morpheusthewhite/nordpy-plasmoid)
 
 ## Installation and requirements
 
