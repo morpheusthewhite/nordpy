@@ -119,12 +119,3 @@ After connection has been established:
 Once closed and restarted:  
 ![Alt text](media/screenshots/screen04.png?raw=true "Preview")
 
-## Caveat
-
-NordPy will not work on Fedora 29 since launching a `tkinter.OptionMenu`
-will cause the application to crash with `Floating point exception (core dumped)`.
-
-For more info and bug progress see [the bug I reported](https://bugzilla.redhat.com/show_bug.cgi?id=1699049)
-and [the entire discussion](https://github.com/morpheusthewhite/NordPy/issues/17) on the issues page.
-
-
