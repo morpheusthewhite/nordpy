@@ -69,7 +69,7 @@ def get_recommended_server(server_type, country):
     import json
     server = json.loads(jsonData)[0]["hostname"]
 
-    logger.info("Connecting to " + server)
+    logger.info("Best server retrieved: " + server)
     return server
 
 
