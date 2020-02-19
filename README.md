@@ -119,3 +119,18 @@ After connection has been established:
 Once closed and restarted:  
 ![Alt text](media/screenshots/screen04.png?raw=true "Preview")
 
+## Development 
+
+### Tests
+
+To set up test environment move to `tests` and install the needed dependencies with
+
+```
+pip install -r requirements.txt
+```
+
+and then start the tests with 
+
+```
+python -m pytest tests
+```
