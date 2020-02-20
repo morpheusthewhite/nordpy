@@ -123,13 +123,13 @@ Once closed and restarted:
 
 ### Tests
 
-To set up test environment move to `tests` and install the needed dependencies with
+To set up test environment install the needed dependencies with
 
 ```
-pip install -r requirements.txt
+pip install -r tests/requirements.txt
 ```
 
-and then start the tests with 
+and then start them with 
 
 ```
 python -m pytest tests
