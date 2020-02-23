@@ -27,6 +27,7 @@ def start_openvpn(server, protocol, killswitch=True):
     if the connection failed, a LoginError if the credentials are wrong or a OpenresolvError if openresolv is missing
     :param server: the server to which the connection will be established
     :param protocol: the protocol to be used (an integer)
+    :param killswitch: if True set up killswitch
     """
     pathToConf = get_path_to_conf(server, protocol)
     args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,
@@ -94,6 +95,7 @@ def start_openvpn(server, protocol, killswitch=True):
 def openvpn_stop(killswitch=True):
     """
     Closes all runnning openvpn processes
+    :param killswitch if True disable the killswitch (should be coherent with command used to start the connection)
     """
     subprocess.Popen(["sudo", "killall", "openvpn"]).communicate()
 
