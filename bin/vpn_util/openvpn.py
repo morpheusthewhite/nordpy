@@ -21,7 +21,7 @@ def timeout_handler(signum, frame):
 signal.signal(signal.SIGALRM, timeout_handler)
 
 
-def start_openvpn(server, protocol):
+def start_openvpn(server, protocol, killswitch=True):
     """
     starts openvpn connection with a certain protocol to a specific server. Raise a ConnectionError
     if the connection failed, a LoginError if the credentials are wrong or a OpenresolvError if openresolv is missing
@@ -37,8 +37,9 @@ def start_openvpn(server, protocol):
     tries = 0
     while tries < MAXIMUM_TRIES:
 
-        # activate killswitch
-        killswitch_up(server, protocol)
+        if killswitch:
+            # activate killswitch
+            killswitch_up(server, protocol)
 
         openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
 
@@ -57,40 +58,47 @@ def start_openvpn(server, protocol):
                     return openvpn
                 elif "connection failed" in line or "Exiting" in line:
                     tries += 1
-                    openvpn_stop()
+                    openvpn_stop(killswitch)
                     break
 
                 elif "AUTH_FAILED" in line:
                     # something's wrong
                     signal.alarm(0)
-                    killswitch_down()
+
+                    if killswitch:
+                        killswitch_down()
+
                     raise LoginError
 
                 # missing script
                 elif "script fails with" in line:
                     signal.alarm(0)
-                    killswitch_down()
+
+                    if killswitch:
+                        killswitch_down()
                     raise OpenresolvError
 
         except TimeoutError:
             logger.warning("expired timeout for openvpn connection")
             tries += 1
-            openvpn_stop()
+            openvpn_stop(killswitch)
 
     signal.alarm(0)
 
     # sometimes openvpn.kill() doesn't close the launched processes
-    openvpn_stop()
+    openvpn_stop(killswitch)
 
     raise ConnectionError
 
 
-def openvpn_stop():
+def openvpn_stop(killswitch=True):
     """
     Closes all runnning openvpn processes
     """
     subprocess.Popen(["sudo", "killall", "openvpn"]).communicate()
-    killswitch_down()
+
+    if killswitch:
+        killswitch_down()
 
 
 def checkOpenVPN():
