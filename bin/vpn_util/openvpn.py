@@ -108,8 +108,11 @@ def checkOpenVPN():
     Checks if a openvpn process is already running
     :return: True if is running, False otherwise
     """
-    c = subprocess.Popen(["ps ax | grep openvpn | grep -v grep"], stdout=subprocess.PIPE, shell=True, universal_newlines=True)
+    c = subprocess.Popen(["ps ax | grep ' openvpn ' | grep -v grep"], stdout=subprocess.PIPE, shell=True, universal_newlines=True)
     (out, _) = c.communicate()
+
+    logger.info("captured grep" +  out)
+
     if out != '':
         return True
     return False
