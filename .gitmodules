@@ -1,0 +1,3 @@
+[submodule "tests/dnsleaktest"]
+	path = tests/dnsleaktest
+	url = https://github.com/macvk/dnsleaktest
