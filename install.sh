@@ -61,8 +61,8 @@ INSTALLATION_COMPLETED_MSG='Required packages installed'
 if ! [ -z $(which apt-get 2> /dev/null) ]; # Debian
     then sudo apt-get install -y python3 python3-tk python3-requests wget strongswan strongswan-ikev2 \
     libstrongswan-standard-plugins unzip libstrongswan-extra-plugins\
-    libcharon-extra-plugins net-tools > /dev/null || sudo apt-get install -y python3 python3-tk python3-requests wget \
-    unzip net-tools > /dev/null
+    libcharon-extra-plugins net-tools iproute2 > /dev/null || sudo apt-get install -y python3 python3-tk python3-requests wget \
+    unzip net-tools iproute2 > /dev/null
     # if some packages are missing the script try to install a minimal and fundamental set of them
 
     echo $INSTALLATION_COMPLETED_MSG
@@ -71,7 +71,7 @@ if ! [ -z $(which apt-get 2> /dev/null) ]; # Debian
     fi
 fi
 if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
-    then sudo dnf install -y python3 python3-tkinter python3-requests wget unzip net-tools > /dev/null
+    then sudo dnf install -y python3 python3-tkinter python3-requests wget unzip net-tools iproute2 > /dev/null
     # sudo dnf install strongswan strongswan-charon-nm libreswan ldns unbound-libs
 
     echo $INSTALLATION_COMPLETED_MSG
@@ -80,7 +80,7 @@ if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
     fi
 fi
 if ! [ -z $(which pacman 2> /dev/null) ]; # Arch Linux
-    then sudo pacman -Sy --needed --noconfirm python3 tk python-requests wget unzip strongswan net-tools > /dev/null||
+    then sudo pacman -Sy --needed --noconfirm python3 tk python-requests wget unzip strongswan net-tools iproute2 > /dev/null||
      sudo pacman -Sy --needed --noconfirm python3 tk python-requests wget unzip > /dev/null
     # again, the script try to install a fundamental set of packages
 
