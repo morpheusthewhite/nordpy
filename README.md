@@ -123,13 +123,17 @@ Once closed and restarted:
 
 ### Tests
 
-To set up test environment install the needed dependencies with
+Before running the tests you need to
+
+1. Start `nordpy` and connect to any server, in order to store the credentials
+
+2. Install needed dependencies with 
 
 ```
 pip install -r tests/requirements.txt
 ```
 
-and then start them with 
+Then tests can be started with 
 
 ```
 python -m pytest tests
