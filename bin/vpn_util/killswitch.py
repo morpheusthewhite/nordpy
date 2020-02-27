@@ -42,9 +42,9 @@ def get_current_used_interface():
             return line_splitten[-1]
 
 
-def get_private_network(interface):
+def get_network(interface):
     """
-    :return: the address of the private network to which the host belongs (on the given interface)
+    :return: the address of the network to which the host belongs (on the given interface)
     """
     (out, _) = subprocess.Popen(['ip', 'r'], stdout=subprocess.PIPE,
                                universal_newlines=True).communicate()
@@ -96,12 +96,12 @@ def killswitch_up(server_name, protocol):
         raise KillswitchError
 
     (ip, port) = read_remote_ip_port(get_path_to_conf(server_name, protocol))
-    address_private_network = get_private_network(interface)
+    address_private_network = get_network(interface)
 
     logger.info("Turning on killswitch")
     logger.info("Default interface: " + interface)
     logger.info("IP and port of the VPN server: " + ip + " " + port)
-    logger.info("Private network address for " + interface + ": " + address_private_network)
+    logger.info("Network address on " + interface + ": " + address_private_network)
 
     # update iptables
     subprocess.Popen(["sudo", os.path.join(CURRENT_PATH, "scripts", "ip-ks.sh"),
