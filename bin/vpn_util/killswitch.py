@@ -62,6 +62,9 @@ def iptables_save():
     """
     save the current iptables
     """
+    # load the module needed to output correctly the state of the iptables
+    subprocess.Popen(["sudo", "modprobe", "iptable_filter"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).communicate()
+
     (out, _) = subprocess.Popen(["sudo", "iptables-save"], stdout=subprocess.PIPE,
                                 universal_newlines=True).communicate()
 
@@ -76,13 +79,14 @@ def iptables_restore():
     restore previously saved iptables
     """
     tables_file = os.path.join(CURRENT_PATH, TABLES_FILENAME)
+    logger.info("looking for iptables in " + tables_file)
 
     subprocess.Popen(["sudo", "iptables-restore", tables_file]).communicate()
 
     try:
         os.remove(tables_file)
     except FileNotFoundError:
-        pass
+        logger.info("No iptables to restore found") 
 
     return
 
