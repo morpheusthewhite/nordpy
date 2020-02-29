@@ -58,8 +58,8 @@ fi
 
 INSTALLATION_COMPLETED_MSG='Required packages installed'
 
-if ! [ -z $(which apt-get 2> /dev/null) ]; # Debian
-    then sudo apt-get install -y python3 python3-tk python3-requests wget strongswan strongswan-ikev2 \
+if ! [ -z $(which apt 2> /dev/null) ]; # Debian
+    then sudo apt-get install -y python3 python3-tk python3-requests wget strongswan \
     libstrongswan-standard-plugins unzip libstrongswan-extra-plugins\
     libcharon-extra-plugins net-tools iproute2 > /dev/null || sudo apt-get install -y python3 python3-tk python3-requests wget \
     unzip net-tools iproute2 > /dev/null
