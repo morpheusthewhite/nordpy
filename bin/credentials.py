@@ -72,7 +72,7 @@ def askVPNPassword():
 def read_saved_credentials():
     """
     reads saved credentials
-    :return:
+    :return: a tuple containing (username, password)
     """
     args = ['sudo', 'cat', credentials_file_path]
     reading_process = subprocess.Popen(args, universal_newlines=True, stdout=subprocess.PIPE)
