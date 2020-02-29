@@ -2,6 +2,7 @@ from tkinter import *
 import os
 from bin.pathUtil import CURRENT_PATH
 from bin.root import test_root_password, wrong_root_password
+from bin.font_size import get_font_scale_factor
 
 password_inserted = None
 
@@ -40,7 +41,7 @@ class RootPermissionWindow(Tk):
         # binding enter button to on_button_pressed function
         self.bind('<Return>', self.on_enter_pressed)
 
-        self.center_window(200, 80)
+        self.center_window(200, 80, self.ok_button.cget("font"))
 
     def on_enter_pressed(self, event):
         self.on_button_pressed()
@@ -58,13 +59,18 @@ class RootPermissionWindow(Tk):
             wrong_root_password()
             self.password_field.delete(0, END)
 
-    def center_window(self, width=300, height=200):
+    def center_window(self, width=300, height=200, font_name='TkDefaultFont'):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
+        
+        font_factor = get_font_scale_factor(font_name)
+
+        scaled_height = height * font_factor
+        scaled_width = width * font_factor
 
         # calculates position x and y coordinates
-        x = (screen_width / 2) - (width / 2)
-        y = (screen_height / 2) - (height / 2)
-        self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        x = (screen_width / 2) - (scaled_width / 2)
+        y = (screen_height / 2) - (scaled_height / 2)
+        self.geometry('%dx%d+%d+%d' % (scaled_width, scaled_height, x, y))
 

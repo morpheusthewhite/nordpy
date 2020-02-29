@@ -4,6 +4,7 @@ from bin.pathUtil import *
 from bin.credentials import credentials_file_path
 from bin.settings import advanced_settings_are_correct, advanced_settings_read, advanced_settings_save
 from bin.root import get_root_permissions
+from bin.font_size import get_font_scale_factor
 
 DEFAULT_SCALE_FACTOR = 1
 DEFAULT_NM_USE = False
@@ -39,7 +40,7 @@ class AdvancedSettingsWindow(Toplevel):
             self.set_scale(DEFAULT_SCALE_FACTOR)
             self.set_nm_use(DEFAULT_NM_USE)
 
-        self.center_window(300 * scale_factor, 150 * scale_factor)
+        self.center_window(300 * scale_factor, 150 * scale_factor, self.save_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 
@@ -95,12 +96,14 @@ class AdvancedSettingsWindow(Toplevel):
     def set_nm_use(self, use):
         self.nm_use.set(use)
 
-    def center_window(self, width=300, height=200):
+    def center_window(self, width=300, height=200, font_name='TkDefaultFont'):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
+        font_factor = get_font_scale_factor(font_name)
+
         # calculates position x and y coordinates
-        x = (screen_width / 2) - (width / 2)
-        y = (screen_height / 2) - (height / 2)
-        self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        x = (screen_width / 2) - (width * font_factor / 2)
+        y = (screen_height / 2) - (height * font_factor / 2)
+        self.geometry('%dx%d+%d+%d' % (width * font_factor, height * font_factor, x, y))

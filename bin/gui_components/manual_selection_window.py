@@ -4,6 +4,7 @@ from os import path
 from bin.conf_util import get_available_servers_dict, global_stats_holder
 from bin.logging_util import get_logger
 from bin.pathUtil import CURRENT_PATH
+from bin.font_size import get_font_scale_factor
 from requests import ConnectionError as RequestsConnectionError
 
 SERVERS_DICT = get_available_servers_dict()
@@ -20,9 +21,10 @@ class ManualServerWindow(Toplevel):
         self.__imgicon__ = PhotoImage(file=path.join(CURRENT_PATH + "media", "manual.png"))
         self.tk.call('wm', 'iconphoto', self._w, self.__imgicon__)
 
-        self.center_window(300 * scale_factor, 190 * scale_factor)
         self.__init_listboxes__()
         self.__init_buttons__()
+
+        self.center_window(300 * scale_factor, 190 * scale_factor, self.accept_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 
@@ -102,12 +104,17 @@ class ManualServerWindow(Toplevel):
         self.grab_release() # to enable again the underlying window
         self.destroy()
 
-    def center_window(self, width=300, height=200):
+    def center_window(self, width=300, height=200, font_name='TkDefaultFont'):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
+        
+        font_factor = get_font_scale_factor(font_name) 
+
+        scaled_width = width * font_factor
+        scaled_height = height * font_factor
 
         # calculates position x and y coordinates
-        x = (screen_width / 2) - (width / 2)
-        y = (screen_height / 2) - (height / 2)
-        self.geometry('%dx%d+%d+%d' % (width, height, x, y))
+        x = (screen_width / 2) - (scaled_width / 2)
+        y = (screen_height / 2) - (scaled_height / 2)
+        self.geometry('%dx%d+%d+%d' % (scaled_width, scaled_height, x, y))

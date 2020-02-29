@@ -10,6 +10,7 @@ from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 from bin.gui_components.settings_frame import SettingsFrame
 from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE
+from bin.font_size import get_font_scale_factor
 import threading
 
 logger = get_logger(__name__)
@@ -17,12 +18,11 @@ logger = get_logger(__name__)
 DEFAUL_WIDTH = 370
 DEFAUL_HEIGHT = 340
 
-
 class gui(Tk):
     def __init__(self):
         super().__init__()
         self.wm_title("NordPY")
-
+        
         # sets the icon
         self.__imgicon__ = PhotoImage(file=os.path.join(CURRENT_PATH+"media", "nordvpn.png"))
         self.tk.call('wm', 'iconphoto', self._w, self.__imgicon__)
@@ -34,14 +34,14 @@ class gui(Tk):
         else:
             (self.scale_factor, self.nm_use) = (DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE)
 
-        self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, self.scale_factor)
-
         self.settings_frame = SettingsFrame(self, self.scale_factor)
         self.manual_frame = ManualSelectionFrame(self, self.background_color, self.scale_factor)
         self.optionsFrame = OptionFrame(self)
         self.__init_protocol__()
         self.__initStatus__()
         self.__initButtons__()
+
+        self.center_window(DEFAUL_WIDTH, DEFAUL_HEIGHT, self.scale_factor, self.optionsFrame.cget("font"))
 
         running_vpn = get_running_vpn()
         if running_vpn is not None:
@@ -251,13 +251,16 @@ class gui(Tk):
     def update_advanced_settings(self, nm_use):
         self.nm_use = nm_use
 
-    def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR):
+    def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR, font_name="TkDefaultFont"):
         # gets screen width and height
         screen_width = self.winfo_screenwidth()
         screen_height = self.winfo_screenheight()
 
-        scaled_width = width * scale
-        scaled_height = height * scale
+        font_factor = get_font_scale_factor(font_name)
+        logger.info("Font factor: " + str(font_factor))
+
+        scaled_width = width * scale * font_factor
+        scaled_height = height * scale * font_factor
 
         # calculates position x and y coordinates
         x = (screen_width / 2) - (scaled_width / 2)
