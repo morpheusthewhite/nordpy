@@ -123,18 +123,45 @@ Once closed and restarted:
 
 ### Tests
 
-Before running the tests you need to
-
-1. Start `nordpy` and connect to any server, in order to store the credentials
-
-2. Install needed dependencies with 
+Before running the tests you need to install needed dependencies with 
 
 ```
-pip install -r tests/requirements.txt
+# pip install -r tests/requirements.txt
 ```
 
-Then tests can be started with 
+Make sure you also connected at least once with the gui (in order to store the credentials). Then tests can be started with 
 
 ```
-python -m pytest tests
+$ python -m pytest tests
 ```
+
+#### Environment
+
+You can also easily setup a test environment with `vagrant` (so you will need to install before proceeding with the following steps): the project contains a minimalistic `Vagrantfile` to initialize it.
+
+1. Start the `nordpy` gui and connect to any server in order to store the password
+
+2. Change the permissions of the `credentials` file. **WARNING**: this will the expose the password of your NordVPN account to anyone which has access to your machine.
+```
+# chmod +r credentials
+```
+
+3. Create the environment
+
+```
+$ vagrant up
+```
+
+4. Open a shell into the vm
+
+```
+$ vagrant ssh
+```
+
+5. Move to the shared folder and install nordpy
+
+```
+$ cd /Vagrant && ./install.sh
+```
+
+6. Start testing as said above!
