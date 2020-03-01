@@ -113,8 +113,9 @@ def load_settings():
                configparser[DEFAULT_SETTING][PROTOCOL_KEY],\
                configparser[DEFAULT_SETTING][LAST_COUNTRY_KEY],\
                configparser[DEFAULT_SETTING][LAST_CONNECTED_KEY]
-    except KeyError:
-        logger.debug("Key not found")
+    except KeyError as e:
+        logger.debug("Key not found: " + str(e))
+        logger.info(configparser.items(DEFAULT_SETTING))
         return None
 
 
