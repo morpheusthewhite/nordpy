@@ -71,7 +71,7 @@ if ! [ -z $(which apt 2> /dev/null) ]; # Debian
     fi
 fi
 if ! [ -z $(which dnf 2> /dev/null) ]; # Fedora
-    then sudo dnf install -y python3 python3-tkinter python3-requests wget unzip net-tools iproute2 > /dev/null
+    then sudo dnf install -y python3 python3-tkinter python3-requests wget unzip net-tools iproute > /dev/null
     # sudo dnf install strongswan strongswan-charon-nm libreswan ldns unbound-libs
 
     echo $INSTALLATION_COMPLETED_MSG
