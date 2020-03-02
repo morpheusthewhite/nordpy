@@ -128,15 +128,16 @@ def __ikev2_launch__():
 
     # trying to start connection if the connection is not found
     while CONFIG_NOT_FOUND_STRING in out or out == '':
-        ipsec_start_command = Popen(args, stdout=PIPE, universal_newlines=True)
+        ipsec_start_command = Popen(args, stderr=PIPE, stdout=PIPE, universal_newlines=True)
 
-        (out, _) = ipsec_start_command.communicate()
+        (out, err) = ipsec_start_command.communicate()
         logger.info(out)
         if AUTH_FAILURE_STRING in out:
             raise LoginError
         elif FAILURE_STRING in out:
             raise ConnectionError
-
+        if "unknown IPsec command" in err:
+            raise Exception(err)
     return
 
 
