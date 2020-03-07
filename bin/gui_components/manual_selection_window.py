@@ -24,7 +24,7 @@ class ManualServerWindow(Toplevel):
         self.__init_listboxes__()
         self.__init_buttons__()
 
-        self.center_window(300 * scale_factor, 190 * scale_factor, self.accept_button.cget("font"))
+        self.center_window(300 * scale_factor, 220 * scale_factor, self.accept_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 
