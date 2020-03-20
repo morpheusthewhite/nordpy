@@ -40,7 +40,7 @@ class AdvancedSettingsWindow(Toplevel):
             self.set_scale(DEFAULT_SCALE_FACTOR)
             self.set_nm_use(DEFAULT_NM_USE)
 
-        self.center_window(300 * scale_factor, 150 * scale_factor, self.save_button.cget("font"))
+        self.center_window(300 * scale_factor, 160 * scale_factor, self.save_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 

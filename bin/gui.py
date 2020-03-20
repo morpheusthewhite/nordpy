@@ -16,7 +16,7 @@ import threading
 logger = get_logger(__name__)
 
 DEFAUL_WIDTH = 370
-DEFAUL_HEIGHT = 340
+DEFAUL_HEIGHT = 370
 
 class gui(Tk):
     def __init__(self):

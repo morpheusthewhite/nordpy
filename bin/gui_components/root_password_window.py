@@ -41,7 +41,7 @@ class RootPermissionWindow(Tk):
         # binding enter button to on_button_pressed function
         self.bind('<Return>', self.on_enter_pressed)
 
-        self.center_window(200, 80, self.ok_button.cget("font"))
+        self.center_window(200, 85, self.ok_button.cget("font"))
 
     def on_enter_pressed(self, event):
         self.on_button_pressed()
