@@ -111,6 +111,7 @@ Comment=NordVPN client application for connecting to recommended servers
 Path=$current_dir
 Exec=\"$current_dir/nordpy.py\"
 Icon=$current_dir/media/nordvpn.png
+StartupWMClass=tk
 Terminal=false
 Categories=Internet;System;Utilities;" | tee nordpy.desktop > /dev/null
 
