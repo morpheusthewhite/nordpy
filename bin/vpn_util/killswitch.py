@@ -23,8 +23,8 @@ def read_remote_ip_port(ovpn_filename):
 
     for line in lines:
         if "remote" in line:
-            return line.split()[1:]
-
+            return line.split()[1:3]
+    
 
 def get_current_used_interface():
     """
