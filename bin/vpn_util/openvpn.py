@@ -48,10 +48,10 @@ def start_openvpn(server, protocol, killswitch=True):
 
         try:
             while True:
-                line = openvpn.stdout.readline()
+                line = openvpn.stdout.readline().strip()
 
-                if not line.strip() == '':
-                    logger.debug("[OPENVPN]: "+line)
+                if not line == '':
+                    logger.debug("[OPENVPN]: "+ line)
 
                 if "Initialization Sequence Completed" in line:
                     # success !
