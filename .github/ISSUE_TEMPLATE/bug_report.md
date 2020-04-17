@@ -15,7 +15,7 @@ A clear and concise description of what the bug is.
 
 If you encountered a connectivity problem, provide the following informations (otherwise just skip them):
 1. `ping 8.8.8.8` to verify connection, `ping www.github.com` to verify also DNS
-2. Paste here the content of `/etc/resolv.conf`, the output of `ip r` and the output of `iptables-save`
+2. Paste here the content of `/etc/resolv.conf`, the output of `ip r` and the output of `iptables --list` (may need root privileges)
 3. Connect to VPN and do the same step again, as above
 4. Disconnect and again do as above
 
