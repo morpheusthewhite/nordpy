@@ -19,7 +19,7 @@ def get_parser():
 
     parser.add_argument('--wait-connection', action="store_true",
                         help='wait connection before trying to start VPN')
-    parser.add_argument('--all', action="store_true",
+    parser.add_argument('--all', action="store_false",
                         help='check status among all connection types')
 
     return parser
