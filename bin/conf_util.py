@@ -5,6 +5,7 @@ from bin.logging_util import get_logger
 import json
 import threading
 import sys
+import random
 
 
 from bin.pathUtil import CURRENT_PATH
@@ -175,6 +176,29 @@ def get_path_to_conf(server, protocol):
     :return: the path to the file
     """
     return os.path.join(CURRENT_PATH + "ovpn_" + PROTOCOLS[protocol], server + "." + PROTOCOLS[protocol] + OVA_SUFFIX)
+
+
+def update_conf(conf_filepath: str, settings: dict):
+    """
+    create a new temporary configuration file with the new updated settings
+    :param conf_filepath: the path of the original configuration file
+    :param settings: a dictionary containing the key to change and its new value
+    :return: the path to the new (temporary) configuration file
+    """
+    new_conf_filepath = "/tmp/_nordpy" + str(random.randint(0, 1000))
+
+    # replace just the needed lines, copy the others
+    with open(conf_filepath, 'r') as old_conf:
+        with open(new_conf_filepath, 'w') as new_conf:
+            for line in old_conf:
+                key = line.strip().split(" ")[0]
+                if settings.get(key):
+                    new_conf.write(str(key) + " " + str(settings[key]) + os.linesep)
+                    settings.pop(key)
+                else:
+                    new_conf.write(line)
+
+    return new_conf_filepath
 
 
 OVA_SUFFIX = ".ovpn"

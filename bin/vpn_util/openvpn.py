@@ -1,4 +1,4 @@
-from bin.conf_util import get_path_to_conf
+from bin.conf_util import get_path_to_conf, update_conf
 from bin.credentials import *
 from bin.root import *
 from bin.logging_util import get_logger
@@ -29,11 +29,19 @@ def start_openvpn(server, protocol, killswitch=True):
     :param protocol: the protocol to be used (an integer)
     :param killswitch: if True set up killswitch
     """
-    pathToConf = get_path_to_conf(server, protocol)
-    args = ["sudo", "openvpn", "--config", pathToConf, "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,
-            # to prevent dns leaks
-            "--script-security", "2", "--up", os.path.join(CURRENT_PATH, "scripts", "nordpy_up.sh"), "--down",
-            os.path.join(CURRENT_PATH, "scripts", "nordpy_down.sh")]
+    pathToOldConf = get_path_to_conf(server, protocol)
+
+    # update the configuration, this must be done for settings which you want to overwrite and which are already defined
+    # in the configuration file. Providing them through command line may cause conflicts and / or may not be detected
+    pathToConf = update_conf(pathToOldConf, {"ping-restart": 60})
+
+    args = ["sudo", "openvpn",
+            "--config", pathToConf,
+            "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,  # use saved credentials
+            "--script-security", "2",  # to prevent dns leaks
+            # "--verb", "9",
+            "--up", os.path.join(CURRENT_PATH, "scripts", "nordpy_up.sh"), # script called on connection completed
+            "--down", os.path.join(CURRENT_PATH, "scripts", "nordpy_down.sh")]  # to be called on connection closed
 
     tries = 0
     while tries < MAXIMUM_TRIES:
