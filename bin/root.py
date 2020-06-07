@@ -52,7 +52,7 @@ def test_root_password(sudo_password):
 
     (_, err) = check_root.communicate(input=sudo_password + "\n")
 
-    if "Sorry, try again." in err:
+    if "incorrect password attempt" in err:
         return False
 
     return True
