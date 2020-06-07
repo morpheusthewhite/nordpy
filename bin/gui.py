@@ -9,8 +9,8 @@ from bin.settings import existing_corrected_saved_settings, load_settings, updat
 from requests import ConnectionError as RequestsConnectionError
 from bin.vpn_util.vpn import *
 from bin.gui_components.settings_frame import SettingsFrame
-from bin.gui_components.advanced_settings_window import DEFAULT_SCALE_FACTOR, DEFAULT_NM_USE
-from bin.font_size import get_font_scale_factor
+from bin.gui_components.advanced_settings_window import DEFAULT_NM_USE
+from bin.gui_components.centered_window import CenteredWindow, DEFAULT_SCALE_FACTOR
 import threading
 
 logger = get_logger(__name__)
@@ -18,7 +18,8 @@ logger = get_logger(__name__)
 DEFAUL_WIDTH = 370
 DEFAUL_HEIGHT = 370
 
-class gui(Tk):
+
+class gui(CenteredWindow):
     def __init__(self):
         super().__init__()
         self.wm_title("NordPY")
@@ -250,20 +251,4 @@ class gui(Tk):
 
     def update_advanced_settings(self, nm_use):
         self.nm_use = nm_use
-
-    def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR, font_name="TkDefaultFont"):
-        # gets screen width and height
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
-        font_factor = get_font_scale_factor(font_name)
-        logger.info("Font factor: " + str(font_factor))
-
-        scaled_width = width * scale * font_factor
-        scaled_height = height * scale * font_factor
-
-        # calculates position x and y coordinates
-        x = (screen_width / 2) - (scaled_width / 2)
-        y = (screen_height / 2) - (scaled_height / 2)
-        self.geometry('%dx%d+%d+%d' % (scaled_width, scaled_height, x, y))
 

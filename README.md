@@ -52,6 +52,9 @@ to support Network Manager (facultative).
 
 Then run `install.sh`
 
+If you have a dual monitor setup you may also want to install `screeninfo` (`pip3
+install --user screeninfo`) to correct window centering.
+
 ### Installing with support for obfuscated servers
 
 At the launch of the installation script you will be asked

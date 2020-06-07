@@ -1,17 +1,17 @@
 from tkinter import *
 from os import path
+from requests import ConnectionError as RequestsConnectionError
 
 from bin.conf_util import get_available_servers_dict, global_stats_holder
 from bin.logging_util import get_logger
 from bin.pathUtil import CURRENT_PATH
-from bin.font_size import get_font_scale_factor
-from requests import ConnectionError as RequestsConnectionError
+from bin.gui_components.centered_window import CenteredTopLevel
 
 SERVERS_DICT = get_available_servers_dict()
 logger = get_logger(__name__)
 
 
-class ManualServerWindow(Toplevel):
+class ManualServerWindow(CenteredTopLevel):
     def __init__(self, parent, scale_factor=1):
         super(ManualServerWindow, self).__init__()
         self.wm_title("Select your server")
@@ -24,7 +24,7 @@ class ManualServerWindow(Toplevel):
         self.__init_listboxes__()
         self.__init_buttons__()
 
-        self.center_window(300 * scale_factor, 220 * scale_factor, self.accept_button.cget("font"))
+        self.center_window(300, 220, scale_factor, self.accept_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 
@@ -101,20 +101,6 @@ class ManualServerWindow(Toplevel):
         self.destroy()
 
     def cancel_pressed(self):
-        self.grab_release() # to enable again the underlying window
+        self.grab_release()  # to enable again the underlying window
         self.destroy()
 
-    def center_window(self, width=300, height=200, font_name='TkDefaultFont'):
-        # gets screen width and height
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-        
-        font_factor = get_font_scale_factor(font_name) 
-
-        scaled_width = width * font_factor
-        scaled_height = height * font_factor
-
-        # calculates position x and y coordinates
-        x = (screen_width / 2) - (scaled_width / 2)
-        y = (screen_height / 2) - (scaled_height / 2)
-        self.geometry('%dx%d+%d+%d' % (scaled_width, scaled_height, x, y))

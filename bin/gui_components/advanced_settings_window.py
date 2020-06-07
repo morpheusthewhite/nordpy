@@ -1,16 +1,17 @@
 from tkinter import *
 from tkinter import messagebox
+
+from bin.gui_components.centered_window import DEFAULT_SCALE_FACTOR
 from bin.pathUtil import *
 from bin.credentials import credentials_file_path
 from bin.settings import advanced_settings_are_correct, advanced_settings_read, advanced_settings_save
 from bin.root import get_root_permissions
-from bin.font_size import get_font_scale_factor
+from bin.gui_components.centered_window import CenteredTopLevel
 
-DEFAULT_SCALE_FACTOR = 1
 DEFAULT_NM_USE = False
 
 
-class AdvancedSettingsWindow(Toplevel):
+class AdvancedSettingsWindow(CenteredTopLevel):
     def __init__(self, main_gui, scale_factor=1):
         super().__init__()
         self.wm_title("Advanced Settings")
@@ -31,7 +32,7 @@ class AdvancedSettingsWindow(Toplevel):
         self.save_button.pack(ipady=10, pady=10)
 
         # retrieving existing default configuration
-        if(advanced_settings_are_correct()):
+        if advanced_settings_are_correct():
             (scale_factor, nm_use) = advanced_settings_read()
             self.set_scale(scale_factor)
             self.set_nm_use(nm_use)
@@ -40,7 +41,7 @@ class AdvancedSettingsWindow(Toplevel):
             self.set_scale(DEFAULT_SCALE_FACTOR)
             self.set_nm_use(DEFAULT_NM_USE)
 
-        self.center_window(300 * scale_factor, 160 * scale_factor, self.save_button.cget("font"))
+        self.center_window(300, 160, scale_factor, self.save_button.cget("font"))
 
         self.grab_set()  # used to disable the underlying window
 
@@ -49,7 +50,7 @@ class AdvancedSettingsWindow(Toplevel):
         self.scale_var = DoubleVar()
 
         # frame containing the spinbox
-        self.window_size_frame = Frame(self)#, text='Window size')
+        self.window_size_frame = Frame(self)  # , text='Window size')
         self.s_label = Label(self.window_size_frame, text='Scale factor')
         self.s_label.pack(side=LEFT)
         self.scale_sbox = Spinbox(self.window_size_frame, width=6, from_=0.50, increment=0.10, to=3.00,
@@ -95,15 +96,3 @@ class AdvancedSettingsWindow(Toplevel):
 
     def set_nm_use(self, use):
         self.nm_use.set(use)
-
-    def center_window(self, width=300, height=200, font_name='TkDefaultFont'):
-        # gets screen width and height
-        screen_width = self.winfo_screenwidth()
-        screen_height = self.winfo_screenheight()
-
-        font_factor = get_font_scale_factor(font_name)
-
-        # calculates position x and y coordinates
-        x = (screen_width / 2) - (width * font_factor / 2)
-        y = (screen_height / 2) - (height * font_factor / 2)
-        self.geometry('%dx%d+%d+%d' % (width * font_factor, height * font_factor, x, y))
