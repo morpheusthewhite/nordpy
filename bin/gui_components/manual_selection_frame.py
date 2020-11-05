@@ -4,6 +4,15 @@ DEFAULT_MANUAL_SERVER_LABEL = '-----'
 
 class ManualSelectionFrame(LabelFrame):
     def __init__(self, parent, background_color, scale_factor=1):
+        """
+        Initialize the interface.
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+            background_color: (bool): write your description
+            scale_factor: (array): write your description
+        """
         super(ManualSelectionFrame, self).__init__(parent, text="Manual Selection")
         self.scale_factor = scale_factor
 
@@ -27,9 +36,21 @@ class ManualSelectionFrame(LabelFrame):
         self.pack(fill='x')
 
     def select_server_manually(self):
+        """
+        Selects the server server server.
+
+        Args:
+            self: (todo): write your description
+        """
         ManualServerWindow(self, self.scale_factor)
 
     def __manual_frame_state_change__(self):
+        """
+        Manage a frame
+
+        Args:
+            self: (todo): write your description
+        """
         if self.use_manual.get():
             # enabling manual selection frame
             self.manual_select_button.config(state=NORMAL)
@@ -42,18 +63,51 @@ class ManualSelectionFrame(LabelFrame):
             self.dynamic_server_label.config(state=DISABLED)
 
     def get_is_manual(self):
+        """
+        Returns true if_manual
+
+        Args:
+            self: (todo): write your description
+        """
         return self.use_manual.get()
 
     def set_is_manual(self, is_manual):
+        """
+        Set whether or not_man.
+
+        Args:
+            self: (todo): write your description
+            is_manual: (bool): write your description
+        """
         self.use_manual.set(is_manual)
 
     def get_manual_server(self):
+        """
+        Returns the server server
+
+        Args:
+            self: (todo): write your description
+        """
         return self.dynamic_server_label.cget('text')
 
     def set_manual_server(self, server):
+        """
+        Set the server server.
+
+        Args:
+            self: (todo): write your description
+            server: (todo): write your description
+        """
         self.dynamic_server_label.config(text=server)
 
     def manual_server_selected(self, server):
+        """
+        Manages the selected server.
+
+        Args:
+            self: (todo): write your description
+            server: (str): write your description
+        """
         self.set_manual_server(server + '.nordvpn.com')
 
 

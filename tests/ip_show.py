@@ -5,6 +5,11 @@ IP_URL = "https://ipinfo.io/json"
 
 
 def ip_show():
+    """
+    Show ip address
+
+    Args:
+    """
     ip_json = requests.get(IP_URL).text
     return json.loads(ip_json)['ip']
 

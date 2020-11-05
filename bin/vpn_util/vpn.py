@@ -34,6 +34,12 @@ def startVPN(server, protocol, nm):
 
 
 def stop_vpn(running_connection):
+    """
+    Stops the vpn session.
+
+    Args:
+        running_connection: (todo): write your description
+    """
     if running_connection == OPENVPN_CONNECTION_STRING:
         openvpn_stop()
     elif running_connection == IPSEC_CONNECTION_STRING:

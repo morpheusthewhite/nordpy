@@ -12,6 +12,12 @@ class RootPermissionWindow(CenteredWindow):
     A window used to require root password before launching NordPy main interface
     """
     def __init__(self):
+        """
+        Initialize window
+
+        Args:
+            self: (todo): write your description
+        """
         super().__init__()
         self.wm_title("NordPY")
 
@@ -44,6 +50,13 @@ class RootPermissionWindow(CenteredWindow):
         self.center_window(200, 85, font_name=self.ok_button.cget("font"))
 
     def on_enter_pressed(self, event):
+        """
+        Enter the keyboard press event handler.
+
+        Args:
+            self: (todo): write your description
+            event: (todo): write your description
+        """
         self.on_button_pressed()
 
     def on_button_pressed(self):

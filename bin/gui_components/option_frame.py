@@ -4,6 +4,13 @@ from bin.vpn_util.networkSelection import MODES, COUNTRIES
 
 class OptionFrame(LabelFrame):
     def __init__(self, parent):
+        """
+        Initialize the parent.
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+        """
         super().__init__(parent, text="Automatic Selection")
 
         self.__init_server_type__()
@@ -12,6 +19,12 @@ class OptionFrame(LabelFrame):
         self.pack(fill="x", pady=10)
 
     def __init_server_type__(self):
+        """
+        Initialize server type
+
+        Args:
+            self: (todo): write your description
+        """
         # setting up first line containing server type
         self.serverTypeFrame = Frame(self)
         self.serverTypeLabel = Label(self.serverTypeFrame, text="Server Type")
@@ -23,6 +36,12 @@ class OptionFrame(LabelFrame):
         self.serverTypeFrame.pack()
 
     def __init_country__(self):
+        """
+        Initialize the country
+
+        Args:
+            self: (todo): write your description
+        """
         # setting up second line containing country
         self.country_frame = Frame(self)
         self.country_label = Label(self.country_frame, text='Country')
@@ -50,6 +69,13 @@ class OptionFrame(LabelFrame):
         self.country_frame.pack()
 
     def option_frame_state_change(self, use_manual):
+        """
+        Re - frame frame frame frames
+
+        Args:
+            self: (todo): write your description
+            use_manual: (bool): write your description
+        """
         if not use_manual:
             # enabling option frame
             self.serverTypeLabel.config(state=NORMAL)
@@ -64,15 +90,41 @@ class OptionFrame(LabelFrame):
             self.country_label.config(state=DISABLED)
 
     def get_selected_server(self):
+        """
+        Return the server that has been selected.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.serverType.get()
 
     def set_selected_server(self, server):
+        """
+        Sets the server s server.
+
+        Args:
+            self: (todo): write your description
+            server: (str): write your description
+        """
         self.serverType.set(server)
 
     def get_selected_country(self):
+        """
+        Returns the country of the currently selected country
+
+        Args:
+            self: (todo): write your description
+        """
         return self.country.get()
 
     def set_selected_country(self, country):
+        """
+        Sets the country for the given country
+
+        Args:
+            self: (todo): write your description
+            country: (str): write your description
+        """
         self.country.set(country)
         self.country_menu_button.config(textvariable=self.country)
 

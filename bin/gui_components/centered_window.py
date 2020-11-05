@@ -11,6 +11,13 @@ DEFAULT_SCALE_FACTOR = 1
 
 
 def get_monitor_from_coord(x, y):
+    """
+    Return monitor for the monitor
+
+    Args:
+        x: (todo): write your description
+        y: (todo): write your description
+    """
     monitors = screeninfo.get_monitors()
 
     for m in reversed(monitors):
@@ -24,6 +31,17 @@ class CenteredWindow(Tk):
     A Tk class for exposing a centering and scaling function
     """
     def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR, font_name='TkDefaultFont'):
+        """
+        Center the main window.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (todo): write your description
+            scale: (float): write your description
+            DEFAULT_SCALE_FACTOR: (float): write your description
+            font_name: (str): write your description
+        """
         # gets screen width and height
         if use_si:
             # Get the screen which contains this window
@@ -55,6 +73,17 @@ class CenteredTopLevel(Toplevel):
     A TopLevel class for exposing a centering and scaling function
     """
     def center_window(self, width=300, height=200, scale=DEFAULT_SCALE_FACTOR, font_name='TkDefaultFont'):
+        """
+        Center the main window.
+
+        Args:
+            self: (todo): write your description
+            width: (int): write your description
+            height: (todo): write your description
+            scale: (float): write your description
+            DEFAULT_SCALE_FACTOR: (float): write your description
+            font_name: (str): write your description
+        """
         # gets screen width and height
         if use_si:
             # Get the screen which contains this window

@@ -21,6 +21,12 @@ DEFAUL_HEIGHT = 370
 
 class gui(CenteredWindow):
     def __init__(self):
+        """
+        Initialize window
+
+        Args:
+            self: (todo): write your description
+        """
         super().__init__()
         self.wm_title("NordPY")
         
@@ -65,6 +71,12 @@ class gui(CenteredWindow):
         self.queue = Queue()
 
     def __initStatus__(self):
+        """
+        Initialize the status.
+
+        Args:
+            self: (todo): write your description
+        """
         self.statusFrame = Frame(self)
         self.statusFrame.statusStatic = Label(self.statusFrame, text="Status: ")
         self.statusFrame.statusStatic.pack(side=LEFT)
@@ -73,6 +85,12 @@ class gui(CenteredWindow):
         self.statusFrame.pack(ipady=10)
 
     def __init_protocol__(self):
+        """
+        Initialize the protocol.
+
+        Args:
+            self: (todo): write your description
+        """
         self.protocolFrame = Frame(self)
         self.protocolFrame.protocolLabel = Label(self.protocolFrame, text="Protocol: ")
         self.protocolFrame.protocolLabel.pack(side=LEFT)
@@ -92,6 +110,12 @@ class gui(CenteredWindow):
         self.protocolFrame.pack(pady=4)
 
     def __initButtons__(self):
+        """
+        Initializes the buttons.
+
+        Args:
+            self: (todo): write your description
+        """
         self.buttonsFrame = Frame(self)
         self.buttonsFrame.connect = Button(text="Connect", command=self.connect)
         self.buttonsFrame.connect.pack(side=LEFT, padx=5)
@@ -100,16 +124,36 @@ class gui(CenteredWindow):
         self.buttonsFrame.pack()
 
     def on_manual_change(self):
+        """
+        When the frame was changed this frame is changed
+
+        Args:
+            self: (todo): write your description
+        """
         self.manual_frame.__manual_frame_state_change__()
         self.optionsFrame.option_frame_state_change(self.manual_frame.get_is_manual())
 
     def setStatusDisconnected(self):
+        """
+        Sets the status to use.
+
+        Args:
+            self: (todo): write your description
+        """
         self.statusFrame.statusDinamic.configure(text="Disconnected", foreground="grey")
 
         self.buttonsFrame.connect.configure(state=ACTIVE)
         self.buttonsFrame.disconnect.configure(state=DISABLED)
 
     def setStatusConnected(self, serverName, protocol):
+        """
+        Sets the status of the connection.
+
+        Args:
+            self: (todo): write your description
+            serverName: (str): write your description
+            protocol: (todo): write your description
+        """
         self.statusFrame.statusDinamic.configure(text="Connected to " + serverName + " by " +
                                                       protocol, foreground="green")
 
@@ -117,18 +161,43 @@ class gui(CenteredWindow):
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
 
     def setStatusAlreadyConnected(self, running_protocol):
+        """
+        Sets the status of the button.
+
+        Args:
+            self: (todo): write your description
+            running_protocol: (todo): write your description
+        """
         self.statusFrame.statusDinamic.configure(text="Connected by "+running_protocol, foreground="green")
 
         self.buttonsFrame.connect.configure(state=DISABLED)
         self.buttonsFrame.disconnect.configure(state=ACTIVE)
 
     def setStatusConnecting(self):
+        """
+        Set the connection status.
+
+        Args:
+            self: (todo): write your description
+        """
         self.statusFrame.statusDinamic.configure(text="Connecting", foreground="white")
 
     def set_status_requesting(self):
+        """
+        Sets the statusing.
+
+        Args:
+            self: (todo): write your description
+        """
         self.statusFrame.statusDinamic.configure(text="Retrieving recommended server", foreground="white")
 
     def connect(self):
+        """
+        Connects the connection object.
+
+        Args:
+            self: (todo): write your description
+        """
         if not get_root_permissions():
             return
 
@@ -138,6 +207,12 @@ class gui(CenteredWindow):
             self.automatic_connection()
 
     def manual_connection(self):
+        """
+        Establish the server connection.
+
+        Args:
+            self: (todo): write your description
+        """
         server = self.manual_frame.get_manual_server()
         if server == DEFAULT_MANUAL_SERVER_LABEL:
             messagebox.showwarning(title="Select a server", message='Please select a manual server')
@@ -145,6 +220,12 @@ class gui(CenteredWindow):
         self.connect_to_VPN(server, self.connectionProtocol.get())
 
     def automatic_connection(self):
+        """
+        This function that will be run.
+
+        Args:
+            self: (todo): write your description
+        """
         selected_server_type = self.optionsFrame.get_selected_server()
         selected_country = self.optionsFrame.get_selected_country()
 
@@ -204,6 +285,14 @@ class gui(CenteredWindow):
         gui.queue.put_nowait(result)
 
     def connect_to_VPN(self, server, protocol):
+        """
+        Connect to a server.
+
+        Args:
+            self: (todo): write your description
+            server: (str): write your description
+            protocol: (str): write your description
+        """
         self.setStatusConnecting()
         self.update_idletasks()
 
@@ -237,6 +326,12 @@ class gui(CenteredWindow):
         self.setStatusConnected(server, self.running_connection)
 
     def disconnect(self):
+        """
+        Disconnects the device.
+
+        Args:
+            self: (todo): write your description
+        """
         if not get_root_permissions():
             return
 
@@ -244,11 +339,24 @@ class gui(CenteredWindow):
         self.setStatusDisconnected()
 
     def reset_settings(self):
+        """
+        Reset the options.
+
+        Args:
+            self: (todo): write your description
+        """
         self.optionsFrame.set_selected_country(AUTOMATIC_CHOICE_STRING)
         self.optionsFrame.set_selected_server('Standard VPN')
         self.manual_frame.set_is_manual(False)
         self.on_manual_change()
 
     def update_advanced_settings(self, nm_use):
+        """
+        Updates the settings.
+
+        Args:
+            self: (todo): write your description
+            nm_use: (todo): write your description
+        """
         self.nm_use = nm_use
 

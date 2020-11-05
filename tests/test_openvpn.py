@@ -11,19 +11,39 @@ initial_ip = ip_show()
 
 
 def test_status_before_connection():
+    """
+    Test if the connection is closed.
+
+    Args:
+    """
     assert not checkOpenVPN()
 
 
 def test_start_connection():
+    """
+    Test to startvpn connection.
+
+    Args:
+    """
     start_openvpn(TEST_SERVER, TEST_PROTOCOL, False)
     assert initial_ip != ip_show()
 
 
 def test_status_after_connection():
+    """
+    Test if the connection is closed.
+
+    Args:
+    """
     assert checkOpenVPN()
 
 
 def test_stop_connection():
+    """
+    Disconnects_stop.
+
+    Args:
+    """
     openvpn_stop(False)
     assert initial_ip == ip_show()
 

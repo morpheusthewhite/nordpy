@@ -13,6 +13,14 @@ DEFAULT_NM_USE = False
 
 class AdvancedSettingsWindow(CenteredTopLevel):
     def __init__(self, main_gui, scale_factor=1):
+        """
+        Initialize main window
+
+        Args:
+            self: (todo): write your description
+            main_gui: (todo): write your description
+            scale_factor: (array): write your description
+        """
         super().__init__()
         self.wm_title("Advanced Settings")
         self.main_gui = main_gui
@@ -46,6 +54,12 @@ class AdvancedSettingsWindow(CenteredTopLevel):
         self.grab_set()  # used to disable the underlying window
 
     def __init_scale_factor_frame__(self):
+        """
+        Initialize scale scale
+
+        Args:
+            self: (todo): write your description
+        """
         # variable for the scale value
         self.scale_var = DoubleVar()
 
@@ -59,6 +73,12 @@ class AdvancedSettingsWindow(CenteredTopLevel):
         self.window_size_frame.pack()
 
     def __init_nm_frame__(self):
+        """
+        Initialize frame.
+
+        Args:
+            self: (todo): write your description
+        """
         # getting background color from window background (needed by checkbox)
         background_color = self.cget('background')
 
@@ -70,6 +90,12 @@ class AdvancedSettingsWindow(CenteredTopLevel):
         self.nm_checkbutton.pack(pady=8)
 
     def remove_cred(self):
+        """
+        Removes the credential
+
+        Args:
+            self: (todo): write your description
+        """
         if not get_root_permissions(parent=self):
             return
 
@@ -81,18 +107,50 @@ class AdvancedSettingsWindow(CenteredTopLevel):
                 pass
 
     def save_current_settings(self):
+        """
+        Save current settings
+
+        Args:
+            self: (todo): write your description
+        """
         advanced_settings_save(self.get_scale(), self.get_nm_use())
         self.main_gui.update_advanced_settings(self.get_nm_use())
         messagebox.showinfo(parent=self, title="Restart required", message='Restart the application to apply scale')
 
     def set_scale(self, n):
+        """
+        Set the scale of the variable
+
+        Args:
+            self: (todo): write your description
+            n: (todo): write your description
+        """
         self.scale_var.set(n)
 
     def get_scale(self):
+        """
+        Get the scale.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.scale_var.get()
 
     def get_nm_use(self):
+        """
+        : return : attribute.
+
+        Args:
+            self: (todo): write your description
+        """
         return self.nm_use.get()
 
     def set_nm_use(self, use):
+        """
+        Sets the current value of the given set.
+
+        Args:
+            self: (todo): write your description
+            use: (todo): write your description
+        """
         self.nm_use.set(use)

@@ -12,6 +12,11 @@ root.get_root_permissions_cli()
 
 
 def test_ipsec_connection():
+    """
+    Establish a redis server
+
+    Args:
+    """
     server = TEST_SERVER
     (username, password) = credentials.read_saved_credentials()
 
@@ -20,6 +25,11 @@ def test_ipsec_connection():
 
 
 def test_ipsec_disconnection():
+    """
+    Show the ipsecv2 session
+
+    Args:
+    """
     ikev2.ikev2_disconnect()
 
     assert ip_show() == initial_ip

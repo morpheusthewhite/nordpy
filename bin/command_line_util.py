@@ -7,6 +7,13 @@ from bin.vpn_util.vpn import startVPN, stop_vpn, get_running_vpn
 
 
 def quick_connect(wait_connection=False, sleep_time=5):
+    """
+    Connect to a connection.
+
+    Args:
+        wait_connection: (todo): write your description
+        sleep_time: (todo): write your description
+    """
     print("Trying to connect to the last server type")
 
     if os.geteuid() != 0:
@@ -36,6 +43,11 @@ def quick_connect(wait_connection=False, sleep_time=5):
 
 
 def quick_disconnect():
+    """
+    Disconnects the vpn
+
+    Args:
+    """
     print("Shutting down any nordpy VPN connection")
 
     openvpn_stop()

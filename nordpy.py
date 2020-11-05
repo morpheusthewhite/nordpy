@@ -6,6 +6,11 @@ import argparse
 
 
 def get_parser():
+    """
+    Return a parser.
+
+    Args:
+    """
     parser = argparse.ArgumentParser(prog="nordpy",
                                      description='An application to connect to NordVPN servers')
     connection_group = parser.add_mutually_exclusive_group()
@@ -26,6 +31,11 @@ def get_parser():
 
 
 def main():
+    """
+    Main function.
+
+    Args:
+    """
     # if file is launched without root privileges
     parser = get_parser()
     parsed_args = parser.parse_args()

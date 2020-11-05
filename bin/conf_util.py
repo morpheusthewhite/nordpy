@@ -81,6 +81,12 @@ def get_available_servers_dict():
     from bin.pathUtil import CURRENT_PATH
 
     def get_server_domain(server):
+        """
+        Returns a domain name for a server.
+
+        Args:
+            server: (todo): write your description
+        """
         numbers = '1234567890'
         domain = ''
 
@@ -116,11 +122,23 @@ PERCENT_KEY = 'percent'
 
 class StatsHolder:
     def __init__(self):
+        """
+        Initialize a thread.
+
+        Args:
+            self: (todo): write your description
+        """
         threading.Thread(target=self.stats_parallel_request).start()
 
         self.stats_dic = {}
 
     def stats_parallel_request(self):
+        """
+        Get the request to the request.
+
+        Args:
+            self: (todo): write your description
+        """
         try:
             stats = requests.get(STATS_URL)
         except requests.ConnectionError:

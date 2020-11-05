@@ -13,6 +13,14 @@ logger = get_logger(__name__)
 
 class ManualServerWindow(CenteredTopLevel):
     def __init__(self, parent, scale_factor=1):
+        """
+        Initialize window
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+            scale_factor: (array): write your description
+        """
         super(ManualServerWindow, self).__init__()
         self.wm_title("Select your server")
         self.parent = parent  # this will be needed when a server is chosen
@@ -35,6 +43,12 @@ class ManualServerWindow(CenteredTopLevel):
             self.stats_holder = None
 
     def __init_listboxes__(self):
+        """
+        Initialize all boxes
+
+        Args:
+            self: (todo): write your description
+        """
         self.listboxes_frame = Frame(self)
 
         # this frame will contain all the stuff of the domain_listbox
@@ -64,6 +78,12 @@ class ManualServerWindow(CenteredTopLevel):
         self.listboxes_frame.pack()
 
     def __init_buttons__(self):
+        """
+        Initialize buttons.
+
+        Args:
+            self: (todo): write your description
+        """
         self.buttons_frame = Frame(self)
         self.accept_button = Button(self.buttons_frame, text='OK', command=self.ok_pressed)
         self.accept_button.pack(side=LEFT)
@@ -72,6 +92,13 @@ class ManualServerWindow(CenteredTopLevel):
         self.buttons_frame.pack(pady=6)
 
     def on_domain_select(self, event):
+        """
+        Insert domain event handler.
+
+        Args:
+            self: (todo): write your description
+            event: (todo): write your description
+        """
         selected_item_tuple = self.domain_listbox.curselection()
         if len(selected_item_tuple) == 0:   # checking if it is a deselection
             return
@@ -90,6 +117,12 @@ class ManualServerWindow(CenteredTopLevel):
 
 
     def ok_pressed(self):
+        """
+        Destroy the selected item.
+
+        Args:
+            self: (todo): write your description
+        """
         selected_item_tuple = self.domain_servers_listbox.curselection()
         if not len(selected_item_tuple) == 0:  # checking if something is selected
             selected_index = selected_item_tuple[0]
@@ -101,6 +134,12 @@ class ManualServerWindow(CenteredTopLevel):
         self.destroy()
 
     def cancel_pressed(self):
+        """
+        Cancel the queue. queue.
+
+        Args:
+            self: (todo): write your description
+        """
         self.grab_release()  # to enable again the underlying window
         self.destroy()
 

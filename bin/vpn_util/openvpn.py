@@ -14,6 +14,13 @@ logger = get_logger(__name__)
 
 
 def timeout_handler(signum, frame):
+    """
+    Called when a request handler is received.
+
+    Args:
+        signum: (int): write your description
+        frame: (todo): write your description
+    """
     raise TimeoutError
 
 

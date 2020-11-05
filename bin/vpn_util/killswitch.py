@@ -92,6 +92,13 @@ def iptables_restore():
 
 
 def killswitch_up(server_name, protocol):
+    """
+    Kill a new ip address
+
+    Args:
+        server_name: (str): write your description
+        protocol: (int): write your description
+    """
     iptables_save()
 
     interface = get_current_used_interface()
@@ -114,6 +121,11 @@ def killswitch_up(server_name, protocol):
 
 
 def killswitch_down():
+    """
+    Kill the socket.
+
+    Args:
+    """
     logger.info("Turning off killswitch")
     iptables_restore()
 

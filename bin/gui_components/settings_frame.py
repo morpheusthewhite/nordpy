@@ -6,6 +6,14 @@ from bin.gui_components.advanced_settings_window import AdvancedSettingsWindow
 
 class SettingsFrame(LabelFrame):
     def __init__(self, parent, scale_factor=1):
+        """
+        !
+
+        Args:
+            self: (todo): write your description
+            parent: (todo): write your description
+            scale_factor: (array): write your description
+        """
         super().__init__(parent, text="Settings")
         self.parent = parent
         self.scale_factor = scale_factor
@@ -19,11 +27,23 @@ class SettingsFrame(LabelFrame):
         self.pack(fill='x', pady=4, ipady=4)
 
     def reset_settings(self):
+        """
+        Reset settings.
+
+        Args:
+            self: (todo): write your description
+        """
         answer = messagebox.askyesno(title='Confirm', message="Are you sure you want to reset connection settings?")
         if answer:
             self.parent.reset_settings()
             update_settings("", 0, "", "")
 
     def open_advanced_settings(self):
+        """
+        Open window settings.
+
+        Args:
+            self: (todo): write your description
+        """
         AdvancedSettingsWindow(self.parent, self.scale_factor)
 
