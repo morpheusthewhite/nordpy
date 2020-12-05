@@ -161,7 +161,7 @@ class StatsHolder:
 
 
 # retrieve stats iff nordpy is opened with gui
-if not 'bin.command_line_util' in sys.modules.keys() and 'bin.gui' in sys.modules.keys():
+if 'bin.command_line_util' not in sys.modules.keys() and 'bin.gui' in sys.modules.keys():
     global_stats_holder = StatsHolder()
 
     # updating stats in another thread
