@@ -50,7 +50,8 @@ def start_openvpn(server, protocol, killswitch=True):
             # activate killswitch
             killswitch_up(server, protocol)
 
-        openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True, stdout=subprocess.PIPE)
+        openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True,
+                                   stdout=subprocess.PIPE, shell=True)
 
         signal.alarm(TIMEOUT_TIME)
 
