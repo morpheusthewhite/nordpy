@@ -43,7 +43,7 @@ def start_openvpn(server, protocol, killswitch=True):
 
     args = ["sudo", "openvpn",
             "--config", pathToConf,
-            "--auth-user-pass", escaped_path + CREDENTIALS_FILENAME,  # use saved credentials
+            "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,  # use saved credentials
             "--script-security", "2",  # to prevent dns leaks
             # "--verb", "9",
             "--up", os.path.join(escaped_path, "scripts", "nordpy_up.sh"), # script called on connection completed
