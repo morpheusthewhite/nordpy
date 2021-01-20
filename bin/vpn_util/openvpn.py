@@ -6,6 +6,7 @@ from bin.vpn_util.exceptions import LoginError, OpenresolvError
 from bin.vpn_util.killswitch import killswitch_up, killswitch_down
 
 import signal
+import platform
 
 MAXIMUM_TRIES = 2
 IKEV2_PROTOCOL_NUMBER = 2
@@ -35,13 +36,18 @@ def start_openvpn(server, protocol, killswitch=True):
     # in the configuration file. Providing them through command line may cause conflicts and / or may not be detected
     pathToConf = update_conf(pathToOldConf, {"ping-restart": 60})
 
+    if platform.system() == 'Linux':
+        escaped_path = CURRENT_PATH.replace(" ", "\ ")
+    else:
+        escaped_path = CURRENT_PATH
+
     args = ["sudo", "openvpn",
             "--config", pathToConf,
-            "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,  # use saved credentials
+            "--auth-user-pass", escaped_path + CREDENTIALS_FILENAME,  # use saved credentials
             "--script-security", "2",  # to prevent dns leaks
             # "--verb", "9",
-            "--up", os.path.join(CURRENT_PATH, "scripts", "nordpy_up.sh"), # script called on connection completed
-            "--down", os.path.join(CURRENT_PATH, "scripts", "nordpy_down.sh")]  # to be called on connection closed
+            "--up", os.path.join(escaped_path, "scripts", "nordpy_up.sh"), # script called on connection completed
+            "--down", os.path.join(escaped_path, "scripts", "nordpy_down.sh")]  # to be called on connection closed
 
     tries = 0
     while tries < MAXIMUM_TRIES:
@@ -51,7 +57,7 @@ def start_openvpn(server, protocol, killswitch=True):
             killswitch_up(server, protocol)
 
         openvpn = subprocess.Popen(args, stdin=subprocess.PIPE, universal_newlines=True,
-                                   stdout=subprocess.PIPE, shell=True)
+                                   stdout=subprocess.PIPE)
 
         signal.alarm(TIMEOUT_TIME)
 
