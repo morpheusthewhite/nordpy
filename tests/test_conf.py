@@ -2,7 +2,7 @@ from bin.conf_util import *
 
 
 def test_get_path():
-    assert get_path_to_conf("nl833.nordvpn.com.tcp.ovpn", 1).endswith(
+    assert get_path_to_conf("nl833.nordvpn.com", 1).endswith(
         "ovpn_tcp/nl833.nordvpn.com.tcp.ovpn")
 
 
