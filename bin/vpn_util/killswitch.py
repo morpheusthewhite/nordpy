@@ -24,7 +24,7 @@ def read_remote_ip_port(ovpn_filename):
     for line in lines:
         if "remote" in line:
             return line.split()[1:3]
-    
+
 
 def get_current_used_interface():
     """
@@ -47,13 +47,13 @@ def get_network(interface):
     :return: the address of the network to which the host belongs (on the given interface)
     """
     (out, _) = subprocess.Popen(['ip', 'r'], stdout=subprocess.PIPE,
-                               universal_newlines=True).communicate()
+                                universal_newlines=True).communicate()
 
     lines = out.split(os.linesep)
     for line in lines:
         line_splitten = line.split()
 
-        # look for the interface name to get the network address (which is the first field) 
+        # look for the interface name to get the network address (which is the first field)
         if len(line_splitten) > 0 and line_splitten[2] == interface:
             return line_splitten[0]
 
@@ -63,9 +63,10 @@ def iptables_save():
     save the current iptables
     """
     # load the module needed to output correctly the state of the iptables
-    subprocess.Popen(["sudo", "modprobe", "iptable_filter"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).communicate()
+    subprocess.Popen(["sudo", "modprobe", "iptable_filter"],
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).communicate()
 
-    (out, _) = subprocess.Popen(["sudo", "iptables-save"], stdout=subprocess.PIPE,
+    (out, _) = subprocess.Popen(["sudo", "iptables-legacy-save"], stdout=subprocess.PIPE,
                                 universal_newlines=True).communicate()
 
     with open(os.path.join(CURRENT_PATH, TABLES_FILENAME), 'w') as f:
@@ -81,12 +82,13 @@ def iptables_restore():
     tables_file = os.path.join(CURRENT_PATH, TABLES_FILENAME)
     logger.info("looking for iptables in " + tables_file)
 
-    subprocess.Popen(["sudo", "iptables-restore", tables_file]).communicate()
+    subprocess.Popen(["sudo", "iptables-legacy-restore",
+                      tables_file]).communicate()
 
     try:
         os.remove(tables_file)
     except FileNotFoundError:
-        logger.info("No iptables to restore found") 
+        logger.info("No iptables to restore found")
 
     return
 
@@ -105,7 +107,8 @@ def killswitch_up(server_name, protocol):
     logger.info("Turning on killswitch")
     logger.info("Default interface: " + interface)
     logger.info("IP and port of the VPN server: " + ip + " " + port)
-    logger.info("Network address on " + interface + ": " + address_private_network)
+    logger.info("Network address on " + interface +
+                ": " + address_private_network)
 
     # update iptables
     subprocess.Popen(["sudo", os.path.join(CURRENT_PATH, "scripts", "ip-ks.sh"),

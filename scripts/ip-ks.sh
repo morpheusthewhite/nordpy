@@ -10,7 +10,7 @@
 EXPECTED_ARGC=5
 
 if [ $# -ne $EXPECTED_ARGC ]
-    then
+then
     echo "Incorrect number of arguments"
     exit
 fi
@@ -24,22 +24,22 @@ NETWORK_ADDRESS=$5
 echo "Launching $PROTOCOL connection with $REMOTE_IP:$REMOTE_PORT on $INTERFACE (on network $5)"
 
 # clear tables
-iptables --flush
-iptables --delete-chain
-iptables -t nat --flush
-iptables -t nat --delete-chain
+iptables-legacy --flush
+iptables-legacy --delete-chain
+iptables-legacy -t nat --flush
+iptables-legacy -t nat --delete-chain
 
 # general policy
-iptables -P OUTPUT DROP
-iptables -P INPUT DROP
+iptables-legacy -P OUTPUT DROP
+iptables-legacy -P INPUT DROP
 
 # localhost
-iptables -A INPUT -j ACCEPT -i lo
-iptables -A OUTPUT -j ACCEPT -o lo
+iptables-legacy -A INPUT -j ACCEPT -i lo
+iptables-legacy -A OUTPUT -j ACCEPT -o lo
 
-iptables -A INPUT --src $NETWORK_ADDRESS -j ACCEPT -i $INTERFACE
-iptables -A OUTPUT -d $NETWORK_ADDRESS -j ACCEPT -o $INTERFACE
-iptables -A OUTPUT -j ACCEPT -d $REMOTE_IP -o $INTERFACE -p $PROTOCOL -m $PROTOCOL --dport $REMOTE_PORT
-iptables -A INPUT -j ACCEPT -s $REMOTE_IP -i $INTERFACE -p $PROTOCOL -m $PROTOCOL --sport $REMOTE_PORT
-iptables -A INPUT -j ACCEPT -i tun+
-iptables -A OUTPUT -j ACCEPT -o tun+
+iptables-legacy -A INPUT --src $NETWORK_ADDRESS -j ACCEPT -i $INTERFACE
+iptables-legacy -A OUTPUT -d $NETWORK_ADDRESS -j ACCEPT -o $INTERFACE
+iptables-legacy -A OUTPUT -j ACCEPT -d $REMOTE_IP -o $INTERFACE -p $PROTOCOL -m $PROTOCOL --dport $REMOTE_PORT
+iptables-legacy -A INPUT -j ACCEPT -s $REMOTE_IP -i $INTERFACE -p $PROTOCOL -m $PROTOCOL --sport $REMOTE_PORT
+iptables-legacy -A INPUT -j ACCEPT -i tun+
+iptables-legacy -A OUTPUT -j ACCEPT -o tun+
