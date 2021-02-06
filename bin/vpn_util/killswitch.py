@@ -9,6 +9,19 @@ TABLES_FILENAME = 'stored_iptables'
 logger = get_logger(__name__)
 
 
+def check_has_legacy():
+    (out, _) = subprocess.Popen(["iptables-legacy", "-h"],
+                                stdout=subprocess.PIPE,
+                                universal_newlines=True).communicate()
+    if len(out) == 0:
+        return False
+    else:
+        return True
+
+
+has_legacy = check_has_legacy()
+
+
 class KillswitchError(RuntimeError):
     pass
 
@@ -66,9 +79,13 @@ def iptables_save():
     subprocess.Popen(["sudo", "modprobe", "iptable_filter"],
                      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).communicate()
 
-    (out, _) = subprocess.Popen(["sudo", "iptables-legacy-save"], stdout=subprocess.PIPE,
-                                universal_newlines=True).communicate()
+    if has_legacy:
+        args = ["sudo", "iptables-legacy-save"]
+    else:
+        args = ["sudo", "iptables-save"]
 
+    (out, _) = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                universal_newlines=True).communicate()
     with open(os.path.join(CURRENT_PATH, TABLES_FILENAME), 'w') as f:
         f.write(out)
 
@@ -82,8 +99,12 @@ def iptables_restore():
     tables_file = os.path.join(CURRENT_PATH, TABLES_FILENAME)
     logger.info("looking for iptables in " + tables_file)
 
-    subprocess.Popen(["sudo", "iptables-legacy-restore",
-                      tables_file]).communicate()
+    if has_legacy:
+        args = ["sudo", "iptables-legacy-restore", tables_file]
+    else:
+        args = ["sudo", "iptables-restore", tables_file]
+
+    subprocess.Popen(args).communicate()
 
     try:
         os.remove(tables_file)
