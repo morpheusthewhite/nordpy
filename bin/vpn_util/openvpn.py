@@ -46,7 +46,8 @@ def start_openvpn(server, protocol, killswitch=True):
             "--auth-user-pass", CURRENT_PATH + CREDENTIALS_FILENAME,  # use saved credentials
             "--script-security", "2",  # to prevent dns leaks
             # "--verb", "9",
-            "--up", os.path.join(escaped_path, "scripts", "nordpy_up.sh"), # script called on connection completed
+            # script called on connection completed
+            "--up", os.path.join(escaped_path, "scripts", "nordpy_up.sh"),
             "--down", os.path.join(escaped_path, "scripts", "nordpy_down.sh")]  # to be called on connection closed
 
     tries = 0
@@ -66,7 +67,7 @@ def start_openvpn(server, protocol, killswitch=True):
                 line = openvpn.stdout.readline().strip()
 
                 if not line == '':
-                    logger.debug("[OPENVPN]: "+ line)
+                    logger.debug("[OPENVPN]: " + line)
 
                 if "Initialization Sequence Completed" in line:
                     # success !
@@ -123,10 +124,11 @@ def checkOpenVPN():
     Checks if a openvpn process is already running
     :return: True if is running, False otherwise
     """
-    c = subprocess.Popen(["ps ax | grep ' openvpn ' | grep -v grep"], stdout=subprocess.PIPE, shell=True, universal_newlines=True)
+    c = subprocess.Popen(["ps ax | grep ' openvpn ' | grep -v grep"],
+                         stdout=subprocess.PIPE, shell=True, universal_newlines=True)
     (out, _) = c.communicate()
 
-    logger.info("captured grep" +  out)
+    logger.info("Verified if another instance of openvpn is running" + out)
 
     if out != '':
         return True
