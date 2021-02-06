@@ -2,7 +2,7 @@ from bin.vpn_util.openvpn import start_openvpn, openvpn_stop, checkOpenVPN
 from bin.root import get_root_permissions_cli
 from .ip_show import ip_show
 
-TEST_SERVER="us3381.nordvpn.com"
+TEST_SERVER = "nl833.nordvpn.com"
 TEST_PROTOCOL = 0
 
 get_root_permissions_cli()
@@ -26,4 +26,3 @@ def test_status_after_connection():
 def test_stop_connection():
     openvpn_stop(False)
     assert initial_ip == ip_show()
-

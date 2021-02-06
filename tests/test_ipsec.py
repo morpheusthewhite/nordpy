@@ -1,9 +1,9 @@
 from bin.vpn_util import ikev2
-from tests.ip_show import ip_show 
+from tests.ip_show import ip_show
 from bin import root
 from bin import credentials
 
-TEST_SERVER="us3381.nordvpn.com"
+TEST_SERVER = "nl833.nordvpn.com"
 
 
 initial_ip = ip_show()
@@ -23,4 +23,3 @@ def test_ipsec_disconnection():
     ikev2.ikev2_disconnect()
 
     assert ip_show() == initial_ip
-
