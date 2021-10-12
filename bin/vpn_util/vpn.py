@@ -58,7 +58,7 @@ def get_running_vpn():
         return NM_CONNECTION_STRING
     elif checkOpenVPN():
         return OPENVPN_CONNECTION_STRING
-    elif ikev2_is_running():
+    elif ipsec_exists() and ikev2_is_running():
         return IPSEC_CONNECTION_STRING
 
     return None
