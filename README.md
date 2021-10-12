@@ -1,6 +1,6 @@
 # NordPy
 
-[![release 1.1](https://img.shields.io/github/tag/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/releases/tag/1.1)
+[![release 1.3.4](https://img.shields.io/github/tag/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/releases/tag/1.3.4)
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/issues)
 [![contributions welcome](https://img.shields.io/github/license/morpheusthewhite/nordpy.svg?style=flat)](https://github.com/morpheusthewhite/NordPy/blob/master/LICENSE)
 
