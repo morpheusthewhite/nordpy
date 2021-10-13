@@ -1,5 +1,6 @@
 from bin.vpn_util.ikev2 import ikev2_connect, ikev2_is_running, ikev2_disconnect, ipsec_exists
 from bin.vpn_util.openvpn import *
+from bin.credentials import read_saved_credentials_ikev2, check_credentials_ikev2, save_credentials_ikev2
 from bin.vpn_util.nm import nm_running_vpn, nm_disconnect, nm_connect, nm_openvpn_exists
 IPSEC_EXISTS = ipsec_exists()
 
@@ -14,6 +15,18 @@ def startVPN(server, protocol, nm):
     :param nm: a boolean: True if network manager should be used, false otherwise
     :return: a string representing the connection established
     """
+
+    if protocol == IKEV2_PROTOCOL_NUMBER:  # if it is ikev2/ipvsec
+        if not check_credentials_ikev2():
+            try:
+                save_credentials_ikev2()
+            except NoCredentialsProvidedException:
+                return None
+        username, password = read_saved_credentials_ikev2()
+
+        ikev2_connect(username, password, server)
+        return IPSEC_CONNECTION_STRING
+
     if not check_credentials():
         try:
             save_credentials()
@@ -22,10 +35,7 @@ def startVPN(server, protocol, nm):
 
     username, password = read_saved_credentials()
 
-    if protocol == IKEV2_PROTOCOL_NUMBER:  # if it is ikev2/ipvsec
-        ikev2_connect(username, password, server)
-        return IPSEC_CONNECTION_STRING
-    elif nm and nm_openvpn_exists():
+    if nm and nm_openvpn_exists():
         nm_connect(server, protocol, username, password)
         return NM_CONNECTION_STRING
     else:

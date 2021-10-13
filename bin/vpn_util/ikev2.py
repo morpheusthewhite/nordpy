@@ -37,6 +37,11 @@ IKEV2_STRONGSWAN_CONF_FORMAT = 'constraints{' + linesep + \
                                '    load = no' + linesep + \
                                '}' + linesep
 
+SUCCESS_STRING = "connection 'NordVPN' established successfully"
+FAILURE_STRING = "establishing connection 'NordVPN' failed"
+AUTH_FAILURE_STRING = "EAP authentication failed"
+CONFIG_NOT_FOUND_STRING = "no config named 'NordVPN'"
+
 logger = get_logger(__name__)
 
 def ipsec_exists():
@@ -112,11 +117,6 @@ def __ikev2_reset_load__():
     return
 
 
-SUCCESS_STRING = "connection 'NordVPN' established successfully"
-FAILURE_STRING = "establishing connection 'NordVPN' failed"
-AUTH_FAILURE_STRING = "EAP authentication failed"
-CONFIG_NOT_FOUND_STRING = "no config named 'NordVPN'"
-
 def __ikev2_launch__():
     """
     Launches the command the start the ikev2 connection. Raise a LoginError if credentials are wrong, a ConnectionError
@@ -175,9 +175,10 @@ def __ikev2_ipsec_reload__():
     restarts ipsec (used to load saved settings)
     """
     args = ['sudo', 'ipsec', 'restart']
-    (out, _) = Popen(args, stdout=PIPE, universal_newlines=True).communicate()
+    (_, _) = Popen(args, stdout=PIPE, universal_newlines=True).communicate()
 
     return
+
 
 def ikev2_connect(username, password, server):
     """

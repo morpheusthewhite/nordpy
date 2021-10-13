@@ -216,7 +216,10 @@ class gui(CenteredWindow):
             return
         except LoginError:
             messagebox.showwarning(title="Error", message="Wrong credentials")
-            os.remove(credentials_file_path)
+            if protocol == IKEV2_PROTOCOL_NUMBER:
+                os.remove(credentials_ikev2_file_path)
+            else:
+                os.remove(credentials_file_path)
             self.setStatusDisconnected()
             return
         except OpenresolvError:
